@@ -24,7 +24,9 @@ Nachdem Mailman deployed wurde muss in der `/etc/profile` das Secret und die Adm
 
 Das Secret kann mit folgenden Kommando im Verzeichnis `/home/deploy/mailman/current/` generiert werden:
 
-`RAILS_ENV=production bundle exec rake secret`
+```
+$ RAILS_ENV=production bundle exec rake secret
+```
 
 ```
 # /etc/profile
