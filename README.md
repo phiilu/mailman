@@ -2,6 +2,8 @@
 
 Mailman (eng. Postbote) ist eine webbasierte administrative Oberfläche für den Mailserver. Der Name kann für Mail Manager oder eben Postbote stehen :)
 
+![Mailman Screenshot][screenshots/mailman.png?raw=true]
+
 # Voraussetzungen
 
 Mailman wurde speziell für die Administrierung des Mailservers aus dem Tutorial von Thomas Leistner entwickelt:
