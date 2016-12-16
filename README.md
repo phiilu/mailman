@@ -6,7 +6,7 @@ Mailman (eng. Postbote) ist eine webbasierte administrative Oberfläche für den
 
 # Voraussetzungen
 
-Mailman wurde speziell für die Administrierung des Mailservers aus dem Tutorial von Thomas Leistner entwickelt:
+Mailman wurde speziell für die Administrierung des Mailservers aus dem Tutorial von Thomas Leister entwickelt:
 
 [Mailserver mit Dovecot, Postfix und MySQL unter Ubuntu 16.04 LTS](https://thomas-leister.de/sicherer-mailserver-dovecot-postfix-virtuellen-benutzern-mysql-ubuntu-server-xenial/)
 
