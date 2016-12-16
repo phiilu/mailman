@@ -1,0 +1,17 @@
+<div class="show">
+      <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+              <td><%= @domain.domain %></td>
+              <td><%= link_to 'Edit', edit_domain_path(@domain) %></td>
+            </tr>
+        </tbody>
+      </table>
+</div>

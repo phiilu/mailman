@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mailman</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <div class="ui top menu">
+      <% if is_admin? %>
+        <%= link_to 'Mailman', root_path, class: 'item' %>
+      <% else %>
+        <%= link_to 'Mailman', current_user, class: 'item' %>
+      <% end %>
+      <% if is_admin? %>
+        <%= link_to 'Domains', domains_path, class: 'item' %>
+        <%= link_to 'Accounts', accounts_path, class: 'item' %>
+        <%= link_to 'Aliases', aliases_path, class: 'item' %>
+      <% end %>
+      <div class="right menu">
+        <% if logged_in? %>
+          <%= link_to "#{current_user.username.capitalize}", current_user, class: 'item' %>
+          <%= link_to 'Logout', logout_path, method: 'delete', class: 'item' %>
+        <% else %>
+          <%= link_to 'Login', login_path, class: 'item' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="ui container">
+      <p id="notice" class="text-center"><%= notice %></p>
+      <%= yield %>
+    </div>
+  </body>
+</html>

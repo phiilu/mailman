@@ -1,0 +1,39 @@
+<h1>Aliases</h1>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Source username</th>
+      <th>Source domain</th>
+      <th>Destination username</th>
+      <th>Destination domain</th>
+      <th>Enabled</th>
+      <th colspan="3">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @aliases.each do |a| %>
+      <tr>
+        <td><%= a.source_username %></td>
+        <td><%= a.source_domain %></td>
+        <td><%= a.destination_username %></td>
+        <td><%= a.destination_domain %></td>
+        <td>
+          <% if a.enabled %>
+            <i class="checkmark icon"></i>
+          <% else %>
+            <i class="remove icon"></i>
+          <% end %>
+        </td>
+        <td><%= link_to 'Show', a %></td>
+        <td><%= link_to 'Edit', edit_alias_path(a) %></td>
+        <td><%= link_to 'Destroy', a, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Alias', new_alias_path, class: 'ui button primary' %>

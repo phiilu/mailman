@@ -1,0 +1,61 @@
+<%= form_for(account, html: {class: 'ui form'}) do |f| %>
+  <% if account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(account.errors.count, "error") %> prohibited this account from being saved:</h2>
+
+      <ul>
+      <% account.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if is_admin? %>
+
+  <div class="field">
+    <%= f.label :username %>
+    <%= f.text_field :username %>
+  </div>
+
+  <div class="field">
+    <%= f.label :domain %>
+    <%= f.collection_select :domain, Domain.all, :domain, :domain, {selected: params[:d]}, {class: 'ui search dropdown'} %>
+  </div>
+
+  <% end %>
+
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+
+  <% if is_admin? %>
+
+  <div class="field">
+    <%= f.label :quota %>
+    <%= f.number_field :quota %>
+  </div>
+
+  <div class="field">
+    <%= f.label :enabled %>
+    <%= f.check_box :enabled %>
+  </div>
+
+  <div class="field">
+    <%= f.label :sendonly %>
+    <%= f.check_box :sendonly %>
+  </div>
+
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit class: 'ui button primary' %>
+  </div>
+<% end %>

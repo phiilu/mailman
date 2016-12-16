@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  username: MyString
+  domain: one
+  password: MyString
+  quota: 1
+  enabled: false
+  sendonly: false
+
+two:
+  username: MyString
+  domain: two
+  password: MyString
+  quota: 1
+  enabled: false
+  sendonly: false

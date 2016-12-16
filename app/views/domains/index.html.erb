@@ -1,0 +1,27 @@
+<h1>Domains</h1>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Domain</th>
+      <th colspan="5">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @domains.each do |domain| %>
+      <tr>
+        <td><%= domain.domain %></td>
+        <td><%= link_to 'Show', domain %></td>
+        <td><%= link_to 'Edit', edit_domain_path(domain) %></td>
+        <td><%= link_to 'Destroy', domain, method: :delete, data: { confirm: 'Are you sure? This will also delete all accounts with this domain!' } %></td>
+        <td><%= link_to 'Show Accounts', accounts_path(d: domain.domain) %></td>
+        <td><%= link_to 'Add Account', new_account_path(d: domain.domain) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Domain', new_domain_path, class: 'ui button primary' %>

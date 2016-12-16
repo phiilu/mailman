@@ -1,0 +1,54 @@
+<h1>Accounts</h1>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Domain</th>
+      <th>Password</th>
+      <th>Quota</th>
+      <th>Enabled</th>
+      <th>Sendonly</th>
+      <th colspan="4">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @accounts.each do |account| %>
+      <tr>
+        <td><%= account.username %></td>
+        <td><%= account.domain %></td>
+        <td><%= "*" * 8 %></td>
+        <td>
+          <% if account.quota <= 0 %>
+            ∞
+          <% else %>
+            <%= Filesize.from("#{account.quota} B").pretty %>
+          <% end %>
+        </td>
+        <td>
+          <% if account.enabled %>
+            <i class="checkmark icon"></i>
+          <% else %>
+            <i class="remove icon"></i>
+          <% end %>
+        </td>
+        <td>
+          <% if account.sendonly %>
+            <i class="checkmark icon"></i>
+          <% else %>
+            <i class="remove icon"></i>
+          <% end %>
+        </td>
+        <td><%= link_to 'Show', account %></td>
+        <td><%= link_to 'Edit'.html_safe, edit_account_path(account, u: account.username, d: account.domain) %></td>
+        <td><%= link_to 'Destroy'.html_safe, account, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Add Alias', new_alias_path(u: account.username, d: account.domain) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Account', new_account_path, class: 'ui button primary' %>
