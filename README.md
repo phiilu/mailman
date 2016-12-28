@@ -14,13 +14,13 @@ Bevor Mailman installiert werden kann muss der Mailserver bereits funktionieren 
 
 # Installation unter Ubuntu 16.04
 
-Die Installation ist im Grunde die selbe wie vom [Chris](https://github.com/excid3) auf [GoRails.com](https://gorails.com/deploy/ubuntu/16.04). Ich habe sie übersetzt und für Mailman adaptiert, damit die komplizierte Installation nachvervolgt werden kann.
+Die Installation ist im Grunde die selbe wie vom [Chris](https://github.com/excid3) auf [GoRails.com](https://gorails.com/deploy/ubuntu/16.04). Ich habe sie übersetzt und für Mailman adaptiert, damit die komplizierte Installation nachverfolgt werden kann.
 
-PS: Rechtschreibfehler inclusive 👇
+PS: Rechtschreibfehler inklusive 👇
 
 ## Benutzer erzeugen & SSH Key hinzufügen
 
-Zunächst wird ein `deploy` Benutzer hinzugefügt, der Mailman letztendlich ausführt.
+Zunächst wird ein `deploy` Benutzer hinzugefügt.
 
 ```
 sudo adduser deploy
@@ -28,7 +28,7 @@ sudo adduser deploy sudo
 su deploy
 ```
 
-Diesem Nutzer wird ein SSH Key hinzugefügt um das deployn zu automatisieren (es muss nicht jedesmal das Password des Benutzers eingegeben werden).
+Diesem Nutzer wird ein SSH Key hinzugefügt um das deployn zu automatisieren (es muss nicht jedesmal das Passwort des Benutzers eingegeben werden).
 
 Auf dem **lokalen Rechner** generiert ihr euch einen neuen SSH Key (falls ihr bereits einen SSH Key habt könnt ihr diesen Schritt überspringen).
 
@@ -109,7 +109,7 @@ include /etc/nginx/passenger.conf;
 
 Bei der letzten Zeile muss das `#` entfernt werden.
 
-Nun öffnet ihr `/etc/nginx/passenger.conf` und setzt das Verzeichnis wo sich die Ruby Installation befindert.
+Nun öffnet ihr `/etc/nginx/passenger.conf` und setzt das Verzeichnis wo sich die Ruby Installation befindet.
 
 Die Datei sieht danach folgendermaßen aus:
 
@@ -119,9 +119,9 @@ passenger_ruby /home/deploy/.rbenv/shims/ruby; # If you use rbenv
 # passenger_ruby /usr/bin/passenger_free_ruby;
 ```
 
-### NGINX Host mit Subdomain
+### NGINX Host
 
-Da ihr eine eigene Domain besitzt ist es am besten, wenn ihr euch bei eurem Domain Hoster eine eigene Subdomain für Mailman erzeugt.
+Da ihr eine eigene Domain besitzt ist es am besten wenn ihr euch bei eurem Domain Hoster (oder wo auch immer ihr DNS Einträge setzen könnt) eine eigene Subdomain für Mailman erzeugt.
 
 Die Konfiguration sieht in NGINX dann folgendermaßen aus:
 
@@ -146,7 +146,9 @@ server {
 
 **Info:** Die Verzeichnisstruktur `/home/deploy/mailman/current/public` wird später erzeut.
 
-Ersetzt example.com mit euer eigenen Domain und linkt die neue host Datei.
+Ersetzt `example.com` mit euer eigenen Domain und linkt die neue host Datei.
+
+Eine Konfiguration für HTTPS wird später ergänzt.
 
 ```
 sudo ln -s /etc/nginx/sites-available/mailman.conf /etc/nginx/sites-enabled/mailman.conf
@@ -154,16 +156,13 @@ sudo ln -s /etc/nginx/sites-available/mailman.conf /etc/nginx/sites-enabled/mail
 
 ### NGINX neustarten
 
-Zu guter Letzt muss NGINX muss neugestartet werden.
-
 ```
 sudo service nginx restart
 ```
 
 ## MySQL Datenbanktreiber installieren
 
-Ihr solltet bereits MySQL auf eurem Mailserver intalliert haben.
-Damit sich Ruby mit der Datenbank verbinden kann muss noch folgendes Paket installiert werden.
+MySQL ist bereits auf eurem Mailserver intalliert. Damit sich Ruby mit der Datenbank verbinden kann muss noch folgendes Paket installiert werden.
 
 ```
 sudo apt-get install libmysqlclient-dev
@@ -171,7 +170,9 @@ sudo apt-get install libmysqlclient-dev
 
 ## Mailman auf den Server deployn
 
-Nun klont ihr euch das Repository von GitHub auf euren **lokalen Rechner** (am besten einer mit einem Unix basierten OS).
+Nun klont ihr euch das Repository von GitHub auf euren **lokalen Rechner** (am besten ein Unix basiertes OS).
+
+**Info:** `ruby` und `bundler` muss auf dem Rechner ebenfalls installiert sein.
 
 ```
 git clone https://github.com/flowryaan/mailman.git
@@ -184,15 +185,13 @@ cd mailman
 bundle install
 ```
 
-Nun da die Abhängigkeiten vorhanden sind kann mit Capistrano alles vorbereitet werden.
+Nun da die Abhängigkeiten vorhanden sind, kann mit Capistrano alles vorbereitet werden.
 
 ```
 cap install STAGES=production
 ```
 
-Capistrano erzeugt die Datei `config/deploy/production.rb`.
-
-Löscht den Inhalt der Datei und fügt folgendes ein:
+Capistrano erzeugt die Datei `config/deploy/production.rb`. Löscht den Inhalt der Datei und fügt folgendes ein:
 
 ```ruby
 server 'SERVER_IP_ADRESSE', user: 'deploy', roles: %w{app db web}
@@ -200,22 +199,19 @@ server 'SERVER_IP_ADRESSE', user: 'deploy', roles: %w{app db web}
 
 Ersetzt SERVER_IP_ADRESSE mit der IP des Servers.
 
-Jetzt kommt der Moment auf den alle gewartet haben: Die Applikation wird auf den Server kopiert.
-
-Deployd Mailman mit folgenden Befehl:
+Abschließend kann Mailman nun auf den Server deployd werden.
 
 ```
 cap production deploy
 ```
 
-Jedoch beim ersten Mal wird Capistrano euch einen Fehler anzeigen:
+Beim ersten Versuch wird Capistrano euch einen Fehler anzeigen:
 
 ```
-linked file /home/deploy/mailman/shared/config/database.yml does not exist on 192.168.1.114
+linked file /home/deploy/mailman/shared/config/database.yml does not exist on SERVER_IP_ADRESSE
 ```
 
-Die Datei existiert auf dem Server noch nicht und muss von Hand erzeugt werden.
-Nehmt euren lieblings Editor (nano, vim, emacs, ....) und erzeugt sie.
+Die Datei existiert auf dem Server noch nicht und muss von Hand erzeugt werden. Nehmt euren lieblings Editor (nano, vim, emacs, ....) und erzeugt diese.
 
 ```
 vim /home/deploy/mailman/shared/config/database.yml
@@ -238,9 +234,9 @@ Ersetzt MYSQL_DB_VMAIL_PASSWORT mit dem Passwort vom MySQL Benutzer vmail.
 Wenn ihr die Datei erzeugt habt führt `cap production deploy` von eurem **lokalen Rechner** erneut aus. Diesmal sollte der Rollout funktionieren.
 
 
-## Letzte Konfigurations- Schritte
+## Letzte Konfigurationsschritte
 
-Nachdem Mailman deployed wurde muss in der `/etc/profile` das Secret und die Admin Email eingetragen werden.
+Nachdem Mailman deployed wurde, muss in der `/etc/profile` das Secret und die Admin Email eingetragen werden.
 
 Das Secret kann mit folgenden Kommando im Verzeichnis `/home/deploy/mailman/current/` generiert werden:
 
@@ -251,11 +247,11 @@ RAILS_ENV=production bundle exec rake secret
 ```
 # /etc/profile
 
-export SECRET_KEY_BASE=01234556789...
+export SECRET_KEY_BASE=012345567894324322432423...
 export MAILMAN_ADMIN_EMAIL="admin@example.com"
 ```
 
-Danach kann der Rails- Applikation mitgeteilt werden das Sie sich neustarten soll:
+Danach kann der Rails- Applikation mitgeteilt werden, dass Sie sich neustarten soll:
 
 ```
 touch /home/deploy/mailman/current/tmp/restart.txt
