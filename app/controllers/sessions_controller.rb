@@ -6,8 +6,6 @@ class SessionsController < ApplicationController
     email = authentication_params[:email].split("@")
     account = Account.find_by_username_and_domain(email.first, email.second)
 
-    puts account
-
     if account && account.check_password?(authentication_params[:password])
       log_in account
       redirect_to account, notice: 'You are now logged in'

@@ -17,28 +17,28 @@ class Account < ApplicationRecord
 
   def self.hash_password password
     salt = SecureRandom.hex(32)
-    hash = Base64.strict_encode64(Digest::SHA512.digest(password+salt) + salt)
-    "{SSHA512}#{hash}"
+    hash = Base64.strict_encode64(password.crypt('$6$' + salt))
+    "{SHA512-CRYPT}#{hash}"
   end
 
   def hash_password
     salt = SecureRandom.hex(32)
-    hash = Base64.strict_encode64(Digest::SHA512.digest(self.password+salt) + salt)
-    self.password = "{SSHA512}#{hash}"
+    hash = Base64.strict_encode64(self.password.crypt('$6$' + salt))
+    self.password = "{SHA512-CRYPT}#{hash}"
   end
 
   def hash_password_with_given password, salt
-    hash = Base64.strict_encode64(Digest::SHA512.digest(password+salt) + salt)
-    password = "{SSHA512}#{hash}"
+    hash = Base64.strict_encode64(password.crypt('$6$' + salt))
+    password = "{SHA512-CRYPT}#{hash}"
+  end
+
+  def decoded
+    Base64.strict_decode64(self.password.to_s.gsub(/^{SHA512-CRYPT}/, ''))
   end
 
   def check_password? password
-    decoded = Base64.strict_decode64(self.password.gsub(/^{SSHA512}/, ''))
-
-    hash = decoded[0...64] # isolate the hash
-    salt = decoded[64..decoded.length] # isolate the salt
-
-    hash_password_with_given(password, salt) == self.password
+    salt = decoded.split('$').third.to_s
+    password.crypt('$6$' + salt) == decoded
   end
 
   def clear_password
