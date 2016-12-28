@@ -148,11 +148,11 @@ server {
 
 Ersetzt `example.com` mit euer eigenen Domain und linkt die neue host Datei.
 
-Eine Konfiguration für HTTPS wird später ergänzt.
-
 ```
 sudo ln -s /etc/nginx/sites-available/mailman.conf /etc/nginx/sites-enabled/mailman.conf
 ```
+
+Eine Konfiguration für HTTPS wird später ergänzt.
 
 ### NGINX neustarten
 
