@@ -12,9 +12,11 @@ Mailman wurde speziell für die Administrierung des Mailservers aus dem Tutorial
 
 Bevor Mailman installiert werden kann muss der Mailserver bereits funktionieren und es muss mindestens eine *Domain* und ein *Account* in der Datenbank sein.
 
-# Installation
+# Installation unter Ubuntu 16.04
 
-Danke an [GoRails.com](https://gorails.com/deploy/ubuntu/16.04) für das tolle Tutorial!
+Die Installation ist im Grunde die selbe wie vom [Chris](https://github.com/excid3) auf [GoRails.com](https://gorails.com/deploy/ubuntu/16.04). Ich habe sie übersetzt und für Mailman adaptiert, damit die komplizierte Installation nachvervolgt werden kann.
+
+PS: Rechtschreibfehler inclusive 👇
 
 ## Benutzer erzeugen & SSH Key hinzufügen
 
@@ -79,9 +81,7 @@ Nun da Ruby installiert ist kann der Webserver eingerichtet werden.
 
 ## NGINX mit Phusion Passenger als Webserver einrichten
 
-Damit NGINX die Anfragen an Ruby weiterleitet muss Passenger installiert werden. Phusion hat eine Version von NGINX die Passenger enthält in einem eigenen Paket veröffentlich.
-
-Wenn ihr NGINX bereits installiert könnt ihr Passenger auch nach installierten.
+Phusion hat ein eigenes APT Paket veröffentlicht indem Passenger bereits in NGINX enthalten ist. Wenn ihr NGINX bereits installiert habt, dann updated das Paket von Phusion euren NGINX automatisch.
 
 ```
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
