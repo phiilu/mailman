@@ -46,6 +46,8 @@ Mit `ssh deploy@SERVER_IP_ADRESSE` könnt ihr euch jetzt ohne Passwort am Server
 
 ## Ruby am Server installieren
 
+**Info:** Die Befehle werden alle als `deploy` Benutzer ausgeführt.
+
 Zuerst werden Abhängigkeiten für Ruby installiert.
 
 ```
