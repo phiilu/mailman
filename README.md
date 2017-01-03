@@ -163,7 +163,7 @@ sudo service nginx restart
 ```
 
 ## Apache mit Phusion Passenger als Webserver einrichten
-Zuerst wird Passenger aus der offiziellen, Passenger-eigenen Paketquelle installiert. Dazu muss zuerst diese Paketquelle erst ins System aufgenommen werden.
+Zuerst wird Passenger aus der offiziellen, Passenger-eigenen Paketquelle installiert. Dazu muss diese Paketquelle erst ins System aufgenommen werden.
 ```bash
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
 sudo apt-get install -y apt-transport-https ca-certificates
