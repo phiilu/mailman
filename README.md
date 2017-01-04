@@ -162,6 +162,60 @@ Eine Konfiguration für HTTPS wird später ergänzt.
 sudo service nginx restart
 ```
 
+## Apache mit Phusion Passenger als Webserver einrichten
+Zuerst wird Passenger aus der offiziellen, Passenger-eigenen Paketquelle installiert. Dazu muss diese Paketquelle erst ins System aufgenommen werden.
+```bash
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo apt-get install -y apt-transport-https ca-certificates
+
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main > /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update 
+```
+Nun kann die Passenger Erweiterung für Apache installiert und in Apache aktiviert werden.
+```bash
+sudo apt-get install libapache2-mod-passenger
+sudo a2enmod passenger
+sudo service apache2 restart
+```
+
+### Apache vHost
+Am einfachsten kann man Mailman mit Apache einbinden, indem man eine (weitere) Subdomain auf den Server zeigen lässt (dazu müssen die DNS Einträge beim Hoster gesetzt werden) und dann zu dieser Subdomain einen virtuellen Host in apache erstellt.
+Ich nehme hier an, dass die gewählte Subdomain mailman.example.com ist.
+Nun solltet ihr eine neue Datei mit dem Namen mailman.conf im Verzeichnis `/etc/apache2/sites-available` erstellen.
+```bash
+#Natürlich ist auch jeder andere Texteditor statt 'vim' hier möglich.
+vim /etc/apache2/sites-available/mailman.conf
+```
+In die Datei wird die folgende Konfiguration eingetragen:
+```apache
+<VirtualHost *:80>
+	#Server ist unter mailman.example.com und www.mailman.example.com erreichbar
+    ServerName mailman.example.com
+    ServerAlias www.mailman.example.com
+	#Bei Störungen zu kontaktierender Server Admin. Kann geändert oder gelöscht werden.
+    ServerAdmin webmaster@localhost
+	
+	#Einstellungen für Passenger
+    DocumentRoot /home/deploy/mailman/current/public
+    RailsEnv production
+    PassengerRuby /home/deploy/.rbenv/shims/ruby
+	
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <Directory "/home/deploy/mailman/current/public">
+        Options FollowSymLinks
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+Dieser vHost hört auf die Domains mailman.example.com und www.mailman.example.com unter Port 80 und übergibt die Anfragen an Passenger.
+Die Domains, der Server Admin und eventuell abweichende Pfade sollten angepasst werden.
+Nun muss die Seite noch aktiviert und Apache neugestartet werden.
+```bash
+sudo a2ensite mailman
+sudo service apache2 restart
+```
+
 ## MySQL Datenbanktreiber installieren
 
 MySQL ist bereits auf eurem Mailserver intalliert. Damit sich Ruby mit der Datenbank verbinden kann muss noch folgendes Paket installiert werden.
