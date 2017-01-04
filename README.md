@@ -177,11 +177,6 @@ sudo apt-get install libapache2-mod-passenger
 sudo a2enmod passenger
 sudo service apache2 restart
 ```
-Da dieser Schritt unsere Ruby Installation mit einer älteren Version überschrieben hat muss die Version wieder manuell angepasst werden.
-```bash
-sudo rm /usr/bin/ruby
-sudo ln -s /usr/local/bin/ruby /usr/bin/ruby
-```
 
 ### Apache vHost
 Am einfachsten kann man Mailman mit Apache einbinden, indem man eine (weitere) Subdomain auf den Server zeigen lässt (dazu müssen die DNS Einträge beim Hoster gesetzt werden) und dann zu dieser Subdomain einen virtuellen Host in apache erstellt.
