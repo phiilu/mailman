@@ -1,0 +1,19 @@
+{
+  "name": "mailman",
+  "version": "1.0.0",
+  "description": "A simple mail manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "backpack"
+  },
+  "author": "Florian Kapfenberger <florian@kapfenbgerger.me>",
+  "license": "MIT",
+  "dependencies": {
+    "backpack-core": "^0.4.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "knex": "^0.13.0",
+    "mariasql": "^0.2.6"
+  }
+}
