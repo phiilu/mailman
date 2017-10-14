@@ -1,8 +1,13 @@
 import { isEmpty } from "lodash";
 import Domain from "../model/domain";
 
+import { isAdmin } from "../helpers/authorizationHelper";
+
 class DomainController {
   async index(req, res) {
+    if (!isAdmin(req.user.email))
+      return res.status(403).json({ message: "insufficient permission" });
+
     const domains = await Domain.getDomains();
     res.json({ domains });
   }
@@ -15,7 +20,13 @@ class DomainController {
 
     const domain = (await Domain.getDomain(id))[0];
     if (domain) {
-      res.json({ domain });
+      const [, userDomain] = req.user.email.split("@");
+      // allow to view the domain if user is admin or belongs to this domain
+      if (isAdmin(req.user.email) || userDomain === domain.domain) {
+        res.json({ domain });
+      } else {
+        res.status(403).json({ message: "insufficient permission" });
+      }
     } else {
       res.status(404).json({ message: "domain not found" });
     }
@@ -26,6 +37,10 @@ class DomainController {
 
     if (!domain)
       return res.status(400).json({ message: "parameter domain is missing" });
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to create domains" });
 
     const id = (await Domain.createDomain(domain))[0];
     if (id) {
@@ -45,6 +60,10 @@ class DomainController {
       return res.status(400).json({ message: "parameter domain is missing" });
     if (!id)
       return res.status(400).json({ message: "parameter id is missing" });
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to update domains" });
 
     await Domain.updateDomain({ domain }, id);
 
@@ -57,6 +76,11 @@ class DomainController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to delete domains" });
 
     const rowsDeleted = await Domain.deleteDomain(id);
     if (rowsDeleted === 0)

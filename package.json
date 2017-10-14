@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "backpack"
+    "dev": "backpack",
+    "build": "backpack build"
   },
   "author": "Florian Kapfenberger <florian@kapfenbgerger.me>",
   "license": "MIT",
   "dependencies": {
     "backpack-core": "^0.4.3",
     "body-parser": "^1.18.2",
+    "dotenv": "^4.0.0",
     "express": "^4.16.2",
+    "express-jwt": "^5.3.0",
     "joi": "^11.4.0",
+    "jsonwebtoken": "^8.1.0",
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "mariasql": "^0.2.6",

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import Express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
