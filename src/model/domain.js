@@ -2,7 +2,10 @@ import db from "../db";
 
 class Domain {
   async getDomains() {
-    return await db.select().from("domains");
+    return await db
+      .select()
+      .from("domains")
+      .orderBy("domain", "asc");
   }
 
   async getDomain(id) {
@@ -17,8 +20,10 @@ class Domain {
     return await db("domains").insert({ domain }, ["id", "domain"]);
   }
 
-  async updateDomain(fields) {
-    return await db("domains").update(fields, ["id", "domain"]);
+  async updateDomain(fields, id) {
+    return await db("domains")
+      .update(fields, ["id", "domain"])
+      .where({ id });
   }
 
   async deleteDomain(id) {

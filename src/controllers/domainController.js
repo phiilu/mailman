@@ -1,11 +1,10 @@
+import { isEmpty } from "lodash";
 import Domain from "../model/domain";
 
 class DomainController {
   async index(req, res) {
-    const domains = await Domain.getDomains().catch(error =>
-      res.status(500).json({ error })
-    );
-    if (domains) res.json({ domains });
+    const domains = await Domain.getDomains();
+    res.json({ domains });
   }
 
   async show(req, res) {
@@ -14,12 +13,9 @@ class DomainController {
     if (!id)
       return res.status(400).json({ message: "parameter id is missing" });
 
-    const domain = await Domain.getDomain(id).catch(error =>
-      res.status(500).json({ error })
-    );
-
-    if (domain[0]) {
-      res.json({ domain: domain[0] });
+    const domain = (await Domain.getDomain(id))[0];
+    if (domain) {
+      res.json({ domain: domain });
     } else {
       res.status(404).json({ message: "domain not found" });
     }
@@ -27,27 +23,45 @@ class DomainController {
 
   async create(req, res) {
     const { domain } = req.body;
-    let error;
 
     if (!domain)
       return res.status(400).json({ message: "parameter domain is missing" });
 
-    const savedDomain = await Domain.createDomain(domain).catch(
-      err => (error = err)
-    );
-    if (error) return res.status(500).json({ error });
-
-    const id = savedDomain[0];
+    const id = (await Domain.createDomain(domain))[0];
     if (id) {
-      res.json({ domain: await Domain.getDomain(id)[0] });
+      res.json({ domain: (await Domain.getDomain(id))[0] });
     } else {
-      res.status(500).json({ message: "could not save domain" });
+      const error = new Error("could not save domain");
+      error.status = 422;
+      throw error;
     }
   }
 
-  async update(req, res) {}
+  async update(req, res) {
+    const { fields } = req.body;
+    const { id } = req.params;
 
-  async delete(req, res) {}
+    if (!fields)
+      return res.status(400).json({ message: "parameter fields is missing" });
+    if (!id)
+      return res.status(400).json({ message: "parameter id is missing" });
+    if (isEmpty(fields))
+      return res
+        .status(400)
+        .json({ message: "parameter fields can not be empty" });
+
+    await Domain.updateDomain(fields, id);
+    res.json({ domain: (await Domain.getDomain(id))[0] });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    const rowsDeleted = await Domain.deleteDomain(id);
+    if (rowsDeleted === 0)
+      return res.status(404).json({ message: "domain not found" });
+    return res.status(204).end();
+  }
 }
 
 export default new DomainController();
