@@ -15,7 +15,7 @@ class DomainController {
 
     const domain = (await Domain.getDomain(id))[0];
     if (domain) {
-      res.json({ domain: domain });
+      res.json({ domain });
     } else {
       res.status(404).json({ message: "domain not found" });
     }
@@ -38,20 +38,21 @@ class DomainController {
   }
 
   async update(req, res) {
-    const { fields } = req.body;
+    const { domain } = req.body;
     const { id } = req.params;
 
-    if (!fields)
-      return res.status(400).json({ message: "parameter fields is missing" });
+    if (!domain)
+      return res.status(400).json({ message: "parameter domain is missing" });
     if (!id)
       return res.status(400).json({ message: "parameter id is missing" });
-    if (isEmpty(fields))
-      return res
-        .status(400)
-        .json({ message: "parameter fields can not be empty" });
 
-    await Domain.updateDomain(fields, id);
-    res.json({ domain: (await Domain.getDomain(id))[0] });
+    await Domain.updateDomain({ domain }, id);
+
+    const updatedDomain = (await Domain.getDomain(id))[0];
+    if (!updatedDomain)
+      return res.status(404).json({ message: "domain not found" });
+
+    res.json({ domain: updatedDomain });
   }
 
   async delete(req, res) {
