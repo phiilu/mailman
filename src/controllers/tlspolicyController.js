@@ -1,14 +1,26 @@
 import { isEmpty } from "lodash";
 import TlsPolicy from "../model/tlspolicy";
 
+import { isAdmin } from "../helpers/authorizationHelper";
+
 class TlsPolicyController {
   async index(req, res) {
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to view all tls policies" });
+
     const tlspolicies = await TlsPolicy.getTlsPolicies();
     res.json({ tlspolicies });
   }
 
   async show(req, res) {
     const { id } = req.params;
+
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to view tls policies" });
 
     if (!id)
       return res.status(400).json({ message: "parameter id is missing" });
@@ -23,6 +35,11 @@ class TlsPolicyController {
 
   async create(req, res) {
     const { domain, policy, params } = req.body;
+
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to create tls policies" });
 
     if (!domain || !policy || !params)
       return res.status(400).json({ message: "parameters are missing" });
@@ -41,6 +58,11 @@ class TlsPolicyController {
     const { domain, policy, params } = req.body;
     const { id } = req.params;
 
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to update tls policies" });
+
     if (isEmpty(req.body))
       return res.status(400).json({ message: "parameters are missing" });
     if (!id)
@@ -57,6 +79,11 @@ class TlsPolicyController {
 
   async delete(req, res) {
     const { id } = req.params;
+
+    if (!isAdmin(req.user.email))
+      return res
+        .status(403)
+        .json({ message: "only admins are allowed to delete tls policies" });
 
     const rowsDeleted = await TlsPolicy.deleteAlias(id);
     if (rowsDeleted === 0)
