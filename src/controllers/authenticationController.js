@@ -3,6 +3,7 @@ import { promisify } from "util";
 
 import Account from "../model/account";
 import { generateToken } from "../helpers/tokenHelper";
+import { isAdmin } from "../helpers/authorizationHelper";
 
 const validate = promisify(Joi.validate);
 const emailValidator = Joi.string().email();
@@ -41,7 +42,7 @@ class AuthenticationController {
 
     // generate JWT
     const token = await generateToken({ email });
-    res.json({ token });
+    res.json({ token, admin: isAdmin(email) });
   }
 }
 
