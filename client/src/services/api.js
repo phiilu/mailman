@@ -15,5 +15,11 @@ export default {
   },
   getTlsPolicies() {
     return axios.get("/api/tlspolicies");
+  },
+  saveDomain(data) {
+    return axios.post("/api/domains", data);
+  },
+  deleteDomain(id) {
+    return axios.delete(`/api/domains/${id}`);
   }
 };

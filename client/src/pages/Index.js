@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -9,40 +10,70 @@ import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 import Button from "material-ui/Button";
 import { CircularProgress } from "material-ui/Progress";
+import IconButton from "material-ui/IconButton";
+import DeleteIcon from "material-ui-icons/Delete";
+import EditIcon from "material-ui-icons/Edit";
 
 import { getAll } from "../actions/data";
+import { deleteDomain } from "../actions/domains";
 
 import withRoot from "../components/hoc/withRoot";
+
 import Navigation from "../components/shared/Navigation";
 import Table from "../components/shared/Table";
+import Wrapper from "../components/shared/Wrapper";
+
 import Login from "./Login";
 
 const styles = {
-  wrapper: {
-    padding: "2.5% 5%"
-  },
   progress: {
     display: "flex",
     flexFlow: "column",
     height: "calc(100vh - 64px)",
     justifyContent: "center",
     alignItems: "center"
+  },
+  tableCell: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  deleteIcon: {
+    color: "#FF6347"
   }
 };
 
-const DomainTable = ({ domains }) => {
+const DomainTable = withStyles(styles)(({ domains, classes, deleteDomain }) => {
   const headers = ["Domain"];
 
   return (
     <Table headers={headers}>
       {domains.map(d => (
         <TableRow key={d.id}>
-          <TableCell>{d.domain}</TableCell>
+          <TableCell className={classes.tableCell}>
+            {d.domain}
+            <span>
+              <IconButton
+                aria-label="Edit"
+                to={`/domains/${d.id}/edit`}
+                component={Link}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label="Delete"
+                className={classes.deleteIcon}
+                onClick={deleteDomain(d.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </TableCell>
         </TableRow>
       ))}
     </Table>
   );
-};
+});
 
 const AccountTable = ({ accounts }) => {
   const headers = ["Email", "Quota", "Enabled", "Sendonly"];
@@ -101,10 +132,14 @@ const TlsPolicyTable = ({ tlspolicies }) => {
 
 class Index extends Component {
   componentDidMount() {
-    if (this.props.authentication.token) {
+    if (this.props.authentication.token && !this.props.data.dataLoaded) {
       this.props.getAll();
     }
   }
+
+  deleteDomain = id => e => {
+    this.props.deleteDomain(id);
+  };
 
   render() {
     const { classes } = this.props;
@@ -118,13 +153,13 @@ class Index extends Component {
     const { token } = this.props.authentication;
 
     let content = (
-      <div className={classes.wrapper}>
+      <Wrapper>
         <Grid container spacing={24}>
           <Grid item xs={12}>
             <Typography type="headline">Domains</Typography>
-            <DomainTable domains={domains} />
+            <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
             <br />
-            <Button raised color="primary">
+            <Button raised color="primary" component={Link} to="/domains/new">
               + Domain
             </Button>
           </Grid>
@@ -153,7 +188,7 @@ class Index extends Component {
             </Button>
           </Grid>
         </Grid>
-      </div>
+      </Wrapper>
     );
 
     if (loading) {
@@ -182,7 +217,8 @@ const enhance = compose(
   withRoot,
   withStyles(styles),
   connect(mapStateToProps, {
-    getAll
+    getAll,
+    deleteDomain
   })
 );
 

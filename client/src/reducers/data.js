@@ -1,4 +1,4 @@
-import { SET_DOMAINS } from "../actions/domains";
+import { SET_DOMAINS, ADD_DOMAIN, REMOVE_DOMAIN } from "../actions/domains";
 import { SET_ACCOUNTS } from "../actions/accounts";
 import { SET_ALIASES } from "../actions/aliases";
 import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
@@ -12,11 +12,27 @@ const initialState = {
   accounts: [],
   aliases: [],
   tlspolicies: [],
-  loading: false
+  loading: false,
+  dataLoaded: false
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case ADD_DOMAIN:
+      return {
+        ...state,
+        domains: [
+          ...state.domains,
+          {
+            ...action.domain
+          }
+        ]
+      };
+    case REMOVE_DOMAIN:
+      return {
+        ...state,
+        domains: state.domains.filter(d => d.id !== action.id)
+      };
     case SET_DOMAINS:
       return {
         ...state,
@@ -49,7 +65,8 @@ export default (state = initialState, action) => {
     case DATA_LOADING_END:
       return {
         ...state,
-        loading: false
+        loading: false,
+        dataLoaded: true
       };
     default:
       return state;

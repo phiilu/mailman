@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import AppBar from "material-ui/AppBar";
@@ -14,7 +15,11 @@ import { logout } from "../../actions/authentication";
 
 const styles = {
   flex: {
-    flex: 1
+    flex: 1,
+    "& > *": {
+      textDecoration: "none",
+      color: "white"
+    }
   }
 };
 
@@ -25,7 +30,7 @@ class Navigation extends Component {
       <AppBar position="static">
         <Toolbar>
           <Typography type="title" color="inherit" className={classes.flex}>
-            Mailman
+            <Link to="/">Mailman</Link>
           </Typography>
           {token && (
             <Button color="contrast" onClick={() => logout()}>
