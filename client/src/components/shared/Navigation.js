@@ -6,8 +6,6 @@ import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
 import Button from "material-ui/Button";
-import IconButton from "material-ui/IconButton";
-import MenuIcon from "material-ui-icons/Menu";
 import { withStyles } from "material-ui/styles";
 
 import compose from "lodash/fp/compose";
@@ -17,10 +15,6 @@ import { logout } from "../../actions/authentication";
 const styles = {
   flex: {
     flex: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
   }
 };
 
@@ -30,15 +24,8 @@ class Navigation extends Component {
     return (
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            color="contrast"
-            aria-label="Menu"
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography type="title" color="inherit" className={classes.flex}>
-            M
+            Mailman
           </Typography>
           {token && (
             <Button color="contrast" onClick={() => logout()}>

@@ -3,13 +3,16 @@ import { SET_ACCOUNTS } from "../actions/accounts";
 import { SET_ALIASES } from "../actions/aliases";
 import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
 
+import { DATA_LOADING_START, DATA_LOADING_END } from "../actions/data";
+
 import { LOGOUT } from "../actions/authentication";
 
 const initialState = {
   domains: [],
   accounts: [],
   aliases: [],
-  tlspolicies: []
+  tlspolicies: [],
+  loading: false
 };
 
 export default (state = initialState, action) => {
@@ -34,11 +37,20 @@ export default (state = initialState, action) => {
         ...state,
         tlspolicies: action.tlspolicies
       };
-    case LOGOUT: {
+    case LOGOUT:
       return {
         ...initialState
       };
-    }
+    case DATA_LOADING_START:
+      return {
+        ...state,
+        loading: true
+      };
+    case DATA_LOADING_END:
+      return {
+        ...state,
+        loading: false
+      };
     default:
       return state;
   }

@@ -3,8 +3,6 @@ import React, { Component } from "react";
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 
-import isEmpty from "lodash/isEmpty";
-
 class LoginForm extends Component {
   state = {
     fields: {
