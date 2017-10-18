@@ -8,13 +8,14 @@ import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 import store from "./store";
 
-import { setToken } from "./actions/authentication";
+import { loginAction } from "./actions/authentication";
 
 // login if there is a token
-const token = localStorage.getItem("token");
-if (token) {
-  store.dispatch(setToken(token));
-  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+const userJson = localStorage.getItem("user");
+if (userJson) {
+  const user = JSON.parse(userJson);
+  store.dispatch(loginAction(user));
+  axios.defaults.headers.common.Authorization = `Bearer ${user.token}`;
 }
 
 const app = (

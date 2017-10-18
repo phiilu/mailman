@@ -1,4 +1,4 @@
-import { SET_TOKEN, SET_EMAIL, SET_ADMIN } from "../actions/authentication";
+import { LOGIN, LOGOUT } from "../actions/authentication";
 
 const initialState = {
   email: "",
@@ -8,20 +8,14 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case SET_TOKEN:
+    case LOGIN:
       return {
         ...state,
-        token: action.token
+        ...action.user
       };
-    case SET_EMAIL:
+    case LOGOUT:
       return {
-        ...state,
-        email: action.email
-      };
-    case SET_ADMIN:
-      return {
-        ...state,
-        admin: action.admin
+        ...initialState
       };
     default:
       return state;

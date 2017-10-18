@@ -1,4 +1,5 @@
 import { SET_DOMAINS } from "../actions/domains";
+import { LOGOUT } from "../actions/authentication";
 
 const initialState = {
   domains: [],
@@ -14,6 +15,11 @@ export default (state = initialState, action) => {
         ...state,
         domains: action.domains
       };
+    case LOGOUT: {
+      return {
+        ...initialState
+      };
+    }
     default:
       return state;
   }
