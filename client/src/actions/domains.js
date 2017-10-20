@@ -3,6 +3,7 @@ import api from "../services/api";
 export const SET_DOMAINS = "SET_DOMAINS";
 export const ADD_DOMAIN = "ADD_DOMAIN";
 export const REMOVE_DOMAIN = "REMOVE_DOMAIN";
+export const SET_DOMAIN = "SET_DOMAIN";
 
 export const setDomains = domains => ({
   type: SET_DOMAINS,
@@ -19,6 +20,11 @@ export const removeDomain = id => ({
   id
 });
 
+export const setDomain = domain => ({
+  type: SET_DOMAIN,
+  domain
+});
+
 export const getDomains = () => async dispatch => {
   const { domains } = (await api.getDomains()).data;
   dispatch(setDomains(domains));
@@ -32,4 +38,9 @@ export const saveDomain = data => async dispatch => {
 export const deleteDomain = id => async dispatch => {
   await api.deleteDomain(id);
   dispatch(removeDomain(id));
+};
+
+export const updateDomain = (id, data) => async dispatch => {
+  const { domain } = (await api.updateDomain(id, data)).data;
+  dispatch(setDomain(domain));
 };

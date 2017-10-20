@@ -1,4 +1,9 @@
-import { SET_DOMAINS, ADD_DOMAIN, REMOVE_DOMAIN } from "../actions/domains";
+import {
+  SET_DOMAINS,
+  ADD_DOMAIN,
+  REMOVE_DOMAIN,
+  SET_DOMAIN
+} from "../actions/domains";
 import { SET_ACCOUNTS } from "../actions/accounts";
 import { SET_ALIASES } from "../actions/aliases";
 import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
@@ -27,6 +32,16 @@ export default (state = initialState, action) => {
             ...action.domain
           }
         ]
+      };
+    case SET_DOMAIN:
+      return {
+        ...state,
+        domains: state.domains.map(domain => {
+          if (domain.id === action.domain.id) {
+            return action.domain;
+          }
+          return domain;
+        })
       };
     case REMOVE_DOMAIN:
       return {

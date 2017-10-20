@@ -21,5 +21,8 @@ export default {
   },
   deleteDomain(id) {
     return axios.delete(`/api/domains/${id}`);
+  },
+  updateDomain(id, data) {
+    return axios.put(`/api/domains/${id}`, data);
   }
 };

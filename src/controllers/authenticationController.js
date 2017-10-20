@@ -28,9 +28,7 @@ class AuthenticationController {
     const account = (await Account.getAccount({ username, domain }))[0];
 
     if (!account) {
-      return res
-        .status(404)
-        .json({ message: `account with email ${email} not found` });
+      return res.status(401).json({ message: `credentials mismatch` });
     }
 
     // check passwords

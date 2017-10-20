@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
@@ -14,6 +15,14 @@ class DomainForm extends Component {
     submitting: false
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (!this.state.data.domain) {
+      this.setState({
+        data: { ...this.state.data, domain: nextProps.domain }
+      });
+    }
+  }
+
   handleChange = e => {
     this.setState({ data: { ...this.state.data, domain: e.target.value } });
   };
@@ -24,22 +33,37 @@ class DomainForm extends Component {
     this.props
       .submit(this.state.data)
       .then(data => {
-        this.setState({
-          error: "saved successfully",
-          data: { domain: "" },
-          submitting: false
-        });
+        if (this.props.update) {
+          this.setState({
+            error: "updated successfully",
+            submitting: false
+          });
+        } else {
+          this.setState({
+            error: "saved successfully",
+            data: { domain: "" },
+            submitting: false
+          });
+        }
       })
       .catch(error => {
-        this.setState({
-          error: error.response.data.message,
-          submitting: false
-        });
+        if (error.response) {
+          this.setState({
+            error: error.response.data.message,
+            submitting: false
+          });
+        } else if (error.message) {
+          this.setState({
+            error: error.message,
+            submitting: false
+          });
+        }
       });
   };
 
   render() {
     const { domain } = this.state.data;
+    const { update } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid container>
@@ -61,7 +85,7 @@ class DomainForm extends Component {
               type="submit"
               disabled={this.state.submitting}
             >
-              Save Domain
+              {update ? "Update Domain" : "Save Domain"}
             </Button>
           </Grid>
           <Grid item xs={12}>
@@ -72,5 +96,13 @@ class DomainForm extends Component {
     );
   }
 }
+
+DomainForm.propTypes = {
+  domain: PropTypes.string
+};
+
+DomainForm.defaultProps = {
+  domain: ""
+};
 
 export default DomainForm;

@@ -1,4 +1,6 @@
+/* eslint-disable */
 import React, { Component } from "react";
+import { createPortal } from "react-dom";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -22,6 +24,7 @@ import withRoot from "../components/hoc/withRoot";
 import Navigation from "../components/shared/Navigation";
 import Table from "../components/shared/Table";
 import Wrapper from "../components/shared/Wrapper";
+import Dialog from "../components/shared/Dialog";
 
 import Login from "./Login";
 
@@ -138,7 +141,10 @@ class Index extends Component {
   }
 
   deleteDomain = id => e => {
-    this.props.deleteDomain(id);
+    const result = confirm("Are you sure you want to delete this domain?");
+    if (result) {
+      this.props.deleteDomain(id);
+    }
   };
 
   render() {
