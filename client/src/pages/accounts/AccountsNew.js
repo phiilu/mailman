@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -8,10 +9,6 @@ import Typography from "material-ui/Typography";
 
 import { saveAccount } from "../../actions/accounts";
 
-import withRoot from "../../components/hoc/withRoot";
-
-import Navigation from "../../components/shared/Navigation";
-import Wrapper from "../../components/shared/Wrapper";
 import AccountForm from "../../components/forms/AccountForm";
 
 class AccountsNew extends Component {
@@ -20,24 +17,33 @@ class AccountsNew extends Component {
   };
 
   render() {
+    if (!this.props.isAdmin) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/"
+          }}
+        />
+      );
+    }
+
     return (
-      <div>
-        <Navigation />
-        <Wrapper>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography type="headline">Add Account</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <AccountForm submit={this.handleSubmit} />
-            </Grid>
-          </Grid>
-        </Wrapper>
-      </div>
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography type="headline">Add Account</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <AccountForm submit={this.handleSubmit} />
+        </Grid>
+      </Grid>
     );
   }
 }
 
-const enhance = compose(withRoot, connect(null, { saveAccount }));
+const mapStateToProps = state => ({
+  isAdmin: state.authentication.admin
+});
+
+const enhance = compose(connect(mapStateToProps, { saveAccount }));
 
 export default enhance(AccountsNew);

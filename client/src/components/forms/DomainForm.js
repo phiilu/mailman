@@ -1,10 +1,14 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
-
 import Grid from "material-ui/Grid";
+
+import { updateDomain } from "../../actions/domains";
+import { getAll } from "../../actions/data";
 
 class DomainForm extends Component {
   state = {
@@ -15,11 +19,16 @@ class DomainForm extends Component {
     submitting: false
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.state.data.domain) {
-      this.setState({
-        data: { ...this.state.data, domain: nextProps.domain }
-      });
+  async componentDidMount() {
+    if (this.props.domains.length === 0) {
+      await this.props.getAll();
+    }
+
+    const { id } = this.props.match.params;
+    const domain = this.props.domains.find(domain => domain.id === +id);
+
+    if (domain) {
+      this.setState({ data: { domain: domain.domain } });
     }
   }
 
@@ -97,12 +106,13 @@ class DomainForm extends Component {
   }
 }
 
-DomainForm.propTypes = {
-  domain: PropTypes.string
-};
+const mapStateToProps = state => ({
+  domains: state.data.domains
+});
 
-DomainForm.defaultProps = {
-  domain: ""
-};
+const enhance = compose(
+  withRouter,
+  connect(mapStateToProps, { updateDomain, getAll })
+);
 
-export default DomainForm;
+export default enhance(DomainForm);

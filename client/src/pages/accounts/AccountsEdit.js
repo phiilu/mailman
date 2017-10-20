@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -9,10 +9,6 @@ import Typography from "material-ui/Typography";
 
 import { updateAccount } from "../../actions/accounts";
 
-import withRoot from "../../components/hoc/withRoot";
-
-import Navigation from "../../components/shared/Navigation";
-import Wrapper from "../../components/shared/Wrapper";
 import AccountForm from "../../components/forms/AccountForm";
 
 class AccountsEdit extends Component {
@@ -23,24 +19,38 @@ class AccountsEdit extends Component {
   };
 
   render() {
+    const { id } = this.props.match.params;
+
+    if (!this.props.isAdmin) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/"
+          }}
+        />
+      );
+    }
+
     return (
-      <div>
-        <Navigation />
-        <Wrapper>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography type="headline">Update Account</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <AccountForm submit={this.handleSubmit} update />
-            </Grid>
-          </Grid>
-        </Wrapper>
-      </div>
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography type="headline">Update Account</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <AccountForm submit={this.handleSubmit} update />
+        </Grid>
+      </Grid>
     );
   }
 }
 
-const enhance = compose(withRoot, withRouter, connect(null, { updateAccount }));
+const mapStateToProps = state => ({
+  isAdmin: state.authentication.admin
+});
+
+const enhance = compose(
+  withRouter,
+  connect(mapStateToProps, { updateAccount })
+);
 
 export default enhance(AccountsEdit);

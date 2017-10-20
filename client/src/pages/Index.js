@@ -20,8 +20,6 @@ import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
 import { deleteAccount } from "../actions/accounts";
 
-import withRoot from "../components/hoc/withRoot";
-
 import Navigation from "../components/shared/Navigation";
 import Table from "../components/shared/Table";
 import Wrapper from "../components/shared/Wrapper";
@@ -186,45 +184,43 @@ class Index extends Component {
     const { token } = this.props.authentication;
 
     let content = (
-      <Wrapper>
-        <Grid container spacing={24}>
-          <Grid item xs={12}>
-            <Typography type="headline">Domains</Typography>
-            <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
-            <br />
-            <Button raised color="primary" component={Link} to="/domains/new">
-              + Domain
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography type="headline">Accounts</Typography>
-            <AccountTable
-              accounts={accounts}
-              deleteAccount={this.deleteAccount}
-            />
-            <br />
-            <Button raised color="primary" component={Link} to="/accounts/new">
-              + Account
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography type="headline">Aliases</Typography>
-            <AliasTable aliases={aliases} />
-            <br />
-            <Button raised color="primary">
-              + Alias
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography type="headline">TLS Policies</Typography>
-            <TlsPolicyTable tlspolicies={tlspolicies} />
-            <br />
-            <Button raised color="primary">
-              + TLS Policy
-            </Button>
-          </Grid>
+      <Grid container spacing={24}>
+        <Grid item xs={12}>
+          <Typography type="headline">Domains</Typography>
+          <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
+          <br />
+          <Button raised color="primary" component={Link} to="/domains/new">
+            + Domain
+          </Button>
         </Grid>
-      </Wrapper>
+        <Grid item xs={12}>
+          <Typography type="headline">Accounts</Typography>
+          <AccountTable
+            accounts={accounts}
+            deleteAccount={this.deleteAccount}
+          />
+          <br />
+          <Button raised color="primary" component={Link} to="/accounts/new">
+            + Account
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography type="headline">Aliases</Typography>
+          <AliasTable aliases={aliases} />
+          <br />
+          <Button raised color="primary">
+            + Alias
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography type="headline">TLS Policies</Typography>
+          <TlsPolicyTable tlspolicies={tlspolicies} />
+          <br />
+          <Button raised color="primary">
+            + TLS Policy
+          </Button>
+        </Grid>
+      </Grid>
     );
 
     if (loading) {
@@ -235,12 +231,7 @@ class Index extends Component {
       );
     }
 
-    return (
-      <div>
-        <Navigation />
-        {token ? content : <Login />}
-      </div>
-    );
+    return token ? content : <Login />;
   }
 }
 
@@ -250,7 +241,6 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
-  withRoot,
   withStyles(styles),
   connect(mapStateToProps, {
     getAll,

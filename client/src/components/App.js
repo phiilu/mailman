@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
+
+import PrivateRoute from "./shared/PrivateRoute";
+import RouteWithLayout from "./shared/RouteWithLayout";
+
+import withRoot from "./hoc/withRoot";
 
 import Index from "../pages/Index";
 import DomainsNew from "../pages/domains/DomainsNew";
@@ -11,11 +16,17 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={Index} />
-        <Route path="/domains/new" component={DomainsNew} />
-        <Route path="/domains/:id/edit" component={DomainsEdit} />
-        <Route path="/accounts/new" component={AccountsNew} />
-        <Route path="/accounts/:id/edit" component={AccountsEdit} />
+        <RouteWithLayout exact path="/" component={withRoot(Index)} />
+        <PrivateRoute path="/domains/new" component={withRoot(DomainsNew)} />
+        <PrivateRoute
+          path="/domains/:id/edit"
+          component={withRoot(DomainsEdit)}
+        />
+        <PrivateRoute path="/accounts/new" component={withRoot(AccountsNew)} />
+        <PrivateRoute
+          path="/accounts/:id/edit"
+          component={withRoot(AccountsEdit)}
+        />
       </Switch>
     );
   }
