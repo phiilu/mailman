@@ -18,6 +18,7 @@ import EditIcon from "material-ui-icons/Edit";
 
 import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
+import { deleteAccount } from "../actions/accounts";
 
 import withRoot from "../components/hoc/withRoot";
 
@@ -78,9 +79,10 @@ const DomainTable = withStyles(styles)(({ domains, classes, deleteDomain }) => {
   );
 });
 
-const AccountTable = ({ accounts }) => {
+const AccountTable = withStyles(
+  styles
+)(({ accounts, classes, deleteAccount }) => {
   const headers = ["Email", "Quota", "Enabled", "Sendonly"];
-
   return (
     <Table headers={headers}>
       {accounts.map(a => (
@@ -90,12 +92,30 @@ const AccountTable = ({ accounts }) => {
           </TableCell>
           <TableCell>{a.quota}</TableCell>
           <TableCell>{a.enabled}</TableCell>
-          <TableCell>{a.sendonly}</TableCell>
+          <TableCell className={classes.tableCell}>
+            {a.sendonly}
+            <span>
+              <IconButton
+                aria-label="Edit"
+                to={`/accounts/${a.id}/edit`}
+                component={Link}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label="Delete"
+                className={classes.deleteIcon}
+                onClick={deleteAccount(a.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </TableCell>
         </TableRow>
       ))}
     </Table>
   );
-};
+});
 
 const AliasTable = ({ aliases }) => {
   const headers = ["Source Email", "Destination Email", "Enabled"];
@@ -147,6 +167,13 @@ class Index extends Component {
     }
   };
 
+  deleteAccount = id => e => {
+    const result = confirm("Are you sure you want to delete this account?");
+    if (result) {
+      this.props.deleteAccount(id);
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -171,9 +198,12 @@ class Index extends Component {
           </Grid>
           <Grid item xs={12}>
             <Typography type="headline">Accounts</Typography>
-            <AccountTable accounts={accounts} />
+            <AccountTable
+              accounts={accounts}
+              deleteAccount={this.deleteAccount}
+            />
             <br />
-            <Button raised color="primary">
+            <Button raised color="primary" component={Link} to="/accounts/new">
               + Account
             </Button>
           </Grid>
@@ -224,7 +254,8 @@ const enhance = compose(
   withStyles(styles),
   connect(mapStateToProps, {
     getAll,
-    deleteDomain
+    deleteDomain,
+    deleteAccount
   })
 );
 

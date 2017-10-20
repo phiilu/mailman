@@ -7,15 +7,6 @@ export default {
   getDomains() {
     return axios.get("/api/domains");
   },
-  getAccounts() {
-    return axios.get("/api/accounts");
-  },
-  getAliases() {
-    return axios.get("/api/aliases");
-  },
-  getTlsPolicies() {
-    return axios.get("/api/tlspolicies");
-  },
   saveDomain(data) {
     return axios.post("/api/domains", data);
   },
@@ -24,5 +15,23 @@ export default {
   },
   updateDomain(id, data) {
     return axios.put(`/api/domains/${id}`, data);
+  },
+  saveAccount(data) {
+    return axios.post("/api/accounts", data);
+  },
+  deleteAccount(id) {
+    return axios.delete(`/api/accounts/${id}`);
+  },
+  updateAccount(id, data) {
+    return axios.put(`/api/accounts/${id}`, data);
+  },
+  getAccounts() {
+    return axios.get("/api/accounts");
+  },
+  getAliases() {
+    return axios.get("/api/aliases");
+  },
+  getTlsPolicies() {
+    return axios.get("/api/tlspolicies");
   }
 };

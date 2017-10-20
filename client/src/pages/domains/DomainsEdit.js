@@ -7,7 +7,8 @@ import compose from "lodash/fp/compose";
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
 
-import { updateDomain, getDomains } from "../../actions/domains";
+import { updateDomain } from "../../actions/domains";
+import { getAll } from "../../actions/data";
 
 import withRoot from "../../components/hoc/withRoot";
 
@@ -22,7 +23,7 @@ class DomainsNew extends Component {
 
   async componentDidMount() {
     if (this.props.domains.length === 0) {
-      await this.props.getDomains();
+      await this.props.getAll();
     }
 
     const { id } = this.props.match.params;
@@ -68,7 +69,7 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withRoot,
   withRouter,
-  connect(mapStateToProps, { updateDomain, getDomains })
+  connect(mapStateToProps, { updateDomain, getAll })
 );
 
 export default enhance(DomainsNew);

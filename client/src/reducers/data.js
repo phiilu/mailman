@@ -4,7 +4,12 @@ import {
   REMOVE_DOMAIN,
   SET_DOMAIN
 } from "../actions/domains";
-import { SET_ACCOUNTS } from "../actions/accounts";
+import {
+  SET_ACCOUNTS,
+  ADD_ACCOUNT,
+  REMOVE_ACCOUNT,
+  SET_ACCOUNT
+} from "../actions/accounts";
 import { SET_ALIASES } from "../actions/aliases";
 import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
 
@@ -57,6 +62,31 @@ export default (state = initialState, action) => {
       return {
         ...state,
         accounts: action.accounts
+      };
+    case ADD_ACCOUNT:
+      return {
+        ...state,
+        accounts: [
+          ...state.accounts,
+          {
+            ...action.account
+          }
+        ]
+      };
+    case REMOVE_ACCOUNT:
+      return {
+        ...state,
+        accounts: state.accounts.filter(d => d.id !== action.id)
+      };
+    case SET_ACCOUNT:
+      return {
+        ...state,
+        accounts: state.accounts.map(account => {
+          if (account.id === action.account.id) {
+            return action.account;
+          }
+          return account;
+        })
       };
     case SET_ALIASES:
       return {

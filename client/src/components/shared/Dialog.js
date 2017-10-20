@@ -27,7 +27,7 @@ export default class AlertDialog extends React.Component {
   };
 
   render() {
-    const { open, title, content, agreeButton, disagreeButton } = this.props;
+    const { title, content, agreeButton, disagreeButton } = this.props;
     return (
       <Dialog
         open={this.state.open}

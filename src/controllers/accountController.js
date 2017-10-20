@@ -105,7 +105,7 @@ class AccountController {
     if (!updatedAccount)
       return res.status(404).json({ message: "account not found" });
 
-    res.json({ updatedAccount });
+    res.json({ account: updatedAccount });
   }
 
   async delete(req, res) {
