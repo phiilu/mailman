@@ -11,6 +11,7 @@ import DomainsNew from "../pages/domains/DomainsNew";
 import DomainsEdit from "../pages/domains/DomainsEdit";
 import AccountsNew from "../pages/accounts/AccountsNew";
 import AccountsEdit from "../pages/accounts/AccountsEdit";
+import AliasesNew from "../pages/aliases/AliasesNew";
 
 class App extends Component {
   render() {
@@ -27,6 +28,7 @@ class App extends Component {
           path="/accounts/:id/edit"
           component={withRoot(AccountsEdit)}
         />
+        <PrivateRoute path="/aliases/new" component={withRoot(AliasesNew)} />
       </Switch>
     );
   }

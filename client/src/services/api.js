@@ -31,6 +31,12 @@ export default {
   getAliases() {
     return axios.get("/api/aliases");
   },
+  deleteAlias(id) {
+    return axios.delete(`/api/aliases/${id}`);
+  },
+  saveAlias(data) {
+    return axios.post("/api/aliases", data);
+  },
   getTlsPolicies() {
     return axios.get("/api/tlspolicies");
   }

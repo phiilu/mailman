@@ -10,7 +10,12 @@ import {
   REMOVE_ACCOUNT,
   SET_ACCOUNT
 } from "../actions/accounts";
-import { SET_ALIASES } from "../actions/aliases";
+import {
+  SET_ALIASES,
+  ADD_ALIAS,
+  REMOVE_ALIAS,
+  SET_ALIAS
+} from "../actions/aliases";
 import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
 
 import { DATA_LOADING_START, DATA_LOADING_END } from "../actions/data";
@@ -92,6 +97,31 @@ export default (state = initialState, action) => {
       return {
         ...state,
         aliases: action.aliases
+      };
+    case ADD_ALIAS:
+      return {
+        ...state,
+        aliases: [
+          ...state.aliases,
+          {
+            ...action.alias
+          }
+        ]
+      };
+    case REMOVE_ALIAS:
+      return {
+        ...state,
+        aliases: state.aliases.filter(a => a.id !== action.id)
+      };
+    case SET_ALIAS:
+      return {
+        ...state,
+        aliases: state.aliases.map(alias => {
+          if (alias.id === action.alias.id) {
+            return action.alias;
+          }
+          return alias;
+        })
       };
     case SET_TLS_POLICIES:
       return {

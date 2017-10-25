@@ -19,6 +19,7 @@ import EditIcon from "material-ui-icons/Edit";
 import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
 import { deleteAccount } from "../actions/accounts";
+import { deleteAlias } from "../actions/aliases";
 
 import Navigation from "../components/shared/Navigation";
 import Table from "../components/shared/Table";
@@ -115,7 +116,7 @@ const AccountTable = withStyles(
   );
 });
 
-const AliasTable = ({ aliases }) => {
+const AliasTable = withStyles(styles)(({ aliases, classes, deleteAlias }) => {
   const headers = ["Source Email", "Destination Email", "Enabled"];
 
   return (
@@ -128,12 +129,30 @@ const AliasTable = ({ aliases }) => {
           <TableCell>
             {a.destination_username}@{a.destination_domain}
           </TableCell>
-          <TableCell>{a.enabled}</TableCell>
+          <TableCell className={classes.tableCell}>
+            {a.enabled}
+            <span>
+              <IconButton
+                aria-label="Edit"
+                to={`/alises/${a.id}/edit`}
+                component={Link}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label="Delete"
+                className={classes.deleteIcon}
+                onClick={deleteAlias(a.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </TableCell>
         </TableRow>
       ))}
     </Table>
   );
-};
+});
 
 const TlsPolicyTable = ({ tlspolicies }) => {
   const headers = ["Domain", "Params", "Policy"];
@@ -172,6 +191,13 @@ class Index extends Component {
     }
   };
 
+  deleteAlias = id => e => {
+    const result = confirm("Are you sure you want to delete this alias?");
+    if (result) {
+      this.props.deleteAlias(id);
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -206,15 +232,19 @@ class Index extends Component {
         </Grid>
         <Grid item xs={12}>
           <Typography type="headline">Aliases</Typography>
-          <AliasTable aliases={aliases} />
+          <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
           <br />
-          <Button raised color="primary">
+          <Button raised color="primary" component={Link} to="/aliases/new">
             + Alias
           </Button>
         </Grid>
         <Grid item xs={12}>
           <Typography type="headline">TLS Policies</Typography>
-          <TlsPolicyTable tlspolicies={tlspolicies} />
+          <TlsPolicyTable
+            tlspolicies={tlspolicies}
+            component={Link}
+            to="/tlspolicies/new"
+          />
           <br />
           <Button raised color="primary">
             + TLS Policy
@@ -245,7 +275,8 @@ const enhance = compose(
   connect(mapStateToProps, {
     getAll,
     deleteDomain,
-    deleteAccount
+    deleteAccount,
+    deleteAlias
   })
 );
 
