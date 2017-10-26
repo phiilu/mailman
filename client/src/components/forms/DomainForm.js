@@ -6,9 +6,16 @@ import { withRouter } from "react-router-dom";
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 import Grid from "material-ui/Grid";
+import { withStyles } from "material-ui/styles";
 
 import { updateDomain } from "../../actions/domains";
 import { getAll } from "../../actions/data";
+
+const styles = {
+  textfield: {
+    width: "100%"
+  }
+};
 
 class DomainForm extends Component {
   state = {
@@ -72,7 +79,7 @@ class DomainForm extends Component {
 
   render() {
     const { domain } = this.state.data;
-    const { update } = this.props;
+    const { update, classes } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid container>
@@ -85,6 +92,7 @@ class DomainForm extends Component {
               value={domain}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>
@@ -111,6 +119,7 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
+  withStyles(styles),
   withRouter,
   connect(mapStateToProps, { updateDomain, getAll })
 );

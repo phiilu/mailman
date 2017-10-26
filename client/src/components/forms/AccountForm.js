@@ -17,8 +17,8 @@ import Grid from "material-ui/Grid";
 import { getAll } from "../../actions/data";
 
 const styles = {
-  select: {
-    minWidth: "167px"
+  textfield: {
+    width: "100%"
   }
 };
 
@@ -145,10 +145,11 @@ class AccountForm extends Component {
               value={username}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl className={classes.select}>
+            <FormControl className={classes.textfield}>
               <InputLabel htmlFor="domains">Domain</InputLabel>
               <Select
                 name="domain"
@@ -173,6 +174,7 @@ class AccountForm extends Component {
               value={password || ""}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>
@@ -185,6 +187,7 @@ class AccountForm extends Component {
               value={quota}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>

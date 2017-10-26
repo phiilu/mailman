@@ -16,8 +16,8 @@ import Grid from "material-ui/Grid";
 import { getAll } from "../../actions/data";
 
 const styles = {
-  select: {
-    minWidth: "167px"
+  textfield: {
+    width: "100%"
   }
 };
 
@@ -118,16 +118,18 @@ class TlsPolicyForm extends Component {
               value={domain}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl className={classes.select}>
+            <FormControl className={classes.textfield}>
               <InputLabel htmlFor="policies">Policy</InputLabel>
               <Select
                 name="policy"
                 value={policy}
                 onChange={this.handleChangeSelect}
                 input={<Input id="policies" />}
+                className={classes.textfield}
               >
                 <MenuItem value="dane">
                   <em>dane</em>
@@ -156,6 +158,7 @@ class TlsPolicyForm extends Component {
               value={params}
               onChange={this.handleChange}
               margin="normal"
+              className={classes.textfield}
             />
           </Grid>
           <Grid item xs={12}>

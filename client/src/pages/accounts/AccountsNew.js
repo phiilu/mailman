@@ -6,10 +6,26 @@ import compose from "lodash/fp/compose";
 
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
+import Paper from "material-ui/Paper";
+import { withStyles } from "material-ui/styles";
 
 import { saveAccount } from "../../actions/accounts";
 
 import AccountForm from "../../components/forms/AccountForm";
+
+const styles = {
+  header: {
+    padding: "1em",
+    borderBottom: "1px solid #eee"
+  },
+  body: {
+    padding: "0 1em"
+  },
+  paper: {
+    maxWidth: "450px",
+    margin: "2em auto"
+  }
+};
 
 class AccountsNew extends Component {
   handleSubmit = data => {
@@ -17,7 +33,9 @@ class AccountsNew extends Component {
   };
 
   render() {
-    if (!this.props.isAdmin) {
+    const { isAdmin, classes } = this.props;
+
+    if (!isAdmin) {
       return (
         <Redirect
           to={{
@@ -28,14 +46,20 @@ class AccountsNew extends Component {
     }
 
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography type="headline">Add Account</Typography>
+      <Paper className={classes.paper}>
+        <Grid container>
+          <Grid item xs={12}>
+            <div className={classes.header}>
+              <Typography type="headline">Add Account</Typography>
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <div className={classes.body}>
+              <AccountForm submit={this.handleSubmit} update />
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <AccountForm submit={this.handleSubmit} />
-        </Grid>
-      </Grid>
+      </Paper>
     );
   }
 }
@@ -44,6 +68,9 @@ const mapStateToProps = state => ({
   isAdmin: state.authentication.admin
 });
 
-const enhance = compose(connect(mapStateToProps, { saveAccount }));
+const enhance = compose(
+  withStyles(styles),
+  connect(mapStateToProps, { saveAccount })
+);
 
 export default enhance(AccountsNew);

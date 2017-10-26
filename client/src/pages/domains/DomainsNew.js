@@ -6,10 +6,26 @@ import compose from "lodash/fp/compose";
 
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
+import Paper from "material-ui/Paper";
+import { withStyles } from "material-ui/styles";
 
 import { saveDomain } from "../../actions/domains";
 
 import DomainForm from "../../components/forms/DomainForm";
+
+const styles = {
+  header: {
+    padding: "1em",
+    borderBottom: "1px solid #eee"
+  },
+  body: {
+    padding: "0 1em"
+  },
+  paper: {
+    maxWidth: "450px",
+    margin: "2em auto"
+  }
+};
 
 class DomainsNew extends Component {
   handleSubmit = data => {
@@ -17,7 +33,9 @@ class DomainsNew extends Component {
   };
 
   render() {
-    if (!this.props.isAdmin) {
+    const { classes, isAdmin } = this.props;
+
+    if (!isAdmin) {
       return (
         <Redirect
           to={{
@@ -28,14 +46,20 @@ class DomainsNew extends Component {
     }
 
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography type="headline">Add Domain</Typography>
+      <Paper className={classes.paper}>
+        <Grid container>
+          <Grid item xs={12}>
+            <div className={classes.header}>
+              <Typography type="headline">Add Domain</Typography>
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <div className={classes.body}>
+              <DomainForm submit={this.handleSubmit} />
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <DomainForm submit={this.handleSubmit} />
-        </Grid>
-      </Grid>
+      </Paper>
     );
   }
 }
@@ -44,6 +68,9 @@ const mapStateToProps = state => ({
   isAdmin: state.authentication.admin
 });
 
-const enhance = compose(connect(mapStateToProps, { saveDomain }));
+const enhance = compose(
+  withStyles(styles),
+  connect(mapStateToProps, { saveDomain })
+);
 
 export default enhance(DomainsNew);
