@@ -19,8 +19,6 @@ class AccountsEdit extends Component {
   };
 
   render() {
-    const { id } = this.props.match.params;
-
     if (!this.props.isAdmin) {
       return (
         <Redirect

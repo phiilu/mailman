@@ -37,7 +37,19 @@ export default {
   saveAlias(data) {
     return axios.post("/api/aliases", data);
   },
+  updateAlias(id, data) {
+    return axios.put(`/api/aliases/${id}`, data);
+  },
   getTlsPolicies() {
     return axios.get("/api/tlspolicies");
+  },
+  deleteTlsPolicy(id) {
+    return axios.delete(`/api/tlspolicies/${id}`);
+  },
+  saveTlsPolicy(data) {
+    return axios.post("/api/tlspolicies", data);
+  },
+  updateTlsPolicy(id, data) {
+    return axios.put(`/api/tlspolicies/${id}`, data);
   }
 };

@@ -42,6 +42,5 @@ export const deleteAccount = id => async dispatch => {
 
 export const updateAccount = (id, data) => async dispatch => {
   const { account } = (await api.updateAccount(id, data)).data;
-  console.log(account);
   dispatch(setAccount(account));
 };

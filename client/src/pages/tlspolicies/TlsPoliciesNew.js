@@ -1,19 +1,19 @@
 import React, { Component } from "react";
-import { compose } from "redux";
 import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+
+import compose from "lodash/fp/compose";
 
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
 
-import { updateDomain } from "../../actions/domains";
+import { saveTlsPolicy } from "../../actions/tlsPolicies";
 
-import DomainForm from "../../components/forms/DomainForm";
+import TlsPolicyForm from "../../components/forms/TlsPolicyForm";
 
-class DomainsEdit extends Component {
+class TlsPoliciesNew extends Component {
   handleSubmit = data => {
-    const { id } = this.props.match.params;
-    return this.props.updateDomain(id, data);
+    return this.props.saveTlsPolicy(data);
   };
 
   render() {
@@ -30,10 +30,10 @@ class DomainsEdit extends Component {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Typography type="headline">Edit Domain</Typography>
+          <Typography type="headline">Add TLS Policy</Typography>
         </Grid>
         <Grid item xs={12}>
-          <DomainForm submit={this.handleSubmit} update />
+          <TlsPolicyForm submit={this.handleSubmit} />
         </Grid>
       </Grid>
     );
@@ -44,6 +44,6 @@ const mapStateToProps = state => ({
   isAdmin: state.authentication.admin
 });
 
-const enhance = compose(withRouter, connect(mapStateToProps, { updateDomain }));
+const enhance = compose(connect(mapStateToProps, { saveTlsPolicy }));
 
-export default enhance(DomainsEdit);
+export default enhance(TlsPoliciesNew);

@@ -20,6 +20,7 @@ import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
 import { deleteAccount } from "../actions/accounts";
 import { deleteAlias } from "../actions/aliases";
+import { deleteTlsPolicy } from "../actions/tlsPolicies";
 
 import Navigation from "../components/shared/Navigation";
 import Table from "../components/shared/Table";
@@ -134,7 +135,7 @@ const AliasTable = withStyles(styles)(({ aliases, classes, deleteAlias }) => {
             <span>
               <IconButton
                 aria-label="Edit"
-                to={`/alises/${a.id}/edit`}
+                to={`/aliases/${a.id}/edit`}
                 component={Link}
               >
                 <EditIcon />
@@ -154,7 +155,9 @@ const AliasTable = withStyles(styles)(({ aliases, classes, deleteAlias }) => {
   );
 });
 
-const TlsPolicyTable = ({ tlspolicies }) => {
+const TlsPolicyTable = withStyles(
+  styles
+)(({ tlspolicies, classes, deleteTlsPolicy }) => {
   const headers = ["Domain", "Params", "Policy"];
 
   return (
@@ -163,12 +166,30 @@ const TlsPolicyTable = ({ tlspolicies }) => {
         <TableRow key={t.id}>
           <TableCell>{t.domain}</TableCell>
           <TableCell>{t.params}</TableCell>
-          <TableCell>{t.policy}</TableCell>
+          <TableCell className={classes.tableCell}>
+            {t.policy}
+            <span>
+              <IconButton
+                aria-label="Edit"
+                to={`/tlspolicies/${t.id}/edit`}
+                component={Link}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                aria-label="Delete"
+                className={classes.deleteIcon}
+                onClick={deleteTlsPolicy(t.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </TableCell>
         </TableRow>
       ))}
     </Table>
   );
-};
+});
 
 class Index extends Component {
   componentDidMount() {
@@ -195,6 +216,13 @@ class Index extends Component {
     const result = confirm("Are you sure you want to delete this alias?");
     if (result) {
       this.props.deleteAlias(id);
+    }
+  };
+
+  deleteTlsPolicy = id => e => {
+    const result = confirm("Are you sure you want to delete this TLS Policy?");
+    if (result) {
+      this.props.deleteTlsPolicy(id);
     }
   };
 
@@ -242,11 +270,10 @@ class Index extends Component {
           <Typography type="headline">TLS Policies</Typography>
           <TlsPolicyTable
             tlspolicies={tlspolicies}
-            component={Link}
-            to="/tlspolicies/new"
+            deleteTlsPolicy={this.deleteTlsPolicy}
           />
           <br />
-          <Button raised color="primary">
+          <Button raised color="primary" component={Link} to="/tlspolicies/new">
             + TLS Policy
           </Button>
         </Grid>
@@ -276,7 +303,8 @@ const enhance = compose(
     getAll,
     deleteDomain,
     deleteAccount,
-    deleteAlias
+    deleteAlias,
+    deleteTlsPolicy
   })
 );
 

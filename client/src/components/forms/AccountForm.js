@@ -38,6 +38,14 @@ class AccountForm extends Component {
 
   async componentDidMount() {
     if (this.props.domains.length === 0) await this.props.getAll();
+    if (this.props.domains.length > 0) {
+      this.setState({
+        data: {
+          ...this.state.data,
+          domain: this.props.domains[0].domain
+        }
+      });
+    }
 
     const { id } = this.props.match.params;
     const account = this.props.accounts.find(account => account.id === +id);
@@ -64,7 +72,6 @@ class AccountForm extends Component {
   };
 
   handleChangeSelect = e => {
-    console.log(e.target.name, e.target.value);
     this.setState({
       data: { ...this.state.data, domain: e.target.value }
     });
@@ -149,9 +156,6 @@ class AccountForm extends Component {
                 onChange={this.handleChangeSelect}
                 input={<Input id="domains" />}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
                 {this.props.domains.map(domain => (
                   <MenuItem key={domain.id} value={domain.domain}>
                     {domain.domain}
@@ -166,7 +170,7 @@ class AccountForm extends Component {
               label="Password"
               name="password"
               type="password"
-              value={password}
+              value={password || ""}
               onChange={this.handleChange}
               margin="normal"
             />

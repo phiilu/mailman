@@ -39,3 +39,8 @@ export const saveAlias = data => async dispatch => {
   const { alias } = (await api.saveAlias(data)).data;
   dispatch(addAlias(alias));
 };
+
+export const updateAlias = (id, data) => async dispatch => {
+  const { alias } = (await api.updateAlias(id, data)).data;
+  dispatch(setAlias(alias));
+};

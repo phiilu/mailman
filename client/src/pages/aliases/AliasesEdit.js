@@ -1,19 +1,20 @@
 import React, { Component } from "react";
-import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter, Redirect } from "react-router-dom";
+
+import compose from "lodash/fp/compose";
 
 import Grid from "material-ui/Grid";
 import Typography from "material-ui/Typography";
 
-import { updateDomain } from "../../actions/domains";
+import { updateAlias } from "../../actions/aliases";
 
-import DomainForm from "../../components/forms/DomainForm";
+import AliasForm from "../../components/forms/AliasForm";
 
-class DomainsEdit extends Component {
+class AliasesEdit extends Component {
   handleSubmit = data => {
     const { id } = this.props.match.params;
-    return this.props.updateDomain(id, data);
+    return this.props.updateAlias(id, data);
   };
 
   render() {
@@ -30,10 +31,10 @@ class DomainsEdit extends Component {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Typography type="headline">Edit Domain</Typography>
+          <Typography type="headline">Update Alias</Typography>
         </Grid>
         <Grid item xs={12}>
-          <DomainForm submit={this.handleSubmit} update />
+          <AliasForm submit={this.handleSubmit} update />
         </Grid>
       </Grid>
     );
@@ -44,6 +45,6 @@ const mapStateToProps = state => ({
   isAdmin: state.authentication.admin
 });
 
-const enhance = compose(withRouter, connect(mapStateToProps, { updateDomain }));
+const enhance = compose(withRouter, connect(mapStateToProps, { updateAlias }));
 
-export default enhance(DomainsEdit);
+export default enhance(AliasesEdit);

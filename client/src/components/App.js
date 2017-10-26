@@ -12,6 +12,9 @@ import DomainsEdit from "../pages/domains/DomainsEdit";
 import AccountsNew from "../pages/accounts/AccountsNew";
 import AccountsEdit from "../pages/accounts/AccountsEdit";
 import AliasesNew from "../pages/aliases/AliasesNew";
+import AliasesEdit from "../pages/aliases/AliasesEdit";
+import TlsPoliciesNew from "../pages/tlspolicies/TlsPoliciesNew";
+import TlsPoliciesEdit from "../pages/tlspolicies/TlsPoliciesEdit";
 
 class App extends Component {
   render() {
@@ -29,6 +32,18 @@ class App extends Component {
           component={withRoot(AccountsEdit)}
         />
         <PrivateRoute path="/aliases/new" component={withRoot(AliasesNew)} />
+        <PrivateRoute
+          path="/aliases/:id/edit"
+          component={withRoot(AliasesEdit)}
+        />
+        <PrivateRoute
+          path="/tlspolicies/new"
+          component={withRoot(TlsPoliciesNew)}
+        />
+        <PrivateRoute
+          path="/tlspolicies/:id/edit"
+          component={withRoot(TlsPoliciesEdit)}
+        />
       </Switch>
     );
   }

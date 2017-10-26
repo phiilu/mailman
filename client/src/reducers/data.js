@@ -16,7 +16,12 @@ import {
   REMOVE_ALIAS,
   SET_ALIAS
 } from "../actions/aliases";
-import { SET_TLS_POLICIES } from "../actions/tlsPolicies";
+import {
+  SET_TLS_POLICIES,
+  ADD_TLS_POLICY,
+  REMOVE_TLS_POLICY,
+  SET_TLS_POLICY
+} from "../actions/tlsPolicies";
 
 import { DATA_LOADING_START, DATA_LOADING_END } from "../actions/data";
 
@@ -127,6 +132,31 @@ export default (state = initialState, action) => {
       return {
         ...state,
         tlspolicies: action.tlspolicies
+      };
+    case ADD_TLS_POLICY:
+      return {
+        ...state,
+        tlspolicies: [
+          ...state.tlspolicies,
+          {
+            ...action.tlspolicy
+          }
+        ]
+      };
+    case REMOVE_TLS_POLICY:
+      return {
+        ...state,
+        tlspolicies: state.tlspolicies.filter(a => a.id !== action.id)
+      };
+    case SET_TLS_POLICY:
+      return {
+        ...state,
+        tlspolicies: state.tlspolicies.map(tlspolicy => {
+          if (tlspolicy.id === action.tlspolicy.id) {
+            return action.tlspolicy;
+          }
+          return tlspolicy;
+        })
       };
     case LOGOUT:
       return {

@@ -41,7 +41,7 @@ class TlsPolicyController {
         .status(403)
         .json({ message: "only admins are allowed to create tls policies" });
 
-    if (!domain || !policy || !params)
+    if (!domain || !policy)
       return res.status(400).json({ message: "parameters are missing" });
 
     const id = (await TlsPolicy.createTlsPolicy({ domain, policy, params }))[0];
@@ -85,7 +85,7 @@ class TlsPolicyController {
         .status(403)
         .json({ message: "only admins are allowed to delete tls policies" });
 
-    const rowsDeleted = await TlsPolicy.deleteAlias(id);
+    const rowsDeleted = await TlsPolicy.deleteTlsPolicy(id);
     if (rowsDeleted === 0)
       return res.status(404).json({ message: "tlspolicy not found" });
     return res.status(204).end();

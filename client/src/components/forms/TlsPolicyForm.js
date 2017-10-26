@@ -8,9 +8,8 @@ import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormControlLabel } from "material-ui/Form";
+import { FormControl } from "material-ui/Form";
 import Select from "material-ui/Select";
-import Switch from "material-ui/Switch";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
 
@@ -22,40 +21,32 @@ const styles = {
   }
 };
 
-class AccountForm extends Component {
+class TlsPolicyForm extends Component {
   state = {
     data: {
-      source_username: "",
-      source_domain: "",
-      destination: "",
-      enabled: true
+      domain: "",
+      params: "",
+      policy: "dane"
     },
     error: "",
     submitting: false
   };
 
   async componentDidMount() {
-    if (this.props.domains.length === 0) await this.props.getAll();
-    if (this.props.domains.length > 0) {
-      this.setState({
-        data: {
-          ...this.state.data,
-          source_domain: this.props.domains[0].domain
-        }
-      });
-    }
+    if (this.props.tlspolicies.length === 0) await this.props.getAll();
 
     const { id } = this.props.match.params;
-    const alias = this.props.aliases.find(alias => alias.id === +id);
+    const tlsPolicy = this.props.tlspolicies.find(
+      tlsPolicy => tlsPolicy.id === +id
+    );
 
-    if (alias) {
+    if (tlsPolicy) {
       this.setState({
         data: {
           ...this.state.data,
-          source_username: alias.source_username,
-          source_domain: alias.source_domain,
-          destination: `${alias.destination_username}@${alias.destination_domain}`,
-          enabled: alias.enabled === "1"
+          domain: tlsPolicy.domain,
+          params: tlsPolicy.params,
+          policy: tlsPolicy.policy
         }
       });
     }
@@ -69,30 +60,15 @@ class AccountForm extends Component {
 
   handleChangeSelect = e => {
     this.setState({
-      data: { ...this.state.data, source_domain: e.target.value }
+      data: { ...this.state.data, policy: e.target.value }
     });
   };
 
   handleSubmit = e => {
     e.preventDefault();
     this.setState({ submitting: true });
-
-    const {
-      source_username,
-      source_domain,
-      enabled,
-      destination
-    } = this.state.data;
-    const [destination_username, destination_domain] = destination.split("@");
-
     this.props
-      .submit({
-        source_username,
-        source_domain,
-        destination_username,
-        destination_domain,
-        enabled
-      })
+      .submit(this.state.data)
       .then(data => {
         if (this.props.update) {
           this.setState({
@@ -104,9 +80,9 @@ class AccountForm extends Component {
             error: "saved successfully",
             data: {
               ...this.state.data,
-              source_username: "",
-              destination: "",
-              enabled: true
+              domain: "",
+              params: "",
+              policy: "dane"
             },
             submitting: false
           });
@@ -128,67 +104,58 @@ class AccountForm extends Component {
   };
 
   render() {
-    const {
-      source_username,
-      source_domain,
-      destination,
-      enabled
-    } = this.state.data;
+    const { domain, params, policy } = this.state.data;
     const { update, classes } = this.props;
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid container>
           <Grid item xs={12}>
             <TextField
-              id="username"
-              label="Username"
-              name="source_username"
-              placeholder="user"
-              value={source_username}
+              id="domain"
+              label="Domain"
+              name="domain"
+              placeholder="google.com"
+              value={domain}
               onChange={this.handleChange}
               margin="normal"
             />
           </Grid>
           <Grid item xs={12}>
             <FormControl className={classes.select}>
-              <InputLabel htmlFor="domains">Domain</InputLabel>
+              <InputLabel htmlFor="policies">Policy</InputLabel>
               <Select
-                name="source_domain"
-                value={source_domain}
+                name="policy"
+                value={policy}
                 onChange={this.handleChangeSelect}
-                input={<Input id="domains" />}
+                input={<Input id="policies" />}
               >
-                {this.props.domains.map(domain => (
-                  <MenuItem key={domain.id} value={domain.domain}>
-                    {domain.domain}
-                  </MenuItem>
-                ))}
+                <MenuItem value="dane">
+                  <em>dane</em>
+                </MenuItem>
+                <MenuItem value="dane-only">
+                  <em>dane-only</em>
+                </MenuItem>
+                <MenuItem value="fingerprint">
+                  <em>fingerprint</em>
+                </MenuItem>
+                <MenuItem value="verify">
+                  <em>verify</em>
+                </MenuItem>
+                <MenuItem value="secure">
+                  <em>secure</em>
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
           <Grid item xs={12}>
             <TextField
-              id="destination"
-              label="Destination Email"
-              name="destination"
-              type="email"
-              value={destination}
+              id="params"
+              label="Params"
+              name="params"
+              placeholder="match=.some.domain"
+              value={params}
               onChange={this.handleChange}
               margin="normal"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={enabled}
-                  onChange={(event, checked) =>
-                    this.setState({
-                      data: { ...this.state.data, enabled: checked }
-                    })}
-                />
-              }
-              label="Enabled"
             />
           </Grid>
           <Grid item xs={12}>
@@ -198,7 +165,7 @@ class AccountForm extends Component {
               type="submit"
               disabled={this.state.submitting}
             >
-              {update ? "Update Alias" : "Save Alias"}
+              {update ? "Update TLS Policy" : "Save TLS Policy"}
             </Button>
           </Grid>
           <Grid item xs={12}>
@@ -210,19 +177,16 @@ class AccountForm extends Component {
   }
 }
 
-AccountForm.propTypes = {
-  domain: PropTypes.string,
+TlsPolicyForm.propTypes = {
   update: PropTypes.bool
 };
 
-AccountForm.defaultProps = {
-  domain: "",
+TlsPolicyForm.defaultProps = {
   update: false
 };
 
 const mapStateToProps = state => ({
-  domains: state.data.domains,
-  aliases: state.data.aliases
+  tlspolicies: state.data.tlspolicies
 });
 
 const enhance = compose(
@@ -231,4 +195,4 @@ const enhance = compose(
   connect(mapStateToProps, { getAll })
 );
 
-export default enhance(AccountForm);
+export default enhance(TlsPolicyForm);
