@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "backpack",
     "build": "backpack build && cd client && npm run build && cd -",
-    "start": "NODE_ENV=production node build/main.js"
+    "start": "NODE_ENV=production pm2 start ecosystem.config.js"
   },
   "author": "Florian Kapfenberger <florian@kapfenbgerger.me>",
   "license": "MIT",
