@@ -4,8 +4,6 @@ import { Switch } from "react-router-dom";
 import PrivateRoute from "./shared/PrivateRoute";
 import RouteWithLayout from "./shared/RouteWithLayout";
 
-import withRoot from "./hoc/withRoot";
-
 import Index from "../pages/Index";
 import DomainsNew from "../pages/domains/DomainsNew";
 import DomainsEdit from "../pages/domains/DomainsEdit";
@@ -20,29 +18,17 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <RouteWithLayout exact path="/" component={withRoot(Index)} />
-        <PrivateRoute path="/domains/new" component={withRoot(DomainsNew)} />
-        <PrivateRoute
-          path="/domains/:id/edit"
-          component={withRoot(DomainsEdit)}
-        />
-        <PrivateRoute path="/accounts/new" component={withRoot(AccountsNew)} />
-        <PrivateRoute
-          path="/accounts/:id/edit"
-          component={withRoot(AccountsEdit)}
-        />
-        <PrivateRoute path="/aliases/new" component={withRoot(AliasesNew)} />
-        <PrivateRoute
-          path="/aliases/:id/edit"
-          component={withRoot(AliasesEdit)}
-        />
-        <PrivateRoute
-          path="/tlspolicies/new"
-          component={withRoot(TlsPoliciesNew)}
-        />
+        <RouteWithLayout exact path="/" component={Index} />
+        <PrivateRoute path="/domains/new" component={DomainsNew} />
+        <PrivateRoute path="/domains/:id/edit" component={DomainsEdit} />
+        <PrivateRoute path="/accounts/new" component={AccountsNew} />
+        <PrivateRoute path="/accounts/:id/edit" component={AccountsEdit} />
+        <PrivateRoute path="/aliases/new" component={AliasesNew} />
+        <PrivateRoute path="/aliases/:id/edit" component={AliasesEdit} />
+        <PrivateRoute path="/tlspolicies/new" component={TlsPoliciesNew} />
         <PrivateRoute
           path="/tlspolicies/:id/edit"
-          component={withRoot(TlsPoliciesEdit)}
+          component={TlsPoliciesEdit}
         />
       </Switch>
     );

@@ -13,8 +13,6 @@ import compose from "lodash/fp/compose";
 
 import { logout } from "../../actions/authentication";
 
-import withRoot from "../hoc/withRoot";
-
 const styles = {
   flex: {
     flex: 1,
@@ -54,7 +52,6 @@ const mapStateToProps = state => ({
 });
 
 const enhance = compose(
-  withRoot,
   withStyles(styles),
   connect(mapStateToProps, { logout })
 );

@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "backpack",
-    "build": "backpack build",
-    "start": "node build/main.js"
+    "build": "backpack build && cd client && npm run build && cd -",
+    "start": "NODE_ENV=production node build/main.js"
   },
   "author": "Florian Kapfenberger <florian@kapfenbgerger.me>",
   "license": "MIT",
@@ -24,5 +24,9 @@
     "mariasql": "^0.2.6",
     "morgan": "^1.9.0",
     "sha512crypt-node": "^0.1.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-react": "^6.24.1"
   }
 }
