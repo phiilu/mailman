@@ -7,14 +7,10 @@ import { Link } from "react-router-dom";
 import compose from "lodash/fp/compose";
 
 import Grid from "material-ui/Grid";
-import { TableCell, TableRow } from "material-ui/Table";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 import Button from "material-ui/Button";
 import { CircularProgress } from "material-ui/Progress";
-import IconButton from "material-ui/IconButton";
-import DeleteIcon from "material-ui-icons/Delete";
-import EditIcon from "material-ui-icons/Edit";
 
 import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
@@ -23,9 +19,13 @@ import { deleteAlias } from "../actions/aliases";
 import { deleteTlsPolicy } from "../actions/tlsPolicies";
 
 import Navigation from "../components/shared/Navigation";
-import Table from "../components/shared/Table";
 import Wrapper from "../components/shared/Wrapper";
 import Dialog from "../components/shared/Dialog";
+
+import DomainTable from "../components/DomainTable";
+import AccountTable from "../components/AccountTable";
+import AliasTable from "../components/AliasTable";
+import TlsPolicyTable from "../components/TlsPolicyTable";
 
 import Login from "./Login";
 
@@ -36,160 +36,8 @@ const styles = {
     height: "calc(100vh - 64px)",
     justifyContent: "center",
     alignItems: "center"
-  },
-  tableCell: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  deleteIcon: {
-    color: "#FF6347"
   }
 };
-
-const DomainTable = withStyles(styles)(({ domains, classes, deleteDomain }) => {
-  const headers = ["Domain"];
-
-  return (
-    <Table headers={headers}>
-      {domains.map(d => (
-        <TableRow key={d.id}>
-          <TableCell className={classes.tableCell}>
-            {d.domain}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/domains/${d.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteDomain(d.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
-        </TableRow>
-      ))}
-    </Table>
-  );
-});
-
-const AccountTable = withStyles(
-  styles
-)(({ accounts, classes, deleteAccount }) => {
-  const headers = ["Email", "Quota", "Enabled", "Sendonly"];
-  return (
-    <Table headers={headers}>
-      {accounts.map(a => (
-        <TableRow key={a.id}>
-          <TableCell>
-            {a.username}@{a.domain}
-          </TableCell>
-          <TableCell>{a.quota}</TableCell>
-          <TableCell>{a.enabled}</TableCell>
-          <TableCell className={classes.tableCell}>
-            {a.sendonly}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/accounts/${a.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteAccount(a.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
-        </TableRow>
-      ))}
-    </Table>
-  );
-});
-
-const AliasTable = withStyles(styles)(({ aliases, classes, deleteAlias }) => {
-  const headers = ["Source Email", "Destination Email", "Enabled"];
-
-  return (
-    <Table headers={headers}>
-      {aliases.map(a => (
-        <TableRow key={a.id}>
-          <TableCell>
-            {a.source_username}@{a.source_domain}
-          </TableCell>
-          <TableCell>
-            {a.destination_username}@{a.destination_domain}
-          </TableCell>
-          <TableCell className={classes.tableCell}>
-            {a.enabled}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/aliases/${a.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteAlias(a.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
-        </TableRow>
-      ))}
-    </Table>
-  );
-});
-
-const TlsPolicyTable = withStyles(
-  styles
-)(({ tlspolicies, classes, deleteTlsPolicy }) => {
-  const headers = ["Domain", "Params", "Policy"];
-
-  return (
-    <Table headers={headers}>
-      {tlspolicies.map(t => (
-        <TableRow key={t.id}>
-          <TableCell>{t.domain}</TableCell>
-          <TableCell>{t.params}</TableCell>
-          <TableCell className={classes.tableCell}>
-            {t.policy}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/tlspolicies/${t.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteTlsPolicy(t.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
-        </TableRow>
-      ))}
-    </Table>
-  );
-});
 
 class Index extends Component {
   componentDidMount() {
@@ -235,50 +83,72 @@ class Index extends Component {
       tlspolicies,
       loading
     } = this.props.data;
-    const { token } = this.props.authentication;
+    const { token, admin, email } = this.props.authentication;
 
-    let content = (
-      <Grid container spacing={24}>
-        <Grid item xs={12}>
-          <Typography type="headline">Domains</Typography>
-          <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
-          <br />
-          <Button raised color="primary" component={Link} to="/domains/new">
-            + Domain
-          </Button>
+    let content;
+
+    if (admin) {
+      content = (
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <Typography type="headline">Domains</Typography>
+            <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
+            <br />
+            <Button raised color="primary" component={Link} to="/domains/new">
+              + Domain
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography type="headline">Accounts</Typography>
+            <AccountTable
+              accounts={accounts}
+              deleteAccount={this.deleteAccount}
+            />
+            <br />
+            <Button raised color="primary" component={Link} to="/accounts/new">
+              + Account
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography type="headline">Aliases</Typography>
+            <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
+            <br />
+            <Button raised color="primary" component={Link} to="/aliases/new">
+              + Alias
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography type="headline">TLS Policies</Typography>
+            <TlsPolicyTable
+              tlspolicies={tlspolicies}
+              deleteTlsPolicy={this.deleteTlsPolicy}
+            />
+            <br />
+            <Button
+              raised
+              color="primary"
+              component={Link}
+              to="/tlspolicies/new"
+            >
+              + TLS Policy
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Typography type="headline">Accounts</Typography>
-          <AccountTable
-            accounts={accounts}
-            deleteAccount={this.deleteAccount}
-          />
-          <br />
-          <Button raised color="primary" component={Link} to="/accounts/new">
-            + Account
-          </Button>
+      );
+    } else {
+      content = (
+        <Grid container spacing={24}>
+          <Grid item xs={12}>
+            <Typography type="headline">{email}</Typography>
+            <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
+            <br />
+            <Button raised color="primary" component={Link} to="/aliases/new">
+              + Alias
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Typography type="headline">Aliases</Typography>
-          <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
-          <br />
-          <Button raised color="primary" component={Link} to="/aliases/new">
-            + Alias
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography type="headline">TLS Policies</Typography>
-          <TlsPolicyTable
-            tlspolicies={tlspolicies}
-            deleteTlsPolicy={this.deleteTlsPolicy}
-          />
-          <br />
-          <Button raised color="primary" component={Link} to="/tlspolicies/new">
-            + TLS Policy
-          </Button>
-        </Grid>
-      </Grid>
-    );
+      );
+    }
 
     if (loading) {
       content = (

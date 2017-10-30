@@ -9,6 +9,16 @@ class Alias {
       .orderBy("source_username", "asc");
   }
 
+  async getAliasesForEmail(email) {
+    const [source_username, source_domain] = email.split("@");
+    return await db
+      .select()
+      .from("aliases")
+      .where({ source_username, source_domain })
+      .orderBy("source_domain", "asc")
+      .orderBy("source_username", "asc");
+  }
+
   async getAlias(id) {
     return await db
       .select()

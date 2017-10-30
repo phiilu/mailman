@@ -5,13 +5,13 @@ import { isAdmin } from "../helpers/authorizationHelper";
 
 class AliasController {
   async index(req, res) {
-    if (!isAdmin(req.user.email))
-      return res
-        .status(403)
-        .json({ message: "only admins are allowed to view all aliases" });
-
-    const aliases = await Alias.getAliases();
-    res.json({ aliases });
+    if (isAdmin(req.user.email)) {
+      const aliases = await Alias.getAliases();
+      res.json({ aliases });
+    } else {
+      const aliases = await Alias.getAliasesForEmail(req.user.email);
+      res.json({ aliases });
+    }
   }
 
   async show(req, res) {
