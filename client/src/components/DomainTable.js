@@ -24,29 +24,35 @@ const DomainTable = ({ domains, classes, deleteDomain }) => {
 
   return (
     <Table headers={headers}>
-      {domains.map(d => (
-        <TableRow key={d.id}>
-          <TableCell className={classes.tableCell}>
-            {d.domain}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/domains/${d.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteDomain(d.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
+      {domains.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={headers.length}>No Domains</TableCell>
         </TableRow>
-      ))}
+      ) : (
+        domains.map(d => (
+          <TableRow key={d.id}>
+            <TableCell className={classes.tableCell}>
+              {d.domain}
+              <span>
+                <IconButton
+                  aria-label="Edit"
+                  to={`/domains/${d.id}/edit`}
+                  component={Link}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="Delete"
+                  className={classes.deleteIcon}
+                  onClick={deleteDomain(d.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
     </Table>
   );
 };

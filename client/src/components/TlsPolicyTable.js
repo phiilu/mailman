@@ -24,31 +24,37 @@ const TlsPolicyTable = ({ tlspolicies, classes, deleteTlsPolicy }) => {
 
   return (
     <Table headers={headers}>
-      {tlspolicies.map(t => (
-        <TableRow key={t.id}>
-          <TableCell>{t.domain}</TableCell>
-          <TableCell>{t.params}</TableCell>
-          <TableCell className={classes.tableCell}>
-            {t.policy}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/tlspolicies/${t.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteTlsPolicy(t.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
+      {tlspolicies.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={headers.length}>No TLS Policies</TableCell>
         </TableRow>
-      ))}
+      ) : (
+        tlspolicies.map(t => (
+          <TableRow key={t.id}>
+            <TableCell>{t.domain}</TableCell>
+            <TableCell>{t.params}</TableCell>
+            <TableCell className={classes.tableCell}>
+              {t.policy}
+              <span>
+                <IconButton
+                  aria-label="Edit"
+                  to={`/tlspolicies/${t.id}/edit`}
+                  component={Link}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="Delete"
+                  className={classes.deleteIcon}
+                  onClick={deleteTlsPolicy(t.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
     </Table>
   );
 };

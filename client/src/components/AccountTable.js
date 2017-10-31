@@ -23,34 +23,40 @@ const AccountTable = ({ accounts, classes, deleteAccount }) => {
   const headers = ["Email", "Quota", "Enabled", "Sendonly"];
   return (
     <Table headers={headers}>
-      {accounts.map(a => (
-        <TableRow key={a.id}>
-          <TableCell>
-            {a.username}@{a.domain}
-          </TableCell>
-          <TableCell>{a.quota}</TableCell>
-          <TableCell>{a.enabled}</TableCell>
-          <TableCell className={classes.tableCell}>
-            {a.sendonly}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/accounts/${a.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteAccount(a.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
+      {accounts.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={headers.length}>No Accounts</TableCell>
         </TableRow>
-      ))}
+      ) : (
+        accounts.map(a => (
+          <TableRow key={a.id}>
+            <TableCell>
+              {a.username}@{a.domain}
+            </TableCell>
+            <TableCell>{a.quota}</TableCell>
+            <TableCell>{a.enabled}</TableCell>
+            <TableCell className={classes.tableCell}>
+              {a.sendonly}
+              <span>
+                <IconButton
+                  aria-label="Edit"
+                  to={`/accounts/${a.id}/edit`}
+                  component={Link}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="Delete"
+                  className={classes.deleteIcon}
+                  onClick={deleteAccount(a.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
     </Table>
   );
 };
