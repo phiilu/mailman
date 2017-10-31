@@ -9,7 +9,7 @@ import { withStyles } from "material-ui/styles";
 const styles = theme => ({
   paper: {
     maxWidth: "400px",
-    margin: "3em auto"
+    margin: "100px auto"
   },
   header: {
     padding: "2em 0",

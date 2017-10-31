@@ -11,6 +11,7 @@ import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 import Button from "material-ui/Button";
 import { CircularProgress } from "material-ui/Progress";
+import { toast } from "react-toastify";
 
 import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
@@ -28,6 +29,8 @@ import AliasTable from "../components/AliasTable";
 import TlsPolicyTable from "../components/TlsPolicyTable";
 
 import Login from "./Login";
+
+import { handleRequestError } from "../util";
 
 const styles = {
   progress: {
@@ -51,31 +54,55 @@ class Index extends Component {
     }
   }
 
-  deleteDomain = id => e => {
+  deleteDomain = id => async e => {
     const result = confirm("Are you sure you want to delete this domain?");
     if (result) {
-      this.props.deleteDomain(id);
+      try {
+        await this.props.deleteDomain(id);
+        toast.success("Deleted domain successfully 🔥");
+      } catch (error) {
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+      }
     }
   };
 
-  deleteAccount = id => e => {
+  deleteAccount = id => async e => {
     const result = confirm("Are you sure you want to delete this account?");
     if (result) {
-      this.props.deleteAccount(id);
+      try {
+        await this.props.deleteAccount(id);
+        toast.success("Deleted account successfully 🔥");
+      } catch (error) {
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+      }
     }
   };
 
-  deleteAlias = id => e => {
+  deleteAlias = id => async e => {
     const result = confirm("Are you sure you want to delete this alias?");
     if (result) {
-      this.props.deleteAlias(id);
+      try {
+        await this.props.deleteAlias(id);
+        toast.success("Deleted alias successfully 🔥");
+      } catch (error) {
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+      }
     }
   };
 
-  deleteTlsPolicy = id => e => {
+  deleteTlsPolicy = id => async e => {
     const result = confirm("Are you sure you want to delete this TLS Policy?");
     if (result) {
-      this.props.deleteTlsPolicy(id);
+      try {
+        await this.props.deleteTlsPolicy(id);
+        toast.success("Deleted TLS Policy successfully 🔥");
+      } catch (error) {
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+      }
     }
   };
 
@@ -99,7 +126,7 @@ class Index extends Component {
             <Typography type="headline">Domains</Typography>
             <DomainTable domains={domains} deleteDomain={this.deleteDomain} />
             <br />
-            <Button raised color="primary" component={Link} to="/domains/new">
+            <Button raised color="accent" component={Link} to="/domains/new">
               + Domain
             </Button>
           </Grid>
@@ -110,7 +137,7 @@ class Index extends Component {
               deleteAccount={this.deleteAccount}
             />
             <br />
-            <Button raised color="primary" component={Link} to="/accounts/new">
+            <Button raised color="accent" component={Link} to="/accounts/new">
               + Account
             </Button>
           </Grid>
@@ -118,7 +145,7 @@ class Index extends Component {
             <Typography type="headline">Aliases</Typography>
             <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
             <br />
-            <Button raised color="primary" component={Link} to="/aliases/new">
+            <Button raised color="accent" component={Link} to="/aliases/new">
               + Alias
             </Button>
           </Grid>
@@ -131,7 +158,7 @@ class Index extends Component {
             <br />
             <Button
               raised
-              color="primary"
+              color="accent"
               component={Link}
               to="/tlspolicies/new"
             >

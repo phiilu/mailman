@@ -13,8 +13,10 @@ import Select from "material-ui/Select";
 import Switch from "material-ui/Switch";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
+import { toast } from "react-toastify";
 
 import { getAll } from "../../actions/data";
+import { handleRequestError } from "../../util";
 
 const styles = {
   textfield: {
@@ -84,8 +86,8 @@ class AccountForm extends Component {
       .submit(this.state.data)
       .then(data => {
         if (this.props.update) {
+          toast.success("Updated successfully 💥");
           this.setState({
-            error: "updated successfully",
             data: {
               ...this.state.data,
               password: ""
@@ -93,8 +95,8 @@ class AccountForm extends Component {
             submitting: false
           });
         } else {
+          toast.success("Saved successfully 💥");
           this.setState({
-            error: "saved successfully",
             data: {
               ...this.state.data,
               username: "",
@@ -109,17 +111,11 @@ class AccountForm extends Component {
         }
       })
       .catch(error => {
-        if (error.response) {
-          this.setState({
-            error: error.response.data.message,
-            submitting: false
-          });
-        } else if (error.message) {
-          this.setState({
-            error: error.message,
-            submitting: false
-          });
-        }
+        const { message } = handleRequestError(error);
+        this.setState({
+          submitting: false
+        });
+        toast.error("Error: " + message);
       });
   };
 

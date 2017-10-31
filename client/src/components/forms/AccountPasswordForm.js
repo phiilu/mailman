@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import yup from "yup";
+import { toast } from "react-toastify";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
@@ -12,6 +13,7 @@ import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
 
 import { getAll } from "../../actions/data";
+import { handleRequestError } from "../../util";
 
 const styles = {
   textfield: {
@@ -40,10 +42,6 @@ const schema = yup.object().shape({
 });
 
 class AccountPasswordForm extends Component {
-  state = {
-    error: ""
-  };
-
   render() {
     const { classes } = this.props;
 
@@ -60,21 +58,12 @@ class AccountPasswordForm extends Component {
             .submit(values)
             .then(data => {
               resetForm();
-              this.setState({
-                error: ""
-              });
+              toast.success("Password changed successfully 💥");
             })
             .catch(error => {
               setSubmitting(false);
-              if (error.response) {
-                this.setState({
-                  error: error.response.data.message
-                });
-              } else if (error.message) {
-                this.setState({
-                  error: error.message
-                });
-              }
+              const { message } = handleRequestError(error);
+              toast.error("Error: " + message);
             });
         }}
       >
@@ -153,9 +142,6 @@ class AccountPasswordForm extends Component {
                 >
                   Change Password
                 </Button>
-              </Grid>
-              <Grid item xs={12}>
-                {this.state.error}
               </Grid>
             </Grid>
           </form>

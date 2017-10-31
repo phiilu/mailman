@@ -12,8 +12,10 @@ import { FormControl } from "material-ui/Form";
 import Select from "material-ui/Select";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
+import { toast } from "react-toastify";
 
 import { getAll } from "../../actions/data";
+import { handleRequestError } from "../../util";
 
 const styles = {
   textfield: {
@@ -28,7 +30,6 @@ class TlsPolicyForm extends Component {
       params: "",
       policy: "dane"
     },
-    error: "",
     submitting: false
   };
 
@@ -71,13 +72,13 @@ class TlsPolicyForm extends Component {
       .submit(this.state.data)
       .then(data => {
         if (this.props.update) {
+          toast.success("Updated successfully 💥");
           this.setState({
-            error: "updated successfully",
             submitting: false
           });
         } else {
+          toast.success("Saved successfully 💥");
           this.setState({
-            error: "saved successfully",
             data: {
               ...this.state.data,
               domain: "",
@@ -89,17 +90,11 @@ class TlsPolicyForm extends Component {
         }
       })
       .catch(error => {
-        if (error.response) {
-          this.setState({
-            error: error.response.data.message,
-            submitting: false
-          });
-        } else if (error.message) {
-          this.setState({
-            error: error.message,
-            submitting: false
-          });
-        }
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+        this.setState({
+          submitting: false
+        });
       });
   };
 
@@ -170,9 +165,6 @@ class TlsPolicyForm extends Component {
             >
               {update ? "Update TLS Policy" : "Save TLS Policy"}
             </Button>
-          </Grid>
-          <Grid item xs={12}>
-            {this.state.error}
           </Grid>
         </Grid>
       </form>

@@ -7,9 +7,11 @@ import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 import Grid from "material-ui/Grid";
 import { withStyles } from "material-ui/styles";
+import { toast } from "react-toastify";
 
 import { updateDomain } from "../../actions/domains";
 import { getAll } from "../../actions/data";
+import { handleRequestError } from "../../util";
 
 const styles = {
   textfield: {
@@ -22,7 +24,6 @@ class DomainForm extends Component {
     data: {
       domain: ""
     },
-    error: "",
     submitting: false
   };
 
@@ -50,30 +51,24 @@ class DomainForm extends Component {
       .submit(this.state.data)
       .then(data => {
         if (this.props.update) {
+          toast.success("Updated successfully 💥");
           this.setState({
-            error: "updated successfully",
             submitting: false
           });
         } else {
+          toast.success("Saved successfully 💥");
           this.setState({
-            error: "saved successfully",
             data: { domain: "" },
             submitting: false
           });
         }
       })
       .catch(error => {
-        if (error.response) {
-          this.setState({
-            error: error.response.data.message,
-            submitting: false
-          });
-        } else if (error.message) {
-          this.setState({
-            error: error.message,
-            submitting: false
-          });
-        }
+        const { message } = handleRequestError(error);
+        toast.error("Error: " + message);
+        this.setState({
+          submitting: false
+        });
       });
   };
 
@@ -104,9 +99,6 @@ class DomainForm extends Component {
             >
               {update ? "Update Domain" : "Save Domain"}
             </Button>
-          </Grid>
-          <Grid item xs={12}>
-            {this.state.error}
           </Grid>
         </Grid>
       </form>
