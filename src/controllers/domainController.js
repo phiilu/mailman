@@ -5,11 +5,13 @@ import { isAdmin } from "../helpers/authorizationHelper";
 
 class DomainController {
   async index(req, res) {
-    if (!isAdmin(req.user.email))
-      return res.status(403).json({ message: "insufficient permission" });
-
-    const domains = await Domain.getDomains();
-    res.json({ domains });
+    if (isAdmin(req.user.email)) {
+      const domains = await Domain.getDomains();
+      res.json({ domains });
+    } else {
+      const domains = await Domain.getDomainsForEmail(req.user.email);
+      res.json({ domains });
+    }
   }
 
   async show(req, res) {

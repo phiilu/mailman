@@ -44,3 +44,7 @@ export const updateAccount = (id, data) => async dispatch => {
   const { account } = (await api.updateAccount(id, data)).data;
   dispatch(setAccount(account));
 };
+
+export const updateAccountPassword = (id, data) => async dispatch => {
+  await api.updateAccountPassword(id, data);
+};

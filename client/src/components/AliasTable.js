@@ -24,35 +24,41 @@ const AliasTable = ({ aliases, classes, deleteAlias }) => {
 
   return (
     <Table headers={headers}>
-      {aliases.map(a => (
-        <TableRow key={a.id}>
-          <TableCell>
-            {a.source_username}@{a.source_domain}
-          </TableCell>
-          <TableCell>
-            {a.destination_username}@{a.destination_domain}
-          </TableCell>
-          <TableCell className={classes.tableCell}>
-            {a.enabled}
-            <span>
-              <IconButton
-                aria-label="Edit"
-                to={`/aliases/${a.id}/edit`}
-                component={Link}
-              >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                aria-label="Delete"
-                className={classes.deleteIcon}
-                onClick={deleteAlias(a.id)}
-              >
-                <DeleteIcon />
-              </IconButton>
-            </span>
-          </TableCell>
+      {aliases.length === 0 ? (
+        <TableRow>
+          <TableCell colSpan={headers.length}>No Aliases</TableCell>
         </TableRow>
-      ))}
+      ) : (
+        aliases.map(a => (
+          <TableRow key={a.id}>
+            <TableCell>
+              {a.source_username}@{a.source_domain}
+            </TableCell>
+            <TableCell>
+              {a.destination_username}@{a.destination_domain}
+            </TableCell>
+            <TableCell className={classes.tableCell}>
+              {a.enabled}
+              <span>
+                <IconButton
+                  aria-label="Edit"
+                  to={`/aliases/${a.id}/edit`}
+                  component={Link}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="Delete"
+                  className={classes.deleteIcon}
+                  onClick={deleteAlias(a.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </span>
+            </TableCell>
+          </TableRow>
+        ))
+      )}
     </Table>
   );
 };

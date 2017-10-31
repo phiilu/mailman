@@ -13,4 +13,9 @@ AccountRouter.route("/:id")
   .put(asyncMiddleware(AccountController.update))
   .delete(asyncMiddleware(AccountController.delete));
 
+AccountRouter.put(
+  "/:id/password",
+  asyncMiddleware(AccountController.updatePassword)
+);
+
 export default AccountRouter;

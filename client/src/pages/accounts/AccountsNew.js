@@ -55,7 +55,7 @@ class AccountsNew extends Component {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.body}>
-              <AccountForm submit={this.handleSubmit} update />
+              <AccountForm submit={this.handleSubmit} />
             </div>
           </Grid>
         </Grid>

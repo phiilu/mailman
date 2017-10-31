@@ -5,13 +5,13 @@ import { isAdmin } from "../helpers/authorizationHelper";
 
 class AccountController {
   async index(req, res) {
-    if (!isAdmin(req.user.email))
-      return res
-        .status(403)
-        .json({ message: "only admins are allowed to view all accounts" });
-
-    const accounts = await Account.getAccounts();
-    res.json({ accounts });
+    if (isAdmin(req.user.email)) {
+      const accounts = await Account.getAccounts();
+      res.json({ accounts });
+    } else {
+      const accounts = await Account.getAccountsForEmail(req.user.email);
+      res.json({ accounts });
+    }
   }
 
   async show(req, res) {
@@ -120,6 +120,43 @@ class AccountController {
     if (rowsDeleted === 0)
       return res.status(404).json({ message: "account not found" });
     return res.status(204).end();
+  }
+
+  async updatePassword(req, res) {
+    const { id } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    const account = (await Account.getAccount({ id }))[0];
+    if (
+      !isAdmin(req.user.email) &&
+      `${account.username}@${account.domain}` !== req.user.email
+    )
+      return res.status(403).json({
+        message:
+          "only admins and the user himself are allowed to update the password"
+      });
+
+    if (!currentPassword || !newPassword)
+      return res.status(400).json({ message: "parameters are missing" });
+
+    if (newPassword.length < 8) {
+      return res
+        .status(421)
+        .json({ message: "new password must be at least 8 characters long" });
+    }
+
+    // check passwords
+    const authenticated = Account.comparePasswords(
+      currentPassword,
+      account.password
+    );
+
+    if (!authenticated) {
+      return res.status(401).json({ message: "current password is incorrect" });
+    }
+
+    await Account.updateAccount({ password: newPassword }, id);
+    res.json({ message: "password successfully changed" });
   }
 }
 

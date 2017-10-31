@@ -11,6 +11,16 @@ class Account {
       .orderBy("username", "asc");
   }
 
+  async getAccountsForEmail(email) {
+    const [username, domain] = email.split("@");
+    return await db
+      .select("id", "username", "domain", "quota", "enabled", "sendonly")
+      .from("accounts")
+      .where({ username, domain })
+      .orderBy("domain", "asc")
+      .orderBy("username", "asc");
+  }
+
   async getAccount(fields) {
     return await db
       .select()
@@ -58,6 +68,7 @@ class Account {
   comparePasswords(plainPassword, hashPassword) {
     const salt = this.getSaltFromHash(hashPassword);
     const plainPasswordHash = this.hashPassword(plainPassword, salt);
+
     return plainPasswordHash === hashPassword;
   }
 }

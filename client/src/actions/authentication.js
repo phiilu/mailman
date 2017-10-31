@@ -16,18 +16,15 @@ export const logoutAction = () => ({
 });
 
 export const login = data => async dispatch => {
-  const { token, admin } = (await api.login(data)).data;
+  const { token, admin, id } = (await api.login(data)).data;
   localStorage.setItem(
     "user",
-    JSON.stringify({ admin, token, email: data.email })
+    JSON.stringify({ admin, token, email: data.email, id })
   );
   axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-  dispatch(loginAction({ admin, token, email: data.email }));
-
-  if (admin) {
-    dispatch(getAll());
-  }
+  dispatch(loginAction({ admin, token, email: data.email, id }));
+  dispatch(getAll());
 };
 
 export const logout = () => dispatch => {

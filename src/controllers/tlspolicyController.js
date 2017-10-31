@@ -5,13 +5,12 @@ import { isAdmin } from "../helpers/authorizationHelper";
 
 class TlsPolicyController {
   async index(req, res) {
-    if (!isAdmin(req.user.email))
-      return res
-        .status(403)
-        .json({ message: "only admins are allowed to view all tls policies" });
-
-    const tlspolicies = await TlsPolicy.getTlsPolicies();
-    res.json({ tlspolicies });
+    if (isAdmin(req.user.email)) {
+      const tlspolicies = await TlsPolicy.getTlsPolicies();
+      res.json({ tlspolicies });
+    } else {
+      res.json({ tlspolicies: [] });
+    }
   }
 
   async show(req, res) {

@@ -40,7 +40,7 @@ class AuthenticationController {
 
     // generate JWT
     const token = await generateToken({ email });
-    res.json({ token, admin: isAdmin(email) });
+    res.json({ token, admin: isAdmin(email), id: account.id });
   }
 }
 

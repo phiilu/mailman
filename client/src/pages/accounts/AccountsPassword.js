@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -9,9 +9,9 @@ import Typography from "material-ui/Typography";
 import Paper from "material-ui/Paper";
 import { withStyles } from "material-ui/styles";
 
-import { saveTlsPolicy } from "../../actions/tlsPolicies";
+import { updateAccountPassword } from "../../actions/accounts";
 
-import TlsPolicyForm from "../../components/forms/TlsPolicyForm";
+import AccountPasswordForm from "../../components/forms/AccountPasswordForm";
 
 const styles = {
   header: {
@@ -27,15 +27,16 @@ const styles = {
   }
 };
 
-class TlsPoliciesNew extends Component {
+class AccountsPassword extends Component {
   handleSubmit = data => {
-    return this.props.saveTlsPolicy(data);
+    const { id } = this.props.match.params;
+    return this.props.updateAccountPassword(id, data);
   };
 
   render() {
-    const { isAdmin, classes } = this.props;
+    const { classes, match, id } = this.props;
 
-    if (!isAdmin) {
+    if (id !== +match.params.id) {
       return (
         <Redirect
           to={{
@@ -50,12 +51,12 @@ class TlsPoliciesNew extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography type="headline">Add TLS Policy</Typography>
+              <Typography type="headline">Change Password</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
             <div className={classes.body}>
-              <TlsPolicyForm submit={this.handleSubmit} />
+              <AccountPasswordForm submit={this.handleSubmit} />
             </div>
           </Grid>
         </Grid>
@@ -65,12 +66,13 @@ class TlsPoliciesNew extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAdmin: state.authentication.admin
+  id: state.authentication.id
 });
 
 const enhance = compose(
   withStyles(styles),
-  connect(mapStateToProps, { saveTlsPolicy })
+  withRouter,
+  connect(mapStateToProps, { updateAccountPassword })
 );
 
-export default enhance(TlsPoliciesNew);
+export default enhance(AccountsPassword);

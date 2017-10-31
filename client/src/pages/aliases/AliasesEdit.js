@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -34,17 +34,7 @@ class AliasesEdit extends Component {
   };
 
   render() {
-    const { isAdmin, classes } = this.props;
-
-    if (!isAdmin) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/"
-          }}
-        />
-      );
-    }
+    const { classes } = this.props;
 
     return (
       <Paper className={classes.paper}>
@@ -65,14 +55,10 @@ class AliasesEdit extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isAdmin: state.authentication.admin
-});
-
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { updateAlias })
+  connect(null, { updateAlias })
 );
 
 export default enhance(AliasesEdit);

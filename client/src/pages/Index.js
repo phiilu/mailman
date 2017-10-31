@@ -36,6 +36,11 @@ const styles = {
     height: "calc(100vh - 64px)",
     justifyContent: "center",
     alignItems: "center"
+  },
+  actions: {
+    "& > *": {
+      marginRight: "15px"
+    }
   }
 };
 
@@ -83,7 +88,7 @@ class Index extends Component {
       tlspolicies,
       loading
     } = this.props.data;
-    const { token, admin, email } = this.props.authentication;
+    const { token, admin, email, id } = this.props.authentication;
 
     let content;
 
@@ -142,9 +147,19 @@ class Index extends Component {
             <Typography type="headline">{email}</Typography>
             <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
             <br />
-            <Button raised color="primary" component={Link} to="/aliases/new">
-              + Alias
-            </Button>
+            <div className={classes.actions}>
+              <Button raised color="primary" component={Link} to="/aliases/new">
+                + Alias
+              </Button>
+              <Button
+                raised
+                color="accent"
+                component={Link}
+                to={`/accounts/${id}/password`}
+              >
+                Change Password
+              </Button>
+            </div>
           </Grid>
         </Grid>
       );

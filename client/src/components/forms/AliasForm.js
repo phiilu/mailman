@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import TextField from "material-ui/TextField";
@@ -40,7 +40,8 @@ class AccountForm extends Component {
       this.setState({
         data: {
           ...this.state.data,
-          source_domain: this.props.domains[0].domain
+          source_domain: this.props.domains[0].domain,
+          source_username: !this.props.isAdmin ? this.props.username : ""
         }
       });
     }
@@ -134,7 +135,21 @@ class AccountForm extends Component {
       destination,
       enabled
     } = this.state.data;
-    const { update, classes } = this.props;
+    const { update, classes, isAdmin, username, aliases } = this.props;
+    const exists = !!aliases.find(
+      alias => alias.id === +this.props.match.params.id
+    );
+
+    if (update && !isAdmin && !exists) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/"
+          }}
+        />
+      );
+    }
+
     return (
       <form onSubmit={this.handleSubmit}>
         <Grid container>
@@ -144,10 +159,11 @@ class AccountForm extends Component {
               label="Username"
               name="source_username"
               placeholder="user"
-              value={source_username}
+              value={isAdmin ? source_username : username}
               onChange={this.handleChange}
               margin="normal"
               className={classes.textfield}
+              disabled={!isAdmin}
             />
           </Grid>
           <Grid item xs={12}>
@@ -158,6 +174,7 @@ class AccountForm extends Component {
                 value={source_domain}
                 onChange={this.handleChangeSelect}
                 input={<Input id="domains" />}
+                disabled={!isAdmin}
               >
                 {this.props.domains.map(domain => (
                   <MenuItem key={domain.id} value={domain.domain}>
@@ -223,6 +240,9 @@ AccountForm.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  isAdmin: state.authentication.admin,
+  username: state.authentication.email.split("@")[0],
+  domain: state.authentication.email.split("@")[1],
   domains: state.data.domains,
   aliases: state.data.aliases
 });

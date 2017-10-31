@@ -25,6 +25,9 @@ export default {
   updateAccount(id, data) {
     return axios.put(`/api/accounts/${id}`, data);
   },
+  updateAccountPassword(id, data) {
+    return axios.put(`/api/accounts/${id}/password`, data);
+  },
   getAccounts() {
     return axios.get("/api/accounts");
   },

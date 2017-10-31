@@ -8,6 +8,15 @@ class Domain {
       .orderBy("domain", "asc");
   }
 
+  async getDomainsForEmail(email) {
+    const [, domain] = email.split("@");
+    return await db
+      .select()
+      .from("domains")
+      .where({ domain })
+      .orderBy("domain", "asc");
+  }
+
   async getDomain(id) {
     return await db
       .select()

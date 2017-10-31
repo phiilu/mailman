@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
@@ -33,17 +32,7 @@ class AliasesNew extends Component {
   };
 
   render() {
-    const { isAdmin, classes } = this.props;
-
-    if (!isAdmin) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/"
-          }}
-        />
-      );
-    }
+    const { classes } = this.props;
 
     return (
       <Paper className={classes.paper}>
@@ -55,7 +44,7 @@ class AliasesNew extends Component {
           </Grid>
           <Grid item xs={12}>
             <div className={classes.body}>
-              <AliasForm submit={this.handleSubmit} update />
+              <AliasForm submit={this.handleSubmit} />
             </div>
           </Grid>
         </Grid>
@@ -64,9 +53,7 @@ class AliasesNew extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isAdmin: state.authentication.admin
-});
+const mapStateToProps = state => ({});
 
 const enhance = compose(
   withStyles(styles),
