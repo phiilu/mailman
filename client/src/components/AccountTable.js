@@ -36,7 +36,7 @@ const humanReadableDataUnits = unit => {
   if (unit === 0) {
     return "∞";
   } else {
-    return bytes(unit, {
+    return bytes(unit * 1000 * 1000, {
       unitSeparator: " ",
       thousandsSeparator: "."
     });
