@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
+import { Formik } from "formik";
+import yup from "yup";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
@@ -16,15 +18,19 @@ import { handleRequestError } from "../../util";
 const styles = {
   textfield: {
     width: "100%"
+  },
+  button: {
+    marginBottom: "1em"
   }
 };
 
+const schema = yup.object().shape({
+  domain: yup.string().required("The domain is required")
+});
+
 class DomainForm extends Component {
   state = {
-    data: {
-      domain: ""
-    },
-    submitting: false
+    domain: ""
   };
 
   async componentDidMount() {
@@ -36,72 +42,82 @@ class DomainForm extends Component {
     const domain = this.props.domains.find(domain => domain.id === +id);
 
     if (domain) {
-      this.setState({ data: { domain: domain.domain } });
+      this.setState({ domain: domain.domain });
     }
   }
 
-  handleChange = e => {
-    this.setState({ data: { ...this.state.data, domain: e.target.value } });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.setState({ submitting: true });
-    this.props
-      .submit(this.state.data)
-      .then(data => {
-        if (this.props.update) {
-          toast.success("Updated successfully 💥");
-          this.setState({
-            submitting: false
-          });
-        } else {
-          toast.success("Saved successfully 💥");
-          this.setState({
-            data: { domain: "" },
-            submitting: false
-          });
-        }
-      })
-      .catch(error => {
-        const { message } = handleRequestError(error);
-        toast.error("Error: " + message);
-        this.setState({
-          submitting: false
-        });
-      });
-  };
-
   render() {
-    const { domain } = this.state.data;
     const { update, classes } = this.props;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <Grid container>
-          <Grid item xs={12}>
-            <TextField
-              id="domain"
-              label="Domain"
-              name="domain"
-              placeholder="example.org"
-              value={domain}
-              onChange={this.handleChange}
-              margin="normal"
-              className={classes.textfield}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              raised
-              color="accent"
-              type="submit"
-              disabled={this.state.submitting}
-            >
-              {update ? "Update Domain" : "Save Domain"}
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+      <Formik
+        initialValues={{
+          domain: this.state.domain
+        }}
+        enableReinitialize={true}
+        validationSchema={schema}
+        validateOnChange={true}
+        onSubmit={(values, { setSubmitting, setValues, resetForm }) => {
+          this.props
+            .submit(values)
+            .then(data => {
+              if (this.props.update) {
+                toast.success("Updated successfully!");
+              } else {
+                toast.success("Saved successfully!");
+              }
+              resetForm();
+            })
+            .catch(error => {
+              setSubmitting(false);
+              const { message } = handleRequestError(error);
+              toast.error("Error: " + message);
+            });
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          isSubmitting,
+          isValid
+        }) => {
+          return (
+            <form onSubmit={handleSubmit}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <TextField
+                    error={touched.domain && !!errors.domain}
+                    helperText={touched.domain && errors.domain}
+                    id="domain"
+                    label="Domain"
+                    name="domain"
+                    placeholder="example.org"
+                    value={values.domain}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    margin="normal"
+                    className={classes.textfield}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    className={classes.button}
+                    raised
+                    color="accent"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {update ? "Update Domain" : "Save Domain"}
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          );
+        }}
+      </Formik>
     );
   }
 }

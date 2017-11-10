@@ -5,6 +5,7 @@ import PrivateRoute from "./shared/PrivateRoute";
 import RouteWithLayout from "./shared/RouteWithLayout";
 
 import Index from "../pages/Index";
+import NotFound from "../pages/NotFound";
 import DomainsNew from "../pages/domains/DomainsNew";
 import DomainsEdit from "../pages/domains/DomainsEdit";
 import AccountsNew from "../pages/accounts/AccountsNew";
@@ -35,6 +36,7 @@ class App extends Component {
           path="/tlspolicies/:id/edit"
           component={TlsPoliciesEdit}
         />
+        <RouteWithLayout component={NotFound} />
       </Switch>
     );
   }

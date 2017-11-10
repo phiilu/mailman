@@ -1,10 +1,15 @@
 import React, { Component } from "react";
+import { Formik } from "formik";
+import yup from "yup";
+import { toast } from "react-toastify";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 import Paper from "material-ui/Paper";
 import Typography from "material-ui/Typography";
 import { withStyles } from "material-ui/styles";
+
+import { handleRequestError } from "../../util";
 
 const styles = theme => ({
   paper: {
@@ -26,34 +31,22 @@ const styles = theme => ({
     "& > button": {
       margin: "1em 0"
     }
+  },
+  button: {
+    marginBottom: "1em"
   }
 });
 
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email()
+    .required("Email is required"),
+  password: yup.string().required("Password is required")
+});
+
 class LoginForm extends Component {
-  state = {
-    fields: {
-      email: "",
-      password: ""
-    },
-    errors: {}
-  };
-
-  handleChange = e => {
-    this.setState({
-      fields: {
-        ...this.state.fields,
-        [e.target.name]: e.target.value
-      }
-    });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.submit(this.state.fields);
-  };
-
   render() {
-    const { email, password } = this.state.fields;
     const { classes } = this.props;
     return (
       <Paper className={classes.paper}>
@@ -63,33 +56,77 @@ class LoginForm extends Component {
           </Typography>
         </div>
         <div className={classes.body}>
-          <form
-            className={classes.form}
-            autoComplete="off"
-            onSubmit={this.handleSubmit}
+          <Formik
+            initialValues={{
+              email: "",
+              password: ""
+            }}
+            validationSchema={schema}
+            validateOnChange={true}
+            onSubmit={(values, { resetForm }) => {
+              this.props
+                .submit(values)
+                .then(() => {
+                  toast.success("You are now logged in");
+                  resetForm();
+                })
+                .catch(error => {
+                  const { message } = handleRequestError(error);
+                  toast.error("Error: " + message);
+                });
+            }}
           >
-            <TextField
-              id="email"
-              label="Email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-              margin="normal"
-              autoFocus
-            />
-            <TextField
-              id="name"
-              label="Password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={this.handleChange}
-              margin="normal"
-            />
-            <Button raised color="accent" type="submit">
-              Login
-            </Button>
-          </form>
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              isSubmitting,
+              isValid,
+              setFieldValue,
+              setFieldTouched
+            }) => (
+              <form
+                className={classes.form}
+                autoComplete="off"
+                onSubmit={handleSubmit}
+              >
+                <TextField
+                  error={touched.email && !!errors.email}
+                  helperText={touched.email && errors.email}
+                  id="email"
+                  label="Email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  margin="normal"
+                  autoFocus
+                />
+                <TextField
+                  error={touched.password && !!errors.password}
+                  helperText={touched.password && errors.password}
+                  id="password"
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  margin="normal"
+                />
+                <Button
+                  className={classes.button}
+                  raised
+                  color="accent"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  Login
+                </Button>
+              </form>
+            )}
+          </Formik>
         </div>
       </Paper>
     );

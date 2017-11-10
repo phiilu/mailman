@@ -4,8 +4,8 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { MuiThemeProvider } from "material-ui/styles";
 import createMuiTheme from "material-ui/styles/createMuiTheme";
-import teal from "material-ui/colors/teal";
-import red from "material-ui/colors/red";
+import blue from "material-ui/colors/blue";
+import amber from "material-ui/colors/amber";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
@@ -28,8 +28,8 @@ if (userJson) {
 
 const theme = createMuiTheme({
   palette: {
-    primary: teal,
-    secondary: red
+    primary: blue,
+    secondary: amber
   }
 });
 
@@ -48,7 +48,7 @@ const app = (
             closeOnClick
             pauseOnHover
             key={1}
-            style={{ marginTop: "75px" }}
+            style={{ marginTop: "65px" }}
           />
         </AppWrapper>
       </MuiThemeProvider>

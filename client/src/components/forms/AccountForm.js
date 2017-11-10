@@ -3,12 +3,18 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Formik } from "formik";
+import yup from "yup";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
 import Input, { InputLabel } from "material-ui/Input";
 import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormControlLabel } from "material-ui/Form";
+import {
+  FormControl,
+  FormControlLabel,
+  FormHelperText
+} from "material-ui/Form";
 import Select from "material-ui/Select";
 import Switch from "material-ui/Switch";
 import { withStyles } from "material-ui/styles";
@@ -21,31 +27,27 @@ import { handleRequestError } from "../../util";
 const styles = {
   textfield: {
     width: "100%"
+  },
+  button: {
+    marginBottom: "1em"
   }
 };
 
 class AccountForm extends Component {
   state = {
-    data: {
-      username: "",
-      domain: "",
-      password: "",
-      quota: "0",
-      enabled: true,
-      sendonly: false
-    },
-    error: "",
-    submitting: false
+    username: "",
+    domain: "",
+    password: "",
+    quota: "0",
+    enabled: true,
+    sendonly: false
   };
 
   async componentDidMount() {
     if (this.props.domains.length === 0) await this.props.getAll();
     if (this.props.domains.length > 0) {
       this.setState({
-        data: {
-          ...this.state.data,
-          domain: this.props.domains[0].domain
-        }
+        domain: this.props.domains[0].domain
       });
     }
 
@@ -54,181 +56,189 @@ class AccountForm extends Component {
 
     if (account) {
       this.setState({
-        data: {
-          ...this.state.data,
-          username: account.username,
-          domain: account.domain,
-          password: "",
-          quota: account.quota,
-          enabled: account.enabled === "1",
-          sendonly: account.sendonly === "1"
-        }
+        username: account.username,
+        domain: account.domain,
+        password: "",
+        quota: account.quota,
+        enabled: account.enabled === "1",
+        sendonly: account.sendonly === "1"
       });
     }
+
+    this.schema = yup.object().shape({
+      username: yup.string().required("The username is required"),
+      domain: yup.string().required("The domain is required"),
+      password: this.props.update
+        ? yup.string().min(8, "Passwords should be at least 8 characters long.")
+        : yup
+            .string()
+            .min(8, "Passwords should be at least 8 characters long.")
+            .required("Password is required"),
+      quota: yup
+        .number()
+        .positive("Quota must be a positive number")
+        .required("Quota is required"),
+      enabled: yup.boolean().required("Enabled is required"),
+      sendonly: yup.boolean().required("Enabled is required")
+    });
   }
 
-  handleChange = e => {
-    this.setState({
-      data: { ...this.state.data, [e.target.name]: e.target.value }
-    });
-  };
-
-  handleChangeSelect = e => {
-    this.setState({
-      data: { ...this.state.data, domain: e.target.value }
-    });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.setState({ submitting: true });
-    this.props
-      .submit(this.state.data)
-      .then(data => {
-        if (this.props.update) {
-          toast.success("Updated successfully 💥");
-          this.setState({
-            data: {
-              ...this.state.data,
-              password: ""
-            },
-            submitting: false
-          });
-        } else {
-          toast.success("Saved successfully 💥");
-          this.setState({
-            data: {
-              ...this.state.data,
-              username: "",
-              domain: "",
-              password: "",
-              quota: "0",
-              enabled: true,
-              sendonly: false
-            },
-            submitting: false
-          });
-        }
-      })
-      .catch(error => {
-        const { message } = handleRequestError(error);
-        this.setState({
-          submitting: false
-        });
-        toast.error("Error: " + message);
-      });
-  };
-
   render() {
-    const {
-      username,
-      domain,
-      password,
-      enabled,
-      quota,
-      sendonly
-    } = this.state.data;
     const { update, classes } = this.props;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <Grid container>
-          <Grid item xs={12}>
-            <TextField
-              id="username"
-              label="Username"
-              name="username"
-              placeholder="user"
-              value={username}
-              onChange={this.handleChange}
-              margin="normal"
-              className={classes.textfield}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl className={classes.textfield}>
-              <InputLabel htmlFor="domains">Domain</InputLabel>
-              <Select
-                name="domain"
-                value={domain}
-                onChange={this.handleChangeSelect}
-                input={<Input id="domains" />}
-              >
-                {this.props.domains.map(domain => (
-                  <MenuItem key={domain.id} value={domain.domain}>
-                    {domain.domain}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="password"
-              label="Password"
-              name="password"
-              type="password"
-              value={password || ""}
-              onChange={this.handleChange}
-              margin="normal"
-              className={classes.textfield}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="quota"
-              label="Quota"
-              name="quota"
-              type="number"
-              placeholder="1024"
-              value={quota}
-              onChange={this.handleChange}
-              margin="normal"
-              className={classes.textfield}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={enabled}
-                  onChange={(event, checked) =>
-                    this.setState({
-                      data: { ...this.state.data, enabled: checked }
-                    })}
-                />
+      <Formik
+        initialValues={{
+          username: this.state.username,
+          domain: this.state.domain,
+          password: this.state.password,
+          quota: this.state.quota,
+          enabled: this.state.enabled,
+          sendonly: this.state.sendonly
+        }}
+        enableReinitialize={true}
+        validationSchema={this.schema}
+        validateOnChange={true}
+        onSubmit={(
+          values,
+          { setSubmitting, setValues, setFieldValue, resetForm }
+        ) => {
+          this.props
+            .submit(values)
+            .then(data => {
+              if (this.props.update) {
+                toast.success("Updated successfully!");
+                setFieldValue("password", "");
+                setSubmitting(false);
+              } else {
+                toast.success("Saved successfully!");
+                resetForm();
               }
-              label="Enabled"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={sendonly}
-                  onChange={(event, checked) =>
-                    this.setState({
-                      data: { ...this.state.data, sendonly: checked }
-                    })}
+            })
+            .catch(error => {
+              setSubmitting(false);
+              const { message } = handleRequestError(error);
+              toast.error("Error: " + message);
+            });
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          isSubmitting,
+          isValid,
+          setFieldValue,
+          setFieldTouched
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  error={touched.username && !!errors.username}
+                  helperText={touched.username && errors.username}
+                  id="username"
+                  label="Username"
+                  name="username"
+                  placeholder="user"
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  margin="normal"
+                  className={classes.textfield}
                 />
-              }
-              label="Sendonly"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              raised
-              color="accent"
-              type="submit"
-              disabled={this.state.submitting}
-            >
-              {update ? "Update Account" : "Save Account"}
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            {this.state.error}
-          </Grid>
-        </Grid>
-      </form>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl className={classes.textfield}>
+                  <InputLabel htmlFor="domains">Domain</InputLabel>
+                  <Select
+                    error={touched.domain && !!errors.domain}
+                    name="domain"
+                    value={values.domain}
+                    onChange={e => setFieldValue("domain", e.target.value)}
+                    onBlur={() => setFieldTouched("domain", true)}
+                    input={<Input id="domains" />}
+                  >
+                    {this.props.domains.map(domain => (
+                      <MenuItem key={domain.id} value={domain.domain}>
+                        {domain.domain}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>
+                    {touched.domain && errors.domain}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  error={touched.password && !!errors.password}
+                  helperText={touched.password && errors.password}
+                  id="password"
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={values.password || ""}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  margin="normal"
+                  className={classes.textfield}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="quota"
+                  label="Quota"
+                  name="quota"
+                  type="number"
+                  placeholder="1024"
+                  value={values.quota}
+                  onChange={handleChange}
+                  margin="normal"
+                  className={classes.textfield}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={values.enabled}
+                      onChange={(event, checked) =>
+                        setFieldValue("enabled", checked)}
+                    />
+                  }
+                  label="Enabled"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={values.sendonly}
+                      onChange={(event, checked) =>
+                        setFieldValue("sendonly", checked)}
+                    />
+                  }
+                  label="Sendonly"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  raised
+                  color="accent"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={classes.button}
+                >
+                  {update ? "Update Account" : "Save Account"}
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
+        )}
+      </Formik>
     );
   }
 }

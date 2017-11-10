@@ -31,7 +31,7 @@ const styles = {
 class Navigation extends Component {
   logout = () => {
     this.props.logout();
-    toast.info("Bye 👋🏼");
+    toast.success("See you!");
   };
 
   render() {

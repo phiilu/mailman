@@ -18,6 +18,9 @@ import { handleRequestError } from "../../util";
 const styles = {
   textfield: {
     width: "100%"
+  },
+  button: {
+    marginBottom: "1em"
   }
 };
 
@@ -58,7 +61,7 @@ class AccountPasswordForm extends Component {
             .submit(values)
             .then(data => {
               resetForm();
-              toast.success("Password changed successfully 💥");
+              toast.success("Password changed successfully!");
             })
             .catch(error => {
               setSubmitting(false);
@@ -139,6 +142,7 @@ class AccountPasswordForm extends Component {
                   color="accent"
                   type="submit"
                   disabled={!isValid || isSubmitting}
+                  className={classes.button}
                 >
                   Change Password
                 </Button>
