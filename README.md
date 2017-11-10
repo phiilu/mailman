@@ -1,17 +1,20 @@
 # Mailman
 
-Mailman (eng. Postbote) ist eine webbasierte administrative Oberfläche für den Mailserver. Der Name kann für Mail Manager oder eben Postbote stehen :)
+Mailman is a SPA written in React to help you to manage your email server database.
 
 ![Mailman Screenshot](screenshots/mailman.png)
 
-# Voraussetzungen
+## Installation
 
-Mailman wurde speziell für die Administrierung des Mailservers aus dem Tutorial von Thomas Leister entwickelt:
+### Install required build tools
 
-[Mailserver mit Dovecot, Postfix und MySQL unter Ubuntu 16.04 LTS](https://thomas-leister.de/sicherer-mailserver-dovecot-postfix-virtuellen-benutzern-mysql-ubuntu-server-xenial/)
+```bash
+sudo apt install build-essential python
+```
 
-Bevor Mailman installiert werden kann muss der Mailserver bereits funktionieren und es muss mindestens eine *Domain* und ein *Account* in der Datenbank sein.
+### Install Node.js with nvm
 
+<<<<<<< HEAD
 # Installation unter Ubuntu 16.04
 
 Die Installation ist im Grunde die selbe wie vom [Chris](https://github.com/excid3) auf [GoRails.com](https://gorails.com/deploy/ubuntu/16.04). Ich habe sie übersetzt und für Mailman adaptiert, damit die komplizierte Installation nachverfolgt werden kann.
@@ -293,16 +296,49 @@ Wenn ihr die Datei erzeugt habt führt `cap production deploy` von eurem **lokal
 ## Letzte Konfigurationsschritte
 
 Nachdem Mailman deployed wurde, muss in der `/etc/profile` das Secret und die Admin Email eingetragen werden.
-
-Das Secret kann mit folgenden Kommando im Verzeichnis `/home/deploy/mailman/current/` generiert werden:
-
+=======
+```bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
 ```
+
+After the installation of nvm you must logout and login again
+
+Now you can install node
+
+```bash
+nvm install 9.1.0
+```
+
+Verify if node is available
+>>>>>>> rewrite
+
+```bash
+$ node -v
+v9.1.0
+
+$ npm -v
+5.5.1
+```
+<<<<<<< HEAD
 RAILS_ENV=production bundle exec rake secret
+=======
+
+### Install PM2 a Node.js process manager
+
+```bash
+npm i -g pm2
+>>>>>>> rewrite
 ```
 
-```
-# /etc/profile
+### Clone Mailman from GitHub
 
+It is easiest if you clone Mailman in a non root user home directory.
+
+```bash
+git clone https://github.com/phiilu/mailman.git
+```
+
+<<<<<<< HEAD
 export SECRET_KEY_BASE=012345567894324322432423...
 export MAILMAN_ADMIN_EMAIL="admin@example.com"
 ```
@@ -314,3 +350,32 @@ touch /home/deploy/mailman/current/tmp/restart.txt
 ```
 
 Mailman ist nun unter `mailman.example.com` erreichbar.
+=======
+### Build the app
+
+```bash
+cd mailman && npm install && cd client && npm install && cd - && npm run build
+```
+
+### Create a .env file
+
+```bash
+cp sample.env .env
+```
+
+Open .env with a text editor and update the environment variables with yours. 
+
+To generate a random hash you can use command in your terminal:
+
+```bash
+head /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 ; echo ''
+```
+
+### Start Mailman
+
+```bash
+npm start
+```
+
+Mailman is now running on port `4000`. If you wish to use a other port set a environment variable in .env file for example `PORT=50000`
+>>>>>>> rewrite
