@@ -4,23 +4,47 @@ import { TableCell, TableRow } from "material-ui/Table";
 import IconButton from "material-ui/IconButton";
 import DeleteIcon from "material-ui-icons/Delete";
 import EditIcon from "material-ui-icons/Edit";
+import SendIcon from "material-ui-icons/Send";
 import { Link } from "react-router-dom";
+import bytes from "bytes";
+import Tooltip from "material-ui/Tooltip";
+import classnames from "classnames";
 
 import Table from "../components/shared/Table";
 
-const styles = {
-  tableCell: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
+const styles = theme => ({
   deleteIcon: {
     color: "#FF6347"
+  },
+  emailCell: {
+    display: "flex",
+    alignItems: "center",
+    "& > span": {
+      marginRight: "10px"
+    }
+  },
+  sendIcon: {
+    color: theme.palette.primary[500]
+  },
+  disabledCell: {
+    background: "#eee",
+    textDecoration: "line-through"
+  }
+});
+
+const humanReadableDataUnits = unit => {
+  if (unit === 0) {
+    return "∞";
+  } else {
+    return bytes(unit, {
+      unitSeparator: " ",
+      thousandsSeparator: "."
+    });
   }
 };
 
 const AccountTable = ({ accounts, classes, deleteAccount }) => {
-  const headers = ["Email", "Quota", "Enabled", "Sendonly"];
+  const headers = ["Email", "Quota", ""];
   return (
     <Table headers={headers}>
       {accounts.length === 0 ? (
@@ -29,14 +53,26 @@ const AccountTable = ({ accounts, classes, deleteAccount }) => {
         </TableRow>
       ) : (
         accounts.map(a => (
-          <TableRow key={a.id}>
+          <TableRow
+            key={a.id}
+            className={classnames({
+              [classes.disabledCell]: a.enabled === "0"
+            })}
+          >
             <TableCell>
-              {a.username}@{a.domain}
+              <div className={classes.emailCell}>
+                <span>
+                  {a.username}@{a.domain}
+                </span>
+                {a.sendonly === "1" && (
+                  <Tooltip title="sendonly" placement="right">
+                    <SendIcon className={classes.sendIcon} />
+                  </Tooltip>
+                )}
+              </div>
             </TableCell>
-            <TableCell>{a.quota}</TableCell>
-            <TableCell>{a.enabled}</TableCell>
-            <TableCell className={classes.tableCell}>
-              {a.sendonly}
+            <TableCell>{humanReadableDataUnits(a.quota)}</TableCell>
+            <TableCell>
               <span>
                 <IconButton
                   aria-label="Edit"

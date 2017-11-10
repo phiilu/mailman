@@ -63,7 +63,7 @@ class LoginForm extends Component {
             }}
             validationSchema={schema}
             validateOnChange={true}
-            onSubmit={(values, { resetForm }) => {
+            onSubmit={(values, { setSubmitting, resetForm }) => {
               this.props
                 .submit(values)
                 .then(() => {
@@ -73,6 +73,7 @@ class LoginForm extends Component {
                 .catch(error => {
                   const { message } = handleRequestError(error);
                   toast.error("Error: " + message);
+                  setSubmitting(false);
                 });
             }}
           >

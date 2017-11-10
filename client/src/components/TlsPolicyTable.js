@@ -9,18 +9,13 @@ import { Link } from "react-router-dom";
 import Table from "../components/shared/Table";
 
 const styles = {
-  tableCell: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   deleteIcon: {
     color: "#FF6347"
   }
 };
 
 const TlsPolicyTable = ({ tlspolicies, classes, deleteTlsPolicy }) => {
-  const headers = ["Domain", "Params", "Policy"];
+  const headers = ["Domain", "Params", "Policy", ""];
 
   return (
     <Table headers={headers}>
@@ -33,8 +28,8 @@ const TlsPolicyTable = ({ tlspolicies, classes, deleteTlsPolicy }) => {
           <TableRow key={t.id}>
             <TableCell>{t.domain}</TableCell>
             <TableCell>{t.params}</TableCell>
-            <TableCell className={classes.tableCell}>
-              {t.policy}
+            <TableCell>{t.policy}</TableCell>
+            <TableCell>
               <span>
                 <IconButton
                   aria-label="Edit"

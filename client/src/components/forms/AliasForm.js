@@ -174,7 +174,6 @@ class AccountForm extends Component {
                     name="source_domain"
                     value={values.source_domain}
                     error={touched.source_domain && !!errors.source_domain}
-                    value={values.source_domain}
                     onChange={e =>
                       setFieldValue("source_domain", e.target.value)}
                     onBlur={() => setFieldTouched("source_domain", true)}

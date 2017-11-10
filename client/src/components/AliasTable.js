@@ -5,22 +5,22 @@ import IconButton from "material-ui/IconButton";
 import DeleteIcon from "material-ui-icons/Delete";
 import EditIcon from "material-ui-icons/Edit";
 import { Link } from "react-router-dom";
+import classnames from "classnames";
 
 import Table from "../components/shared/Table";
 
 const styles = {
-  tableCell: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   deleteIcon: {
     color: "#FF6347"
+  },
+  disabledCell: {
+    background: "#eee",
+    textDecoration: "line-through"
   }
 };
 
 const AliasTable = ({ aliases, classes, deleteAlias }) => {
-  const headers = ["Source Email", "Destination Email", "Enabled"];
+  const headers = ["Source Email", "Destination Email", ""];
 
   return (
     <Table headers={headers}>
@@ -30,15 +30,19 @@ const AliasTable = ({ aliases, classes, deleteAlias }) => {
         </TableRow>
       ) : (
         aliases.map(a => (
-          <TableRow key={a.id}>
+          <TableRow
+            key={a.id}
+            className={classnames({
+              [classes.disabledCell]: a.enabled === "0"
+            })}
+          >
             <TableCell>
               {a.source_username}@{a.source_domain}
             </TableCell>
-            <TableCell>
+            <TableCell className={classes.tableCell}>
               {a.destination_username}@{a.destination_domain}
             </TableCell>
-            <TableCell className={classes.tableCell}>
-              {a.enabled}
+            <TableCell>
               <span>
                 <IconButton
                   aria-label="Edit"
