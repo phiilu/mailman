@@ -36,8 +36,16 @@ class Domain {
   }
 
   async deleteDomain(id) {
-    return await db("domains")
-      .delete(["id", "domain"])
+    const domain = await this.getDomain(id);
+
+    await db("aliases")
+      .delete()
+      .where({ source_domain: domain[0].domain });
+    await db("accounts")
+      .delete()
+      .where({ domain: domain[0].domain });
+    return db("domains")
+      .delete()
       .where({ id });
   }
 }
