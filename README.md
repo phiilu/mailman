@@ -4,7 +4,12 @@ Mailman is a SPA written in React to help you to manage your email server databa
 
 ![Mailman Screenshot](screenshots/mailman.png)
 
-## Installation
+## Prerequisites
+
+You must have a functional mailserver with the database model provided by [Thomas Leister](https://github.com/ThomasLeister) in his awesome mailserver tutorial: 
+[Mailserver mit Dovecot, Postfix, MySQL und Rspamd unter Debian 9 Stretch](https://thomas-leister.de/mailserver-debian-stretch/)
+
+## Deployment
 
 ### Install required build tools
 
@@ -77,3 +82,11 @@ npm start
 ```
 
 Mailman is now running on port `4000`. If you wish to use a other port set a environment variable in .env file for example `PORT=50000`
+
+## License 
+
+This project is licensed under the MIT License
+
+## Acknowledgments
+
+* Thank you [Thomas Leister](https://github.com/ThomasLeister) for you excellent mailserver installation instructions
