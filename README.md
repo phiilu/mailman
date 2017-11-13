@@ -17,7 +17,7 @@ You must have a functional mailserver with the database model provided by [Thoma
 sudo apt install build-essential python
 ```
 
-### Install Node.js with nvm
+### Install Node.js with [nvm](https://github.com/creationix/nvm)
 
 ```bash
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
@@ -49,7 +49,7 @@ npm i -g pm2
 
 ### Clone Mailman from GitHub
 
-It is easiest if you clone Mailman in a non root user home directory.
+It is easiest if you clone Mailman into a non-root user's home directory.
 
 ```bash
 git clone https://github.com/phiilu/mailman.git
@@ -67,7 +67,7 @@ cd mailman && npm install && cd client && npm install && cd - && npm run build
 cp sample.env .env
 ```
 
-Open .env with a text editor and update the environment variables with yours. 
+Open .env with a text editor and adapt the environment variables with your configuration. 
 
 To generate a random hash you can use command in your terminal:
 
@@ -81,7 +81,7 @@ head /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 ; echo ''
 npm start
 ```
 
-Mailman is now running on port `4000`. If you wish to use a other port set a environment variable in .env file for example `PORT=50000`
+Mailman is now running on port `4000`. If you wish to use another port set an environment variable in the .env file: `PORT=50000`
 
 ## License 
 
@@ -89,4 +89,4 @@ This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* Thank you [Thomas Leister](https://github.com/ThomasLeister) for you excellent mailserver installation instructions
+* Thank you [Thomas Leister](https://github.com/ThomasLeister) for your excellent mailserver installation instructions
