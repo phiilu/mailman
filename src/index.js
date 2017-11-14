@@ -2,6 +2,7 @@ import "dotenv/config";
 import Express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import helmet from "helmet";
 import path from "path";
 import RateLimit from "express-rate-limit";
 
@@ -22,6 +23,7 @@ app.enable("trust proxy"); // only if you're behind a reverse proxy
 
 app.use(bodyParser.json());
 app.use(morgan("dev"));
+app.use(helmet());
 
 app.use("/api", apiLimiter, api);
 

@@ -125,7 +125,7 @@ class AccountPasswordForm extends Component {
                     errors.newPasswordConfirmation
                   }
                   id="newPasswordConfirmation"
-                  label="New Password"
+                  label="New Password confirmation"
                   name="newPasswordConfirmation"
                   type="password"
                   placeholder="********"
