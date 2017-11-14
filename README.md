@@ -6,8 +6,44 @@ Mailman is a SPA written in React to help you to manage your email server databa
 
 ## Prerequisites
 
-You must have a functional mailserver with the database model provided by [Thomas Leister](https://github.com/ThomasLeister) in his awesome mailserver tutorial: 
+You must have a functional mailserver with the database model provided by [Thomas Leister](https://github.com/ThomasLeister) in his awesome mailserver tutorial:
 [Mailserver mit Dovecot, Postfix, MySQL und Rspamd unter Debian 9 Stretch](https://thomas-leister.de/mailserver-debian-stretch/)
+
+Update the permissions of the vmail database user to allow insert, update and delete queries:
+
+```sql
+grant select, insert, update, delete on vmail.* to 'vmail'@'localhost' identified by 'vmaildbpass';
+```
+
+**Or** create a new user:
+
+```sql
+grant select, insert, update, delete on vmail.* to 'vmail_mailman'@'localhost' identified by 'vmaildbpass';
+```
+
+## Docker
+
+If you have `docker` installed on your server you can run Mailman in a docker container otherwise go to the [Deployment](#deployment) section to see how to deploy it manually.
+
+Download the `sample.env` file
+
+```bash
+wget https://github.com/phiilu/mailman/raw/master/sample.env -O .env
+```
+
+Update the variables in `.env` and then start mailman:
+
+```bash
+docker run -d -p 4000:4000 --net="host" --env-file .env --name mailman phiilu/mailman
+```
+
+Explanation:
+
+* `-d` runs the container as a daemon process a.k.a. in the background
+* `-p <HOST_PORT>:4000` exposes the port container 4000 to the specified `HOST_PORT`
+* `--net="host"` instructs docker to share the network with the host. This is required to access the vmail database
+* `--env-file .env` sets the environment variables in the container
+* `--name mailman` sets the name for the docker container to mailman
 
 ## Deployment
 
@@ -81,7 +117,7 @@ head /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 ; echo ''
 npm start
 ```
 
-Mailman is now running on port `4000`. If you wish to use another port set an environment variable in the .env file: `PORT=50000`
+Mailman is now running on port `4000`. If you wish to use another port set an environment variable in the .env file: `MAILMAN_PORT=50000`
 
 ## License 
 
