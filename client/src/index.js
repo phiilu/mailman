@@ -36,7 +36,7 @@ const theme = createMuiTheme({
 
 const app = (
   <Provider store={store}>
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <MuiThemeProvider theme={theme}>
         <AppWrapper>
           <App key={0} />,

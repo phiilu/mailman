@@ -1,15 +1,36 @@
 # Mailman
 
-Mailman is a SPA written in React to help you to manage your email server database.
+Mailman is a SPA written in React to help you to manage your email server
+database.
 
 ![Mailman Screenshot](screenshots/mailman.png)
 
+## Table of contents
+
+* [Prerequisites](#prerequisites)
+* [Docker](#docker)
+* [Deployment](#deployment)
+  * [Reverse Proxy](#reverse-proxy)
+* [License](#license)
+* [Acknowledgments](#acknowledgments)
+
+## Features
+
+* [x] create, update and delete domains, accounts, aliases and TLS policies
+* [x] accounts can create aliases and change their passwords
+* [x] responsive web interface
+* [ ] admins per domain
+* [ ] UI customization
+
 ## Prerequisites
 
-You must have a functional mailserver with the database model provided by [Thomas Leister](https://github.com/ThomasLeister) in his awesome mailserver tutorial:
+You must have a functional mailserver with the database model provided by
+[Thomas Leister](https://github.com/ThomasLeister) in his awesome mailserver
+tutorial:
 [Mailserver mit Dovecot, Postfix, MySQL und Rspamd unter Debian 9 Stretch](https://thomas-leister.de/mailserver-debian-stretch/)
 
-Update the permissions of the vmail database user to allow insert, update and delete queries:
+Update the permissions of the vmail database user to allow insert, update and
+delete queries:
 
 ```sql
 grant select, insert, update, delete on vmail.* to 'vmail'@'localhost' identified by 'vmaildbpass';
@@ -23,7 +44,9 @@ grant select, insert, update, delete on vmail.* to 'vmail_mailman'@'localhost' i
 
 ## Docker
 
-If you have `docker` installed on your server you can run Mailman in a docker container otherwise go to the [Deployment](#deployment) section to see how to deploy it manually.
+If you have `docker` installed on your server you can run Mailman in a docker
+container otherwise go to the [Deployment](#deployment) section to see how to
+deploy it manually.
 
 Download the `sample.env` file
 
@@ -40,8 +63,10 @@ docker run -d -p 4000:4000 --net="host" --env-file .env --name mailman phiilu/ma
 Explanation:
 
 * `-d` runs the container as a daemon process a.k.a. in the background
-* `-p <HOST_PORT>:4000` exposes the port container 4000 to the specified `HOST_PORT`
-* `--net="host"` instructs docker to share the network with the host. This is required to access the vmail database
+* `-p <HOST_PORT>:4000` exposes the port container 4000 to the specified
+  `HOST_PORT`
+* `--net="host"` instructs docker to share the network with the host. This is
+  required to access the vmail database
 * `--env-file .env` sets the environment variables in the container
 * `--name mailman` sets the name for the docker container to mailman
 
@@ -91,24 +116,50 @@ It is easiest if you clone Mailman into a non-root user's home directory.
 git clone https://github.com/phiilu/mailman.git
 ```
 
-### Build the app
-
-```bash
-cd mailman && npm install && cd client && npm install && cd - && npm run build
-```
-
 ### Create a .env file
 
 ```bash
 cp sample.env .env
 ```
 
-Open .env with a text editor and adapt the environment variables with your configuration. 
+Open .env with a text editor and adapt the environment variables with your
+configuration:
+
+* `MAILMAN_SECRET` a long unique random string to sign the JWT token
+* `MAILMAN_DB_USER` the `vmail` database user
+* `MAILMAN_DB_PASSWORD` the password for the `vmail` database user
+* `MAILMAN_DB_DATABASE` the `vmail` database
+* `MAILMAN_HOST` the IP address which mailman binds to. Default is `0.0.0.0`
+* `MAILMAN_PORT` the TCP port mailman binds to. Default is `4000`
+* `MAILMAN_BASENAME` the HTTP base. Default is `/`
+* `MAILMAN_ADMIN` the email address of the user, which is allowed to
+  administrate the `vmail` database
+
+---
+
+**Subfolder configuration:**
+
+If you want to access mailman via a subfolder `/mailman` instead of the http
+root `/`, you have to modify the following:
+
+* Open the `package.json` file inside the client folder
+* Find `"homepage"` and update the URL to your needs. For example:
+  `http://localhost:4000/mailman`
+* Set the `MAILMAN_BASENAME` variable in `.env` to the subfolder you want to
+  use: For example: `/mailman`
+
+---
 
 To generate a random hash you can use command in your terminal:
 
 ```bash
 head /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 ; echo ''
+```
+
+### Build the app
+
+```bash
+cd mailman && npm install && cd client && npm install && cd - && npm run build
 ```
 
 ### Start Mailman
@@ -117,12 +168,42 @@ head /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 ; echo ''
 npm start
 ```
 
-Mailman is now running on port `4000`. If you wish to use another port set an environment variable in the .env file: `MAILMAN_PORT=50000`
+Mailman should now be running on port `4000` of the server.
 
-## License 
+### Reverse Proxy
+
+#### NGINX
+
+```nginx
+server {
+    listen 80;
+    server_name mailman.example.org;
+
+    ##
+    ## Uncomment one of the two possibilities
+    ##
+
+    # Subdomain
+    #location / {
+    #  proxy_pass       http://localhost:4000;
+    #  proxy_set_header Host      $host;
+    #  proxy_set_header X-Real-IP $remote_addr;
+    #}
+
+    # Subfolder
+    #location /mailman {
+    #  proxy_pass       http://localhost:4000;
+    #  proxy_set_header Host      $host;
+    #  proxy_set_header X-Real-IP $remote_addr;
+    #}
+}
+```
+
+## License
 
 This project is licensed under the MIT License
 
 ## Acknowledgments
 
-* Thank you [Thomas Leister](https://github.com/ThomasLeister) for your excellent mailserver installation instructions
+* Thank you [Thomas Leister](https://github.com/ThomasLeister) for your
+  excellent mailserver installation instructions
