@@ -28,13 +28,12 @@ app.use(helmet());
 
 app.use("/api", apiLimiter, api);
 
-// This is fired every time the server side receives a request.
-// if (process.env.NODE_ENV === "production") {
-app.use(base, Express.static(path.resolve("client", "build")));
-app.use("*", (req, res) => {
-  res.sendFile(path.resolve("client", "build", "index.html"));
-});
-// }
+if (process.env.NODE_ENV === "production") {
+  app.use(base, Express.static(path.resolve("client", "build")));
+  app.use("*", (req, res) => {
+    res.sendFile(path.resolve("client", "build", "index.html"));
+  });
+}
 
 app.use(errorMiddleware);
 
