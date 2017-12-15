@@ -11,6 +11,7 @@ database.
 * [Docker](#docker)
 * [Deployment](#deployment)
   * [Reverse Proxy](#reverse-proxy)
+* [Update Mailman](#update-mailman)
 * [License](#license)
 * [Acknowledgments](#acknowledgments)
 
@@ -169,6 +170,24 @@ npm start
 ```
 
 Mailman should now be running on port `4000` of the server.
+
+## Update Mailman
+
+### Manual deployment
+
+Run the following command inside the mailman directory
+
+```bash
+git stash && git pull && npm install && cd client && npm install && cd - && npm run build && pm2 restart all
+```
+
+### Docker
+
+```bash
+docker pull phiilu/mailman:latest
+```
+
+After pulling the new image just start a new container.
 
 ### Reverse Proxy
 
