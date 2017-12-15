@@ -17,7 +17,6 @@ import store from "./store";
 import { loginAction } from "./actions/authentication";
 
 import "./styles/index.css";
-import "react-toastify/dist/ReactToastify.min.css";
 
 // login if there is a token
 const userJson = localStorage.getItem("user");

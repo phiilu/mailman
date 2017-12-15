@@ -189,6 +189,8 @@ class AccountForm extends Component {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={touched.quota && !!errors.quota}
+                  helperText={touched.quota && errors.quota}
                   id="quota"
                   label="Quota"
                   name="quota"
@@ -206,7 +208,8 @@ class AccountForm extends Component {
                     <Switch
                       checked={values.enabled}
                       onChange={(event, checked) =>
-                        setFieldValue("enabled", checked)}
+                        setFieldValue("enabled", checked)
+                      }
                     />
                   }
                   label="Enabled"
@@ -218,7 +221,8 @@ class AccountForm extends Component {
                     <Switch
                       checked={values.sendonly}
                       onChange={(event, checked) =>
-                        setFieldValue("sendonly", checked)}
+                        setFieldValue("sendonly", checked)
+                      }
                     />
                   }
                   label="Sendonly"

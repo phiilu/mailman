@@ -4,30 +4,42 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
-    "bytes": "^3.0.0",
     "classnames": "^2.2.5",
-    "formik": "^0.10.4",
+    "file-size": "^1.0.0",
+    "formik": "^0.10.5",
     "lodash": "^4.17.4",
-    "material-ui": "^1.0.0-beta.21",
+    "material-ui": "^1.0.0-beta.23",
     "material-ui-icons": "^1.0.0-beta.17",
     "prop-types": "^15.6.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.17",
-    "react-toastify": "^2.2.0",
+    "react-toastify": "^3.1.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "yup": "^0.23.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "precommit": "lint-staged"
   },
   "homepage": "http://localhost:4000/",
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:4000",
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^6.0.0",
+    "prettier": "^1.9.2"
+  }
 }

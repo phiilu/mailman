@@ -6,7 +6,7 @@ import DeleteIcon from "material-ui-icons/Delete";
 import EditIcon from "material-ui-icons/Edit";
 import SendIcon from "material-ui-icons/Send";
 import { Link } from "react-router-dom";
-import bytes from "bytes";
+import fileSize from "file-size";
 import Tooltip from "material-ui/Tooltip";
 import classnames from "classnames";
 
@@ -36,10 +36,10 @@ const humanReadableDataUnits = unit => {
   if (unit === 0) {
     return "∞";
   } else {
-    return bytes(unit * 1000 * 1000, {
-      unitSeparator: " ",
-      thousandsSeparator: "."
-    });
+    return fileSize(unit * 1049000, {
+      fixed: 2,
+      spacer: " "
+    }).human("jedec");
   }
 };
 
