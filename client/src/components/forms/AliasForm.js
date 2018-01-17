@@ -5,6 +5,7 @@ import { withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import yup from "yup";
+import queryString from "query-string";
 
 import TextField from "material-ui/TextField";
 import Button from "material-ui/Button";
@@ -72,6 +73,14 @@ class AccountForm extends Component {
         }`,
         enabled: alias.enabled === "1"
       });
+    }
+
+    const { domain: source_domain } = queryString.parse(
+      this.props.location.search
+    );
+
+    if (source_domain) {
+      this.setState({ source_domain });
     }
   }
 

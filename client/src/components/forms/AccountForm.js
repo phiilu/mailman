@@ -20,6 +20,7 @@ import Switch from "material-ui/Switch";
 import { withStyles } from "material-ui/styles";
 import Grid from "material-ui/Grid";
 import { toast } from "react-toastify";
+import queryString from "query-string";
 
 import { getAll } from "../../actions/data";
 import { handleRequestError } from "../../util";
@@ -63,6 +64,12 @@ class AccountForm extends Component {
         enabled: account.enabled === "1",
         sendonly: account.sendonly === "1"
       });
+    }
+
+    const { domain } = queryString.parse(this.props.location.search);
+
+    if (domain) {
+      this.setState({ domain });
     }
 
     this.schema = yup.object().shape({

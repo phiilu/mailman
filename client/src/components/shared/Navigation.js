@@ -6,8 +6,11 @@ import PropTypes from "prop-types";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
+import IconButton from "material-ui/IconButton";
 import { withStyles } from "material-ui/styles";
+import LogoutIcon from "material-ui-icons/ExitToApp";
+import AccountIcon from "material-ui-icons/AccountCircle";
+
 import { toast } from "react-toastify";
 
 import compose from "lodash/fp/compose";
@@ -18,9 +21,13 @@ import { logout } from "../../actions/authentication";
 const styles = {
   flex: {
     flex: 1,
+    display: "flex",
     "& > *": {
       textDecoration: "none",
       color: "white"
+    },
+    "& > svg": {
+      marginRight: "0.5em"
     }
   },
   logout: {
@@ -49,17 +56,17 @@ class Navigation extends Component {
                 color="inherit"
                 className={classes.flex}
               >
-                {startCase(username)}
+                <AccountIcon /> {startCase(username)}
               </Typography>
             </span>,
-            <Button
+            <IconButton
               className={classes.logout}
               key={2}
               color="contrast"
               onClick={this.logout}
             >
-              Logout
-            </Button>
+              <LogoutIcon />
+            </IconButton>
           ]}
         </Toolbar>
       </AppBar>
