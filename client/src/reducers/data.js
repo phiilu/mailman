@@ -25,7 +25,7 @@ import {
 
 import { DATA_LOADING_START, DATA_LOADING_END } from "../actions/data";
 
-import { LOGOUT } from "../actions/authentication";
+import { LOGOUT, TOKEN_EXPIRED } from "../actions/authentication";
 
 const initialState = {
   domains: [],
@@ -158,6 +158,7 @@ export default (state = initialState, action) => {
           return tlspolicy;
         })
       };
+    case TOKEN_EXPIRED:
     case LOGOUT:
       return {
         ...initialState

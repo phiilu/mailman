@@ -26,8 +26,13 @@ export const setAccount = account => ({
 });
 
 export const getAccounts = () => async dispatch => {
-  const { accounts } = (await api.getAccounts()).data;
-  dispatch(setAccounts(accounts));
+  const response = await api.getAccounts();
+  if (response) {
+    const { accounts } = response.data;
+    dispatch(setAccounts(accounts));
+  } else {
+    // dispatch some error
+  }
 };
 
 export const saveAccount = data => async dispatch => {

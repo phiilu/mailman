@@ -1,3 +1,9 @@
+import axios from "axios";
+import { toast } from "react-toastify";
+
+import store from "./store";
+import { tokenExpired } from "./actions/authentication";
+
 export const handleRequestError = error => {
   if (error.response) {
     // The request was made and the server responded with a status code
@@ -22,4 +28,24 @@ export const handleRequestError = error => {
       message: error.message
     };
   }
+};
+
+export const setupAxiosInterceptors = () => {
+  axios.interceptors.response.use(
+    function(response) {
+      return response;
+    },
+    function(error) {
+      const data = error.response.data;
+      if (
+        error.response.status === 401 &&
+        data &&
+        data.error === "jwt expired"
+      ) {
+        store.dispatch(tokenExpired());
+        toast.warn("Your session has expired. Login again!");
+      }
+      return Promise.reject(error);
+    }
+  );
 };

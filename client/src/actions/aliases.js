@@ -26,8 +26,13 @@ export const setAlias = alias => ({
 });
 
 export const getAliases = () => async dispatch => {
-  const { aliases } = (await api.getAliases()).data;
-  dispatch(setAliases(aliases));
+  const response = await api.getAliases();
+  if (response) {
+    const { aliases } = response.data;
+    dispatch(setAliases(aliases));
+  } else {
+    // dispatch some error
+  }
 };
 
 export const deleteAlias = id => async dispatch => {

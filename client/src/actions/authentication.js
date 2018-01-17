@@ -5,6 +5,7 @@ import { getAll } from "./data";
 
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
+export const TOKEN_EXPIRED = "TOKEN_EXPIRED";
 
 export const loginAction = user => ({
   type: LOGIN,
@@ -31,3 +32,7 @@ export const logout = () => dispatch => {
   localStorage.removeItem("user");
   dispatch(logoutAction());
 };
+
+export const tokenExpired = () => ({
+  type: TOKEN_EXPIRED
+});

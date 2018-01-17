@@ -67,7 +67,9 @@ class AccountForm extends Component {
       this.setState({
         source_username: alias.source_username,
         source_domain: alias.source_domain,
-        destination: `${alias.destination_username}@${alias.destination_domain}`,
+        destination: `${alias.destination_username}@${
+          alias.destination_domain
+        }`,
         enabled: alias.enabled === "1"
       });
     }
@@ -132,9 +134,11 @@ class AccountForm extends Component {
               }
             })
             .catch(error => {
-              setSubmitting(false);
-              const { message } = handleRequestError(error);
-              toast.error("Error: " + message);
+              const { message, status } = handleRequestError(error);
+              if (status !== 401) {
+                setSubmitting(false);
+                toast.error("Error: " + message);
+              }
             });
         }}
       >
@@ -175,7 +179,8 @@ class AccountForm extends Component {
                     value={values.source_domain}
                     error={touched.source_domain && !!errors.source_domain}
                     onChange={e =>
-                      setFieldValue("source_domain", e.target.value)}
+                      setFieldValue("source_domain", e.target.value)
+                    }
                     onBlur={() => setFieldTouched("source_domain", true)}
                     input={<Input id="domains" />}
                     disabled={!isAdmin}
@@ -211,7 +216,8 @@ class AccountForm extends Component {
                     <Switch
                       checked={values.enabled}
                       onChange={(event, checked) =>
-                        setFieldValue("enabled", checked)}
+                        setFieldValue("enabled", checked)
+                      }
                     />
                   }
                   label="Enabled"

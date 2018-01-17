@@ -26,8 +26,14 @@ export const setDomain = domain => ({
 });
 
 export const getDomains = () => async dispatch => {
-  const { domains } = (await api.getDomains()).data;
-  dispatch(setDomains(domains));
+  const response = await api.getDomains();
+  if (response) {
+    const { domains } = response.data;
+    dispatch(setDomains(domains));
+  } else {
+    // dispatch some error
+    throw new Error("Fetch failed");
+  }
 };
 
 export const saveDomain = data => async dispatch => {

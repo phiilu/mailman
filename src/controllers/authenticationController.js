@@ -20,7 +20,7 @@ class AuthenticationController {
     try {
       await validate(email, emailValidator);
     } catch (validationError) {
-      return res.status(421).json({ message: "invalid email" });
+      return res.status(422).json({ message: "invalid email" });
     }
 
     // check if account with email exists

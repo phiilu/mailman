@@ -26,8 +26,13 @@ export const setTlsPolicy = tlspolicy => ({
 });
 
 export const getTlsPolicies = () => async dispatch => {
-  const { tlspolicies } = (await api.getTlsPolicies()).data;
-  dispatch(setTlsPolicies(tlspolicies));
+  const response = await api.getTlsPolicies();
+  if (response) {
+    const { tlspolicies } = response.data;
+    dispatch(setTlsPolicies(tlspolicies));
+  } else {
+    // dispatch some error
+  }
 };
 
 export const saveTlsPolicy = data => async dispatch => {

@@ -59,7 +59,7 @@ wget https://github.com/phiilu/mailman/raw/master/sample.env -O .env
 Update the variables in `.env` and then start mailman:
 
 ```bash
-docker run -d -p 4000:4000 --net="host" --env-file .env --name mailman phiilu/mailman
+docker run -d -p 4000:4000 --net="host" --env-file .env --restart=always --name mailman phiilu/mailman
 ```
 
 Explanation:

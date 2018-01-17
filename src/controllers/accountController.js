@@ -22,11 +22,6 @@ class AccountController {
 
     const account = (await Account.getAccount({ id }))[0];
     if (account) {
-      console.log(
-        `${account.username}@${account.domain}`,
-        req.user.email,
-        `${account.username}@${account.domain}` !== req.user.email
-      );
       if (
         !isAdmin(req.user.email) &&
         `${account.username}@${account.domain}` !== req.user.email

@@ -86,9 +86,11 @@ class TlsPolicyForm extends Component {
               }
             })
             .catch(error => {
-              setSubmitting(false);
-              const { message } = handleRequestError(error);
-              toast.error("Error: " + message);
+              const { message, status } = handleRequestError(error);
+              if (status !== 401) {
+                setSubmitting(false);
+                toast.error("Error: " + message);
+              }
             });
         }}
       >

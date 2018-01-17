@@ -68,12 +68,11 @@ class LoginForm extends Component {
                 .submit(values)
                 .then(() => {
                   toast.success("You are now logged in");
-                  resetForm();
                 })
                 .catch(error => {
                   const { message } = handleRequestError(error);
-                  toast.error("Error: " + message);
                   setSubmitting(false);
+                  toast.error("Error: " + message);
                 });
             }}
           >

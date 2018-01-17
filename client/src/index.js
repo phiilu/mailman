@@ -13,10 +13,12 @@ import AppWrapper from "./components/shared/AppWrapper";
 import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 import store from "./store";
-
 import { loginAction } from "./actions/authentication";
+import { setupAxiosInterceptors } from "./util";
 
 import "./styles/index.css";
+
+setupAxiosInterceptors();
 
 // login if there is a token
 const userJson = localStorage.getItem("user");
@@ -38,7 +40,7 @@ const app = (
     <Router basename={process.env.PUBLIC_URL}>
       <MuiThemeProvider theme={theme}>
         <AppWrapper>
-          <App key={0} />,
+          <App key={0} />
           <ToastContainer
             position="top-right"
             type="default"
