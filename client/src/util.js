@@ -31,6 +31,12 @@ export const handleRequestError = error => {
 };
 
 export const setupAxiosInterceptors = () => {
+  const base = process.env.REACT_APP_BASENAME;
+  if (base.endsWith("/")) {
+    axios.defaults.baseURL = base.slice(0, -1);
+  } else {
+    axios.defaults.baseURL = base;
+  }
   axios.interceptors.response.use(
     function(response) {
       return response;
