@@ -146,7 +146,7 @@ root `/`, you have to modify the following:
 
 _These steps need to be done BEFORE you build Mailman!_
 
-1. open `mailman/client/package.json` and change `"homepage": "http://localhost:4000/"` to "homepage": `"http://localhost:4000/mailman"`
+1. open `mailman/client/package.json` and change `"homepage": "http://localhost:4000/"` to `"homepage": "http://localhost:4000/mailman"`
 2. open `mailman/client/.env.production` and change `REACT_APP_BASENAME=/` to `REACT_APP_BASENAME=/mailman`
 3. open `mailman/.env` and change `MAILMAN_BASENAME=/` to `MAILMAN_BASENAME=/mailman`
 4. build Mailman `npm install && cd client && npm install && cd - && npm run build`
