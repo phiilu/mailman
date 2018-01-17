@@ -144,11 +144,14 @@ configuration:
 If you want to access mailman via a subfolder `/mailman` instead of the http
 root `/`, you have to modify the following:
 
-* Open the `package.json` file inside the client folder
-* Find `"homepage"` and update the URL to your needs. For example:
-  `http://localhost:4000/mailman`
-* Set the `MAILMAN_BASENAME` variable in `.env` to the subfolder you want to
-  use: For example: `/mailman`
+_These steps need to be done BEFORE you build Mailman!_
+
+1. open `mailman/client/package.json` and change `"homepage": "http://localhost:4000/"` to "homepage": `"http://localhost:4000/mailman"`
+2. open `mailman/client/.env.production` and change `REACT_APP_BASENAME=/` to `REACT_APP_BASENAME=/mailman`
+3. open `mailman/.env` and change `MAILMAN_BASENAME=/` to `MAILMAN_BASENAME=/mailman`
+4. build Mailman `npm install && cd client && npm install && cd - && npm run build`
+5. kill `pm2` if it is already running with `pm2 kill`
+6. start Mailman again: `npm start`
 
 ---
 
