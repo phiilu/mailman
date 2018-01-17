@@ -26,7 +26,11 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(helmet());
 
-app.use("/api", apiLimiter, api);
+if (base.endsWith("/")) {
+  app.use(base + "api", apiLimiter, api);
+} else {
+  app.use(base + "/api", apiLimiter, api);
+}
 
 if (process.env.NODE_ENV === "production") {
   app.use(base, Express.static(path.resolve("client", "build")));
