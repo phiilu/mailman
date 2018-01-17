@@ -14,10 +14,8 @@ WORKDIR /opt/mailman
 
 # Install all dependencies of the current project.
 COPY package.json package.json
-COPY package-lock.json package-lock.json
 # Client
 COPY client/package.json client/package.json
-COPY client/package-lock.json client/package-lock.json
 
 RUN npm install && cd client && npm install && cd -
 
