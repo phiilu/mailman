@@ -59,18 +59,39 @@ wget https://github.com/phiilu/mailman/raw/master/sample.env -O .env
 Update the variables in `.env` and then start mailman:
 
 ```bash
-docker run -d -p 4000:4000 --net="host" --env-file .env --restart=always --name mailman phiilu/mailman
+docker run -d --net="host" --env-file .env --restart=always --name mailman phiilu/mailman
 ```
 
 Explanation:
 
 * `-d` runs the container as a daemon process a.k.a. in the background
-* `-p <HOST_PORT>:4000` exposes the port container 4000 to the specified
-  `HOST_PORT`
 * `--net="host"` instructs docker to share the network with the host. This is
   required to access the vmail database
 * `--env-file .env` sets the environment variables in the container
 * `--name mailman` sets the name for the docker container to mailman
+
+---
+
+**Docker with Subfolder configuration:**
+
+If you want to access mailman via a subfolder `/mailman` instead of the http
+root `/`, you have to modify the following:
+
+Download the `sample.subfolder.env` file
+
+```bash
+wget https://github.com/phiilu/mailman/raw/master/sample.env -O .env
+```
+
+Update the variables in `.env` and then start mailman with the :subfolder tag:
+
+```bash
+docker run -d --net="host" --env-file .env --restart=always --name mailman phiilu/mailman:subfolder
+```
+
+**Note:** This Docker Image is for the path `/mailman` only! It can not be changed.
+
+---
 
 ## Deployment
 
