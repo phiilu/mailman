@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Formik } from "formik";
-import yup from "yup";
+import * as yup from "yup";
 import { toast } from "react-toastify";
 
-import TextField from "material-ui/TextField";
-import Button from "material-ui/Button";
-import Paper from "material-ui/Paper";
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 
 import { handleRequestError } from "../../util";
 
@@ -51,7 +51,7 @@ class LoginForm extends Component {
     return (
       <Paper className={classes.paper}>
         <div className={classes.header}>
-          <Typography type="headline" align="center">
+          <Typography variant="headline" align="center">
             Login
           </Typography>
         </div>
@@ -67,7 +67,7 @@ class LoginForm extends Component {
               this.props
                 .submit(values)
                 .then(() => {
-                  toast.success("You are now logged in");
+                  toast.success("Welcome back!");
                 })
                 .catch(error => {
                   const { message } = handleRequestError(error);
@@ -117,8 +117,8 @@ class LoginForm extends Component {
                 />
                 <Button
                   className={classes.button}
-                  raised
-                  color="accent"
+                  variant="contained"
+                  color="secondary"
                   type="submit"
                   disabled={isSubmitting}
                 >

@@ -2,12 +2,13 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { MuiThemeProvider } from "material-ui/styles";
-import createMuiTheme from "material-ui/styles/createMuiTheme";
-import blue from "material-ui/colors/blue";
-import amber from "material-ui/colors/amber";
+import { MuiThemeProvider } from "@material-ui/core/styles";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import blue from "@material-ui/core/colors/blue";
+import amber from "@material-ui/core/colors/amber";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 import AppWrapper from "./components/shared/AppWrapper";
 import App from "./components/App";
@@ -15,6 +16,8 @@ import registerServiceWorker from "./registerServiceWorker";
 import store from "./store";
 import { loginAction } from "./actions/authentication";
 import { setupAxiosInterceptors } from "./util";
+
+import "typeface-roboto";
 
 import "./styles/index.css";
 

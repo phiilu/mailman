@@ -4,13 +4,13 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
-import yup from "yup";
+import * as yup from "yup";
 import { toast } from "react-toastify";
 
-import TextField from "material-ui/TextField";
-import Button from "material-ui/Button";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 
 import { getAll } from "../../actions/data";
 import { handleRequestError } from "../../util";
@@ -83,7 +83,7 @@ class AccountPasswordForm extends Component {
           isValid
         }) => (
           <form onSubmit={handleSubmit}>
-            <Grid container>
+            <Grid container spacing={8}>
               <Grid item xs={12}>
                 <TextField
                   error={touched.currentPassword && !!errors.currentPassword}
@@ -140,8 +140,8 @@ class AccountPasswordForm extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  raised
-                  color="accent"
+                  variant="contained"
+                  color="secondary"
                   type="submit"
                   disabled={!isValid || isSubmitting}
                   className={classes.button}
@@ -175,7 +175,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { getAll })
+  connect(
+    mapStateToProps,
+    { getAll }
+  )
 );
 
 export default enhance(AccountPasswordForm);

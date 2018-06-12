@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import AppBar from "material-ui/AppBar";
-import Toolbar from "material-ui/Toolbar";
-import Typography from "material-ui/Typography";
-import IconButton from "material-ui/IconButton";
-import { withStyles } from "material-ui/styles";
-import LogoutIcon from "material-ui-icons/ExitToApp";
-import AccountIcon from "material-ui-icons/AccountCircle";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
+import LogoutIcon from "@material-ui/icons/ExitToApp";
+import AccountIcon from "@material-ui/icons/AccountCircle";
 
 import { toast } from "react-toastify";
 
@@ -22,6 +22,7 @@ const styles = {
   flex: {
     flex: 1,
     display: "flex",
+    alignItems: "center",
     "& > *": {
       textDecoration: "none",
       color: "white"
@@ -31,14 +32,15 @@ const styles = {
     }
   },
   logout: {
-    marginLeft: "15px"
+    marginLeft: "15px",
+    color: "white"
   }
 };
 
 class Navigation extends Component {
   logout = () => {
     this.props.logout();
-    toast.success("See you!");
+    toast.success("Have a great day!");
   };
 
   render() {
@@ -46,13 +48,13 @@ class Navigation extends Component {
     return (
       <AppBar position="static">
         <Toolbar>
-          <Typography type="title" color="inherit" className={classes.flex}>
+          <Typography variant="title" color="inherit" className={classes.flex}>
             <Link to="/">Mailman</Link>
           </Typography>
           {token && [
             <span key={1}>
               <Typography
-                type="subheading"
+                variant="subheading"
                 color="inherit"
                 className={classes.flex}
               >
@@ -62,7 +64,6 @@ class Navigation extends Component {
             <IconButton
               className={classes.logout}
               key={2}
-              color="contrast"
               onClick={this.logout}
             >
               <LogoutIcon />
@@ -85,7 +86,10 @@ const mapStateToProps = state => ({
 
 const enhance = compose(
   withStyles(styles),
-  connect(mapStateToProps, { logout })
+  connect(
+    mapStateToProps,
+    { logout }
+  )
 );
 
 export default enhance(Navigation);

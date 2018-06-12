@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import Grid from "material-ui/Grid";
+import Grid from "@material-ui/core/Grid";
 import LoginForm from "../components/forms/LoginForm";
 
 import { login } from "../actions/authentication";
@@ -23,4 +23,7 @@ class Login extends Component {
   }
 }
 
-export default connect(null, { login })(Login);
+export default connect(
+  null,
+  { login }
+)(Login);

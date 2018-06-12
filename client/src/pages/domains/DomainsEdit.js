@@ -3,10 +3,10 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter, Redirect } from "react-router-dom";
 
-import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
-import Paper from "material-ui/Paper";
-import { withStyles } from "material-ui/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import { withStyles } from "@material-ui/core/styles";
 
 import { updateDomain } from "../../actions/domains";
 
@@ -50,7 +50,7 @@ class DomainsEdit extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography type="headline">Edit Domain</Typography>
+              <Typography variant="headline">Edit Domain</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
@@ -71,7 +71,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { updateDomain })
+  connect(
+    mapStateToProps,
+    { updateDomain }
+  )
 );
 
 export default enhance(DomainsEdit);

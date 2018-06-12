@@ -4,10 +4,10 @@ import { Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
-import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
-import Paper from "material-ui/Paper";
-import { withStyles } from "material-ui/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import { withStyles } from "@material-ui/core/styles";
 
 import { saveDomain } from "../../actions/domains";
 
@@ -50,7 +50,7 @@ class DomainsNew extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography type="headline">Add Domain</Typography>
+              <Typography variant="headline">Add Domain</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
@@ -70,7 +70,10 @@ const mapStateToProps = state => ({
 
 const enhance = compose(
   withStyles(styles),
-  connect(mapStateToProps, { saveDomain })
+  connect(
+    mapStateToProps,
+    { saveDomain }
+  )
 );
 
 export default enhance(DomainsNew);

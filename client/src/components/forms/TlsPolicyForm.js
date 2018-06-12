@@ -4,16 +4,18 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
-import yup from "yup";
+import * as yup from "yup";
 
-import TextField from "material-ui/TextField";
-import Button from "material-ui/Button";
-import Input, { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import { FormControl, FormHelperText } from "material-ui/Form";
-import Select from "material-ui/Select";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Select from "@material-ui/core/Select";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import { toast } from "react-toastify";
 
 import { getAll } from "../../actions/data";
@@ -78,10 +80,14 @@ class TlsPolicyForm extends Component {
             .submit(values)
             .then(data => {
               if (this.props.update) {
-                toast.success("Updated successfully!");
+                toast.success(
+                  `Updated policy for ${values.domain} successfully!`
+                );
                 setSubmitting(false);
               } else {
-                toast.success("Saved successfully!");
+                toast.success(
+                  `Created policy for ${values.domain} successfully!`
+                );
                 resetForm();
               }
             })
@@ -107,7 +113,7 @@ class TlsPolicyForm extends Component {
           setFieldTouched
         }) => (
           <form onSubmit={handleSubmit}>
-            <Grid container>
+            <Grid container spacing={8}>
               <Grid item xs={12}>
                 <TextField
                   error={touched.domain && !!errors.domain}
@@ -169,8 +175,8 @@ class TlsPolicyForm extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  raised
-                  color="accent"
+                  variant="contained"
+                  color="secondary"
                   type="submit"
                   disabled={this.state.submitting}
                   className={classes.button}
@@ -201,7 +207,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { getAll })
+  connect(
+    mapStateToProps,
+    { getAll }
+  )
 );
 
 export default enhance(TlsPolicyForm);

@@ -4,21 +4,20 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
-import yup from "yup";
+import * as yup from "yup";
 
-import TextField from "material-ui/TextField";
-import Button from "material-ui/Button";
-import Input, { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import {
-  FormControl,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
-import Select from "material-ui/Select";
-import Switch from "material-ui/Switch";
-import { withStyles } from "material-ui/styles";
-import Grid from "material-ui/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Select from "@material-ui/core/Select";
+import Switch from "@material-ui/core/Switch";
+import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
 import { toast } from "react-toastify";
 import queryString from "query-string";
 
@@ -113,11 +112,15 @@ class AccountForm extends Component {
             .submit(values)
             .then(data => {
               if (this.props.update) {
-                toast.success("Updated successfully!");
+                toast.success(
+                  `Updated "${values.username}@${values.domain}" sucessfully!`
+                );
                 setFieldValue("password", "");
                 setSubmitting(false);
               } else {
-                toast.success("Saved successfully!");
+                toast.success(
+                  `Created "${values.username}@${values.domain}" sucessfully!`
+                );
                 resetForm();
               }
             })
@@ -143,7 +146,7 @@ class AccountForm extends Component {
           setFieldTouched
         }) => (
           <form onSubmit={handleSubmit}>
-            <Grid container>
+            <Grid container spacing={8}>
               <Grid item xs={12}>
                 <TextField
                   error={touched.username && !!errors.username}
@@ -215,6 +218,7 @@ class AccountForm extends Component {
                 <FormControlLabel
                   control={
                     <Switch
+                      color="primary"
                       checked={values.enabled}
                       onChange={(event, checked) =>
                         setFieldValue("enabled", checked)
@@ -228,6 +232,7 @@ class AccountForm extends Component {
                 <FormControlLabel
                   control={
                     <Switch
+                      color="primary"
                       checked={values.sendonly}
                       onChange={(event, checked) =>
                         setFieldValue("sendonly", checked)
@@ -239,8 +244,8 @@ class AccountForm extends Component {
               </Grid>
               <Grid item xs={12}>
                 <Button
-                  raised
-                  color="accent"
+                  variant="contained"
+                  color="secondary"
                   type="submit"
                   disabled={isSubmitting}
                   className={classes.button}
@@ -274,7 +279,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { getAll })
+  connect(
+    mapStateToProps,
+    { getAll }
+  )
 );
 
 export default enhance(AccountForm);

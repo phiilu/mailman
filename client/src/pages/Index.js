@@ -1,37 +1,32 @@
 /* eslint-disable */
 import React, { Component } from "react";
-import { createPortal } from "react-dom";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
-import Grid from "material-ui/Grid";
-import { withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import Button from "material-ui/Button";
-import Paper from "material-ui/Paper";
-import { CircularProgress } from "material-ui/Progress";
+import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { toast } from "react-toastify";
-import Tooltip from "material-ui/Tooltip";
-import green from "material-ui/colors/green";
+import Tooltip from "@material-ui/core/Tooltip";
+import green from "@material-ui/core/colors/green";
 
-import IconButton from "material-ui/IconButton";
-import DeleteIcon from "material-ui-icons/Delete";
-import AddIcon from "material-ui-icons/Add";
-import EditIcon from "material-ui-icons/Edit";
-import PersonAddIcon from "material-ui-icons/PersonAdd";
-import GroupAddIcon from "material-ui-icons/GroupAdd";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 import { getAll } from "../actions/data";
 import { deleteDomain } from "../actions/domains";
 import { deleteAccount } from "../actions/accounts";
 import { deleteAlias } from "../actions/aliases";
 import { deleteTlsPolicy } from "../actions/tlsPolicies";
-
-import Navigation from "../components/shared/Navigation";
-import Wrapper from "../components/shared/Wrapper";
-import Dialog from "../components/shared/Dialog";
 
 import AccountTable from "../components/AccountTable";
 import AliasTable from "../components/AliasTable";
@@ -175,9 +170,14 @@ class Index extends Component {
       content = (
         <Grid container spacing={24}>
           <Grid item xs={12}>
-            <Typography type="display1" className={classes.pageHeader}>
+            <Typography variant="display1" className={classes.pageHeader}>
               Domains
-              <Button raised color="accent" component={Link} to="/domains/new">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/domains/new"
+              >
                 <AddIcon /> Domain
               </Button>
             </Typography>
@@ -185,7 +185,7 @@ class Index extends Component {
               domains.map(domain => (
                 <Paper key={domain.id} className={classes.box}>
                   <div className={classes.boxTitle}>
-                    <Typography type="headline">{domain.domain}</Typography>
+                    <Typography variant="headline">{domain.domain}</Typography>
                     <span>
                       <Tooltip title="Add Alias" placement="top">
                         <IconButton
@@ -230,7 +230,7 @@ class Index extends Component {
                   </div>
                   <div className={classes.boxContent}>
                     <div className={classes.boxSection}>
-                      <Typography type="title">Accounts</Typography>
+                      <Typography variant="title">Accounts</Typography>
                       <AccountTable
                         accounts={accounts.filter(
                           account => account.domain === domain.domain
@@ -239,7 +239,7 @@ class Index extends Component {
                       />
                     </div>
                     <div className={classes.boxSection}>
-                      <Typography type="title">Aliases</Typography>
+                      <Typography variant="title">Aliases</Typography>
                       <AliasTable
                         aliases={aliases.filter(
                           alias =>
@@ -257,11 +257,11 @@ class Index extends Component {
             )}
           </Grid>
           <Grid item xs={12}>
-            <Typography type="display1" className={classes.pageHeader}>
+            <Typography variant="display1" className={classes.pageHeader}>
               TLS Policies
               <Button
-                raised
-                color="accent"
+                variant="contained"
+                color="secondary"
                 component={Link}
                 to="/tlspolicies/new"
               >
@@ -279,18 +279,23 @@ class Index extends Component {
       content = (
         <Grid container spacing={24}>
           <Grid item xs={12}>
-            <Typography type="display1" className={classes.pageHeader}>
+            <Typography variant="display1" className={classes.pageHeader}>
               {email}
             </Typography>
             <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />
             <br />
             <div className={classes.actions}>
-              <Button raised color="primary" component={Link} to="/aliases/new">
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/aliases/new"
+              >
                 <AddIcon /> Alias
               </Button>
               <Button
-                raised
-                color="accent"
+                variant="contained"
+                color="secondary"
                 component={Link}
                 to={`/accounts/${id}/password`}
               >
@@ -305,7 +310,7 @@ class Index extends Component {
     if (loading) {
       content = (
         <div className={classes.progress}>
-          <CircularProgress color="accent" />
+          <CircularProgress color="secondary" />
         </div>
       );
     }
@@ -321,13 +326,16 @@ const mapStateToProps = state => ({
 
 const enhance = compose(
   withStyles(styles),
-  connect(mapStateToProps, {
-    getAll,
-    deleteDomain,
-    deleteAccount,
-    deleteAlias,
-    deleteTlsPolicy
-  })
+  connect(
+    mapStateToProps,
+    {
+      getAll,
+      deleteDomain,
+      deleteAccount,
+      deleteAlias,
+      deleteTlsPolicy
+    }
+  )
 );
 
 export default enhance(Index);

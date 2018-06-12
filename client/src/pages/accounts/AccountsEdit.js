@@ -4,10 +4,10 @@ import { withRouter, Redirect } from "react-router-dom";
 
 import compose from "lodash/fp/compose";
 
-import Grid from "material-ui/Grid";
-import Typography from "material-ui/Typography";
-import Paper from "material-ui/Paper";
-import { withStyles } from "material-ui/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import { withStyles } from "@material-ui/core/styles";
 
 import { updateAccount } from "../../actions/accounts";
 
@@ -52,7 +52,7 @@ class AccountsEdit extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography type="headline">Edit Account</Typography>
+              <Typography variant="headline">Edit Account</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
@@ -73,7 +73,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { updateAccount })
+  connect(
+    mapStateToProps,
+    { updateAccount }
+  )
 );
 
 export default enhance(AccountsEdit);

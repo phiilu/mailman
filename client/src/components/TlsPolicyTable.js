@@ -1,18 +1,19 @@
 import React from "react";
-import { withStyles } from "material-ui/styles";
-import { TableCell, TableRow } from "material-ui/Table";
-import IconButton from "material-ui/IconButton";
-import DeleteIcon from "material-ui-icons/Delete";
-import EditIcon from "material-ui-icons/Edit";
+import { withStyles, createStyles } from "@material-ui/core/styles";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
 
 import Table from "../components/shared/Table";
 
-const styles = {
+const styles = createStyles({
   deleteIcon: {
     color: "#FF6347"
   }
-};
+});
 
 const TlsPolicyTable = ({ tlspolicies, classes, deleteTlsPolicy }) => {
   const headers = ["Domain", "Params", "Policy", ""];

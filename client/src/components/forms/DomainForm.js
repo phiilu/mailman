@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { Formik } from "formik";
-import yup from "yup";
+import * as yup from "yup";
 
-import TextField from "material-ui/TextField";
-import Button from "material-ui/Button";
-import Grid from "material-ui/Grid";
-import { withStyles } from "material-ui/styles";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 
 import { updateDomain } from "../../actions/domains";
@@ -61,9 +61,9 @@ class DomainForm extends Component {
             .submit(values)
             .then(data => {
               if (this.props.update) {
-                toast.success("Updated successfully!");
+                toast.success(`Updated "${values.domain}" sucessfully!`);
               } else {
-                toast.success("Saved successfully!");
+                toast.success(`Created "${values.domain}" sucessfully!`);
               }
               resetForm();
             })
@@ -88,7 +88,7 @@ class DomainForm extends Component {
         }) => {
           return (
             <form onSubmit={handleSubmit}>
-              <Grid container>
+              <Grid container spacing={8}>
                 <Grid item xs={12}>
                   <TextField
                     error={touched.domain && !!errors.domain}
@@ -107,8 +107,8 @@ class DomainForm extends Component {
                 <Grid item xs={12}>
                   <Button
                     className={classes.button}
-                    raised
-                    color="accent"
+                    variant="contained"
+                    color="secondary"
                     type="submit"
                     disabled={isSubmitting}
                   >
@@ -131,7 +131,10 @@ const mapStateToProps = state => ({
 const enhance = compose(
   withStyles(styles),
   withRouter,
-  connect(mapStateToProps, { updateDomain, getAll })
+  connect(
+    mapStateToProps,
+    { updateDomain, getAll }
+  )
 );
 
 export default enhance(DomainForm);
