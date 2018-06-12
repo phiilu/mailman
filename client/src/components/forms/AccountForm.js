@@ -19,10 +19,9 @@ import Switch from "@material-ui/core/Switch";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { toast } from "react-toastify";
-import queryString from "query-string";
 
 import { getAll } from "../../actions/data";
-import { handleRequestError } from "../../util";
+import { handleRequestError, getParams } from "../../util";
 
 const styles = {
   textfield: {
@@ -65,7 +64,7 @@ class AccountForm extends Component {
       });
     }
 
-    const { domain } = queryString.parse(this.props.location.search);
+    const { domain } = getParams(this.props.location.search);
 
     if (domain) {
       this.setState({ domain });
