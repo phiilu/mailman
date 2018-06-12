@@ -80,7 +80,7 @@ root `/`, you have to modify the following:
 Download the `sample.subfolder.env` file
 
 ```bash
-wget https://github.com/phiilu/mailman/raw/master/sample.env -O .env
+wget https://github.com/phiilu/mailman/raw/master/sample.subfolder.env -O .env
 ```
 
 Update the variables in `.env` and then start mailman with the :subfolder tag:
