@@ -12,7 +12,7 @@ import api from "./api";
 import errorMiddleware from "./middlware/errorMiddleware";
 
 const app = new Express();
-const port = process.env.MAILMAN_PORT || 4000;
+const port = process.env.PORT || process.env.MAILMAN_PORT || 4000;
 const base = process.env.MAILMAN_BASENAME || "/";
 const apiLimiter = new RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
