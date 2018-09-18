@@ -16,8 +16,7 @@ const port = process.env.PORT || process.env.MAILMAN_PORT || 4000;
 const base = process.env.MAILMAN_BASENAME || "/";
 const apiLimiter = new RateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // 100 request per IP
-  delayMs: 0 // disabled
+  max: 1000 // 100 request per IP
 });
 
 app.enable("trust proxy"); // only if you're behind a reverse proxy

@@ -46,9 +46,27 @@ class Navigation extends Component {
   render() {
     const { classes, token, username } = this.props;
     return (
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="title" color="inherit" className={classes.flex}>
+      <AppBar
+        className={classNames(classes.appBar, {
+          [classes.appBarShift]: open,
+          [classes[`appBarShift-${anchor}`]]: open
+        })}
+      >
+        <Toolbar disableGutters={!open}>
+          <IconButton
+            color="inherit"
+            aria-label="Open drawer"
+            onClick={this.handleDrawerOpen}
+            className={classNames(classes.menuButton, open && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="title"
+            color="inherit"
+            className={classes.flex}
+            noWrap
+          >
             <Link to="/">Mailman</Link>
           </Typography>
           {token && [
