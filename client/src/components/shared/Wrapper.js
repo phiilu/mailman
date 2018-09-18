@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   wrapper: {
-    padding: "2.5% 5%",
+    padding: "0 5% 2.5% 5%",
     maxWidth: "1080px",
     margin: "0 auto",
     "@media (max-width: 530px)": {
