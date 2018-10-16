@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 const NotFound = () => {
   return (
     <div>
-      <Typography variant="title" align="center">
+      <Typography variant="h6" align="center">
         404 | Not found
       </Typography>
     </div>

@@ -52,7 +52,7 @@ class AccountsEdit extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Edit Account</Typography>
+              <Typography variant="h5">Edit Account</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>

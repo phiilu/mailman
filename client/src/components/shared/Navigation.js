@@ -62,7 +62,7 @@ class Navigation extends Component {
             <MenuIcon />
           </IconButton>
           <Typography
-            variant="title"
+            variant="h6"
             color="inherit"
             className={classes.flex}
             noWrap
@@ -72,7 +72,7 @@ class Navigation extends Component {
           {token && [
             <span key={1}>
               <Typography
-                variant="subheading"
+                variant="subtitle1"
                 color="inherit"
                 className={classes.flex}
               >

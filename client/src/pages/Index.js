@@ -56,7 +56,7 @@ const styles = theme => ({
     margin: "1em 0 2em"
   },
   boxTitle: {
-    background: theme.palette.primary["200"],
+    background: "#eeeeee",
     borderBottom: "1px solid #eee",
     padding: "1em",
     display: "flex",
@@ -170,7 +170,7 @@ class Index extends Component {
       content = (
         <Grid container spacing={24}>
           <Grid item xs={12}>
-            <Typography variant="display1" className={classes.pageHeader}>
+            <Typography variant="h4" className={classes.pageHeader}>
               Domains
               <Button
                 variant="contained"
@@ -185,7 +185,7 @@ class Index extends Component {
               domains.map(domain => (
                 <Paper key={domain.id} className={classes.box}>
                   <div className={classes.boxTitle}>
-                    <Typography variant="headline">{domain.domain}</Typography>
+                    <Typography variant="h5">{domain.domain}</Typography>
                     <span>
                       <Tooltip title="Add Alias" placement="top">
                         <IconButton
@@ -230,7 +230,7 @@ class Index extends Component {
                   </div>
                   <div className={classes.boxContent}>
                     <div className={classes.boxSection}>
-                      <Typography variant="title">Accounts</Typography>
+                      <Typography variant="h6">Accounts</Typography>
                       <AccountTable
                         accounts={accounts.filter(
                           account => account.domain === domain.domain
@@ -239,7 +239,7 @@ class Index extends Component {
                       />
                     </div>
                     <div className={classes.boxSection}>
-                      <Typography variant="title">Aliases</Typography>
+                      <Typography variant="h6">Aliases</Typography>
                       <AliasTable
                         aliases={aliases.filter(
                           alias =>
@@ -257,7 +257,7 @@ class Index extends Component {
             )}
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="display1" className={classes.pageHeader}>
+            <Typography variant="h4" className={classes.pageHeader}>
               TLS Policies
               <Button
                 variant="contained"
@@ -279,7 +279,7 @@ class Index extends Component {
       content = (
         <Grid container spacing={24}>
           <Grid item xs={12}>
-            <Typography variant="display1" className={classes.pageHeader}>
+            <Typography variant="h4" className={classes.pageHeader}>
               {email}
             </Typography>
             <AliasTable aliases={aliases} deleteAlias={this.deleteAlias} />

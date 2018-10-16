@@ -4,8 +4,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import blue from "@material-ui/core/colors/blue";
-import amber from "@material-ui/core/colors/amber";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -33,8 +31,21 @@ if (userJson) {
 
 const theme = createMuiTheme({
   palette: {
-    primary: blue,
-    secondary: amber
+    primary: {
+      light: "#555767",
+      main: "#2B2D42",
+      dark: "#1e1f2e",
+      contrastText: "#fff"
+    },
+    secondary: {
+      light: "#f73378",
+      main: "#f50057",
+      dark: "#ab003c",
+      contrastText: "#fff"
+    }
+  },
+  typography: {
+    useNextVariants: true
   }
 });
 

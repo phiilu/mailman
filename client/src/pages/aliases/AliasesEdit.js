@@ -41,7 +41,7 @@ class AliasesEdit extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Edit Alias</Typography>
+              <Typography variant="h5">Edit Alias</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>

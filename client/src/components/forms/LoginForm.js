@@ -51,7 +51,7 @@ class LoginForm extends Component {
     return (
       <Paper className={classes.paper}>
         <div className={classes.header}>
-          <Typography variant="headline" align="center">
+          <Typography variant="h5" align="center">
             Login
           </Typography>
         </div>

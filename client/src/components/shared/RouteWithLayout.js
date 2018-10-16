@@ -89,7 +89,7 @@ class RouteWithLayout extends React.Component {
                 >
                   <MenuIcon />
                 </IconButton>
-                <Typography variant="title" color="inherit" noWrap>
+                <Typography variant="h6" color="inherit" noWrap>
                   Mailman
                 </Typography>
               </Toolbar>

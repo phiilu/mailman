@@ -50,7 +50,7 @@ class TlsPoliciesNew extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Add TLS Policy</Typography>
+              <Typography variant="h5">Add TLS Policy</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>

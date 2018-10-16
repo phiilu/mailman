@@ -51,7 +51,7 @@ class AccountsPassword extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Change Password</Typography>
+              <Typography variant="h5">Change Password</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>

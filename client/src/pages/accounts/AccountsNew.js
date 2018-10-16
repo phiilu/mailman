@@ -50,7 +50,7 @@ class AccountsNew extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Add Account</Typography>
+              <Typography variant="h5">Add Account</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>

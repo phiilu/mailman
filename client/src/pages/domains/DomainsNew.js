@@ -50,7 +50,7 @@ class DomainsNew extends Component {
         <Grid container>
           <Grid item xs={12}>
             <div className={classes.header}>
-              <Typography variant="headline">Add Domain</Typography>
+              <Typography variant="h5">Add Domain</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
