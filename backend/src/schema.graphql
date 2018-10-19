@@ -5,7 +5,6 @@ type Query {
 }
 
 type Mutation {
-  sayHello(name: String!): String!
   createAccount(
     email: String!
     password: String!
@@ -13,6 +12,7 @@ type Mutation {
     enabled: Int
     sendonly: Int
   ): Account!
+  createDomain(domain: String!): Domain!
 }
 
 type Domain {
@@ -25,6 +25,7 @@ type Account {
   id: Int!
   email: String!
   username: String!
+  password: String!
   domain: Domain!
   quota: Int!
   enabled: Int!

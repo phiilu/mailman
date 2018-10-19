@@ -1,15 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { ApolloProvider } from "react-apollo";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Provider } from "react-redux";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "typeface-roboto";
 
-import Mailman from "./components/App";
-import Dashboard from "./pages/Dashboard";
 import registerServiceWorker from "./registerServiceWorker";
-import store from "./store";
+import apolloClient from "./lib/apolloClient";
+
+import Mailman from "./components/Mailman";
+import Dashboard from "./pages/Dashboard";
 
 const theme = createMuiTheme({
   palette: {
@@ -32,18 +33,18 @@ const theme = createMuiTheme({
 });
 
 const app = (
-  <Provider store={store}>
+  <ApolloProvider client={apolloClient}>
     <Router basename={process.env.REACT_APP_BASENAME}>
       <MuiThemeProvider theme={theme}>
-        <React.Fragment>
+        <>
           <CssBaseline />
           <Mailman>
             <Dashboard />
           </Mailman>
-        </React.Fragment>
+        </>
       </MuiThemeProvider>
     </Router>
-  </Provider>
+  </ApolloProvider>
 );
 
 ReactDOM.render(app, document.getElementById("root"));

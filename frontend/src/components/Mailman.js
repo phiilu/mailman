@@ -20,8 +20,6 @@ import MailIcon from "@material-ui/icons/Mail";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import SettingsIcon from "@material-ui/icons/Settings";
 
-import PageTitle from "../components/styles/PageTitle";
-
 const drawerWidth = 240;
 
 const styles = theme => ({
