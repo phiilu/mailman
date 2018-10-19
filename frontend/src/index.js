@@ -2,32 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import axios from "axios";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
-
-import AppWrapper from "./components/shared/AppWrapper";
-import App from "./components/App";
-import registerServiceWorker from "./registerServiceWorker";
-import store from "./store";
-import { loginAction } from "./actions/authentication";
-import { setupAxiosInterceptors } from "./util";
-
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import "typeface-roboto";
 
-import "./styles/index.css";
-
-setupAxiosInterceptors();
-
-// login if there is a token
-const userJson = localStorage.getItem("user");
-if (userJson) {
-  const user = JSON.parse(userJson);
-  store.dispatch(loginAction(user));
-  axios.defaults.headers.common.Authorization = `Bearer ${user.token}`;
-}
+import Mailman from "./components/App";
+import Dashboard from "./pages/Dashboard";
+import registerServiceWorker from "./registerServiceWorker";
+import store from "./store";
 
 const theme = createMuiTheme({
   palette: {
@@ -53,20 +35,12 @@ const app = (
   <Provider store={store}>
     <Router basename={process.env.REACT_APP_BASENAME}>
       <MuiThemeProvider theme={theme}>
-        <AppWrapper>
-          <App key={0} />
-          <ToastContainer
-            position="top-right"
-            type="default"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            pauseOnHover
-            key={1}
-            style={{ marginTop: "65px" }}
-          />
-        </AppWrapper>
+        <React.Fragment>
+          <CssBaseline />
+          <Mailman>
+            <Dashboard />
+          </Mailman>
+        </React.Fragment>
       </MuiThemeProvider>
     </Router>
   </Provider>

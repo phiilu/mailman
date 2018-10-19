@@ -8,7 +8,7 @@ class Domain {
       .orderBy("domain", "asc");
   }
 
-  async getDomainsForEmail(email) {
+  async getDomainForEmail(email) {
     const [, domain] = email.split("@");
     return await db
       .select()

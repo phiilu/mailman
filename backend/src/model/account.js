@@ -11,12 +11,21 @@ class Account {
       .orderBy("username", "asc");
   }
 
-  async getAccountsForEmail(email) {
+  async getAccountsByEmail(email) {
     const [username, domain] = email.split("@");
     return await db
       .select("id", "username", "domain", "quota", "enabled", "sendonly")
       .from("accounts")
       .where({ username, domain })
+      .orderBy("domain", "asc")
+      .orderBy("username", "asc");
+  }
+
+  async getAccountsByDomain(domain) {
+    return await db
+      .select("id", "username", "domain", "quota", "enabled", "sendonly")
+      .from("accounts")
+      .where({ domain })
       .orderBy("domain", "asc")
       .orderBy("username", "asc");
   }

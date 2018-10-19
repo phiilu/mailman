@@ -1,0 +1,39 @@
+type Query {
+  domains: [Domain!]!
+  accounts: [Account!]!
+  tlspolicies: [TLSPolicy!]!
+}
+
+type Mutation {
+  sayHello(name: String!): String!
+  createAccount(
+    email: String!
+    password: String!
+    quota: Int
+    enabled: Int
+    sendonly: Int
+  ): Account!
+}
+
+type Domain {
+  id: Int!
+  domain: String!
+  accounts: [Account!]!
+}
+
+type Account {
+  id: Int!
+  email: String!
+  username: String!
+  domain: Domain!
+  quota: Int!
+  enabled: Int!
+  sendonly: Int!
+}
+
+type TLSPolicy {
+  id: Int!
+  domain: String!
+  policy: String!
+  params: String
+}

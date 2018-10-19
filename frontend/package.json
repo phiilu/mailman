@@ -22,6 +22,7 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
+    "styled-components": "^4.0.2",
     "typeface-roboto": "0.0.54",
     "yup": "^0.26.6"
   },
