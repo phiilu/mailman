@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+import Loading from "./Loading";
 
 import { humanReadableDataUnits } from "../lib/humanReadableDataUnits";
 
@@ -36,7 +39,7 @@ const options = {
   }
 };
 
-const getData = accounts => {
+const transformData = accounts => {
   const transformedData = accounts.reduce((accu, account) => {
     accu = [...accu, [account.email, humanReadableDataUnits(account.quota)]];
     return accu;
@@ -123,8 +126,14 @@ class DomainTable extends Component {
           variables={{ id: domain.id }}
         >
           {({ data: apolloData, loading, error }) => {
-            if (loading) return "loading ...";
-            const data = getData(apolloData.domain.accounts.nodes);
+            if (loading) return <Loading />;
+            const data = transformData(apolloData.domain.accounts.nodes);
+            if (!data.length)
+              return (
+                <Typography>
+                  No Accounts yet for <strong>{domain.domain}</strong>
+                </Typography>
+              );
             return (
               <MuiThemeProvider theme={this.getMuiTheme()}>
                 <MUIDataTable

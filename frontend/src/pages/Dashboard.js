@@ -7,11 +7,17 @@ import Typography from "@material-ui/core/Typography";
 import Domain from "../components/Domain";
 import PageTitle from "../components/styles/PageTitle";
 import DomainTable from "../components/DomainTable";
+import FormDialog from "../components/FormDialog";
+import Loading from "../components/Loading";
+import NewAccountForm from "../components/NewAccountForm";
 
 const DomainCards = styled.div`
   display: grid;
   grid-gap: 25px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: 1fr;
+  align-items: center;
+  justify-items: center;
 `;
 
 const ALL_DOMAINS_QUERY = gql`
@@ -28,11 +34,26 @@ const ALL_DOMAINS_QUERY = gql`
 
 class Dashboard extends React.Component {
   state = {
-    domain: null
+    domain: null,
+    dialog: {
+      open: false,
+      title: "New Dialog",
+      form: null
+    }
   };
 
   handleDomainClick = domain => e => {
     this.setState({ domain });
+  };
+
+  handleDialogOpen = ({ title, form }) => e => {
+    this.setState({
+      dialog: { ...this.state.dialog, title, form, open: true }
+    });
+  };
+
+  handleDialogClose = () => {
+    this.setState({ dialog: { ...this.state.dialog, open: false } });
   };
 
   render() {
@@ -52,7 +73,7 @@ class Dashboard extends React.Component {
                 Dashboard
               </PageTitle>
               {loading ? (
-                "Loading ..."
+                <Loading />
               ) : (
                 <>
                   <DomainCards>
@@ -61,9 +82,24 @@ class Dashboard extends React.Component {
                         key={domain.id}
                         domain={domain}
                         handleDomainClick={this.handleDomainClick}
+                        openCreateAccountDialog={this.handleDialogOpen({
+                          title: "Create Account",
+                          form: (
+                            <NewAccountForm
+                              domain={domain.domain}
+                              domains={data.domains}
+                            />
+                          )
+                        })}
                       />
                     ))}
                   </DomainCards>
+                  <FormDialog
+                    title={this.state.dialog.title}
+                    open={this.state.dialog.open}
+                    form={this.state.dialog.form}
+                    handleClose={this.handleDialogClose}
+                  />
                   <DomainTable domain={this.state.domain || data.domains[0]} />
                 </>
               )}

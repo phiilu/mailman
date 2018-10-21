@@ -33,7 +33,7 @@ const DashboardNumbers = styled.div`
 
 class Domain extends Component {
   render() {
-    const { domain, handleDomainClick } = this.props;
+    const { domain, handleDomainClick, openCreateAccountDialog } = this.props;
 
     return (
       <Card>
@@ -65,11 +65,19 @@ class Domain extends Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" variant="contained" color="secondary">
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={openCreateAccountDialog}
+          >
             Add Account
           </Button>
-          <Button size="small" variant="contained" color="secondary">
+          <Button size="small" variant="contained" color="primary">
             Add Alias
+          </Button>
+          <Button size="small" variant="contained" color="secondary">
+            Delete Domain
           </Button>
         </CardActions>
       </Card>
