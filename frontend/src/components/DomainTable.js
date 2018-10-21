@@ -28,10 +28,20 @@ const GET_ACCOUNTS_FOR_DOMAIN_QUERY = gql`
   }
 `;
 
-const columns = ["Email", "Quota"];
+const columns = [
+  {
+    name: "Email",
+    options: {
+      filter: false,
+      sort: true
+    }
+  },
+  "Quota"
+];
 const options = {
   print: false,
   selectableRows: true,
+  responsive: "scroll",
   textLabels: {
     body: {
       noMatch: "No accounts found"
@@ -152,3 +162,4 @@ class DomainTable extends Component {
 }
 
 export default DomainTable;
+export { GET_ACCOUNTS_FOR_DOMAIN_QUERY };

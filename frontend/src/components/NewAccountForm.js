@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { compose } from "redux";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { Mutation } from "react-apollo";
+import gql from "graphql-tag";
+import styled from "styled-components";
 
+import { withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -12,13 +16,16 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
-import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/lab/Slider";
 import Typography from "@material-ui/core/Typography";
-import styled from "styled-components";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import Button from "@material-ui/core/Button";
 
 import { humanReadableDataUnits } from "../lib/humanReadableDataUnits";
+import { FETCH_ALL_DOMAINS_QUERY } from "../pages/Dashboard";
+import { GET_ACCOUNTS_FOR_DOMAIN_QUERY } from "../components/DomainTable";
 
 const SliderWrapper = styled.div`
   display: grid;
@@ -44,6 +51,27 @@ const styles = {
   }
 };
 
+const CREATE_ACCOUNT_MUTATION = gql`
+  mutation CREATE_ACCOUNT_MUTATION(
+    $email: String!
+    $password: String!
+    $quota: Int
+    $enabled: Int
+    $sendonly: Int
+  ) {
+    createAccount(
+      email: $email
+      password: $password
+      quota: $quota
+      enabled: $enabled
+      sendonly: $sendonly
+    ) {
+      id
+      email
+    }
+  }
+`;
+
 class AccountForm extends Component {
   state = {
     username: "",
@@ -58,7 +86,7 @@ class AccountForm extends Component {
     const { domain } = this.props;
 
     if (domain) {
-      this.setState({ domain });
+      this.setState({ domain: domain.domain });
     }
 
     this.schema = yup.object().shape({
@@ -78,158 +106,225 @@ class AccountForm extends Component {
   }
 
   render() {
-    const { classes, submit } = this.props;
+    const { classes, handleClose, domain } = this.props;
     return (
-      <Formik
-        initialValues={{
-          username: this.state.username,
-          domain: this.state.domain,
-          password: this.state.password,
-          quota: this.state.quota,
-          enabled: this.state.enabled,
-          sendonly: this.state.sendonly
-        }}
-        enableReinitialize={true}
-        validationSchema={this.schema}
-        validateOnChange={true}
-        onSubmit={(values, { setSubmitting, setFieldValue, resetForm }) => {
-          console.log(values);
-          submit(values);
+      <Mutation
+        mutation={CREATE_ACCOUNT_MUTATION}
+        refetchQueries={[
+          { query: GET_ACCOUNTS_FOR_DOMAIN_QUERY, variables: { id: domain.id } }
+        ]}
+        update={(cache, { data: { createAccount: account } }) => {
+          // get domains from cache
+          const { domains } = cache.readQuery({
+            query: FETCH_ALL_DOMAINS_QUERY
+          });
+          console.log(domains, account);
+          // get the domain from the accounts email address
+          const [, accountDomain] = account.email.split("@");
+          // increment the count of the accounts in the domain from the user
+          const newDomains = domains.map(domain => {
+            if (domain.domain === accountDomain) {
+              domain.accounts.count++;
+            }
+            return domain;
+          });
+          // write the change back to the cache
+          cache.writeQuery({
+            query: FETCH_ALL_DOMAINS_QUERY,
+            data: { domains: newDomains }
+          });
         }}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleSubmit,
-          handleBlur,
-          isSubmitting,
-          isValid,
-          setFieldValue,
-          setFieldTouched
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={8}>
-              <Grid item xs={12}>
-                <TextField
-                  error={touched.username && !!errors.username}
-                  helperText={touched.username && errors.username}
-                  id="username"
-                  label="Username"
-                  name="username"
-                  placeholder="user"
-                  value={values.username}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={classes.textfield}
-                  margin="dense"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl className={classes.textfield}>
-                  <InputLabel htmlFor="domains">Domain</InputLabel>
-                  <Select
-                    error={touched.domain && !!errors.domain}
-                    name="domain"
-                    value={values.domain}
-                    onChange={e => setFieldValue("domain", e.target.value)}
-                    onBlur={() => setFieldTouched("domain", true)}
-                    input={<Input id="domains" />}
-                    margin="dense"
-                  >
-                    {this.props.domains.map(domain => (
-                      <MenuItem key={domain.id} value={domain.domain}>
-                        {domain.domain}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {touched.domain &&
-                    errors.domain && (
-                      <FormHelperText>{errors.domain}</FormHelperText>
-                    )}
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  error={touched.password && !!errors.password}
-                  helperText={touched.password && errors.password}
-                  id="password"
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={values.password || ""}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={classes.textfield}
-                  margin="dense"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <SliderWrapper>
-                  <TextField
-                    error={touched.quota && !!errors.quota}
-                    helperText={touched.quota && errors.quota}
-                    id="quota"
-                    label="Quota"
-                    name="quota"
-                    type="number"
-                    placeholder="1024"
-                    value={values.quota}
-                    onChange={handleChange}
-                    className={classes.textfield}
-                    margin="dense"
-                  />
-                  <Typography id="quota-label" variant="body1">
-                    Quota:{" "}
-                    <strong>{humanReadableDataUnits(values.quota)}</strong>
-                  </Typography>
-                  <Slider
-                    id="quota"
-                    aria-labelledby="quota-label"
-                    name="quota"
-                    classes={{ container: classes.slider }}
-                    value={+values.quota}
-                    min={0}
-                    max={10240}
-                    step={1024}
-                    onChange={(e, value) => setFieldValue("quota", value)}
-                    onBlur={() => setFieldTouched("quota", true)}
-                  />
-                </SliderWrapper>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      color="primary"
-                      checked={values.enabled}
-                      onChange={(event, checked) =>
-                        setFieldValue("enabled", checked)
-                      }
-                    />
+        {(createAccount, { loading, error }) => {
+          return (
+            <Formik
+              initialValues={{
+                username: this.state.username,
+                domain: this.state.domain,
+                password: this.state.password,
+                quota: this.state.quota,
+                enabled: this.state.enabled,
+                sendonly: this.state.sendonly
+              }}
+              enableReinitialize={true}
+              validationSchema={this.schema}
+              validateOnChange={true}
+              onSubmit={async (values, { resetForm }) => {
+                await createAccount({
+                  variables: {
+                    email: `${values.username}@${values.domain}`,
+                    password: values.password,
+                    quota: values.quota,
+                    enabled: values.enabled === true ? 1 : 0,
+                    sendonly: values.sendonly === true ? 1 : 0
+                  },
+                  optimisticResponse: {
+                    __typename: "Mutation",
+                    createAccount: {
+                      __typename: "Account",
+                      id: -1,
+                      email: `${values.username}@${values.domain}`
+                    }
                   }
-                  label="Enabled"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      color="primary"
-                      checked={values.sendonly}
-                      onChange={(event, checked) =>
-                        setFieldValue("sendonly", checked)
-                      }
-                    />
-                  }
-                  label="Sendonly"
-                />
-              </Grid>
-            </Grid>
-          </form>
-        )}
-      </Formik>
+                });
+                resetForm();
+              }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleSubmit,
+                handleBlur,
+                setFieldValue,
+                setFieldTouched
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <DialogContent>
+                    <Grid container spacing={8}>
+                      <Grid item xs={12}>
+                        <TextField
+                          error={touched.username && !!errors.username}
+                          helperText={touched.username && errors.username}
+                          id="username"
+                          label="Username"
+                          name="username"
+                          placeholder="user"
+                          value={values.username}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.textfield}
+                          margin="dense"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControl className={classes.textfield}>
+                          <InputLabel htmlFor="domains">Domain</InputLabel>
+                          <Select
+                            error={touched.domain && !!errors.domain}
+                            name="domain"
+                            value={values.domain}
+                            onChange={e =>
+                              setFieldValue("domain", e.target.value)
+                            }
+                            onBlur={() => setFieldTouched("domain", true)}
+                            input={<Input id="domains" />}
+                            margin="dense"
+                          >
+                            {this.props.domains.map(domain => (
+                              <MenuItem key={domain.id} value={domain.domain}>
+                                {domain.domain}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {touched.domain &&
+                            errors.domain && (
+                              <FormHelperText>{errors.domain}</FormHelperText>
+                            )}
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          error={touched.password && !!errors.password}
+                          helperText={touched.password && errors.password}
+                          id="password"
+                          label="Password"
+                          name="password"
+                          type="password"
+                          value={values.password || ""}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={classes.textfield}
+                          margin="dense"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <SliderWrapper>
+                          <TextField
+                            error={touched.quota && !!errors.quota}
+                            helperText={touched.quota && errors.quota}
+                            id="quota"
+                            label="Quota"
+                            name="quota"
+                            type="number"
+                            placeholder="1024"
+                            value={values.quota}
+                            onChange={handleChange}
+                            className={classes.textfield}
+                            margin="dense"
+                          />
+                          <Typography id="quota-label" variant="body1">
+                            Quota:{" "}
+                            <strong>
+                              {humanReadableDataUnits(values.quota)}
+                            </strong>
+                          </Typography>
+                          <Slider
+                            id="quota"
+                            aria-labelledby="quota-label"
+                            name="quota"
+                            classes={{ container: classes.slider }}
+                            value={+values.quota}
+                            min={0}
+                            max={10240}
+                            step={1024}
+                            onChange={(e, value) =>
+                              setFieldValue("quota", value)
+                            }
+                            onBlur={() => setFieldTouched("quota", true)}
+                          />
+                        </SliderWrapper>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              color="primary"
+                              checked={values.enabled}
+                              onChange={(event, checked) =>
+                                setFieldValue("enabled", checked)
+                              }
+                            />
+                          }
+                          label="Enabled"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              color="primary"
+                              checked={values.sendonly}
+                              onChange={(event, checked) =>
+                                setFieldValue("sendonly", checked)
+                              }
+                            />
+                          }
+                          label="Sendonly"
+                        />
+                      </Grid>
+                    </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={handleClose}
+                      color="secondary"
+                      variant="outlined"
+                    >
+                      Close
+                    </Button>
+                    <Button color="primary" variant="contained" type="submit">
+                      Sav
+                      {loading ? "ing" : "e"}
+                    </Button>
+                  </DialogActions>
+                </form>
+              )}
+            </Formik>
+          );
+        }}
+      </Mutation>
     );
   }
 }
@@ -237,3 +332,4 @@ class AccountForm extends Component {
 const enhance = compose(withStyles(styles));
 
 export default enhance(AccountForm);
+export { CREATE_ACCOUNT_MUTATION };

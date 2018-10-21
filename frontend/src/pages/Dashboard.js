@@ -17,10 +17,9 @@ const DomainCards = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-auto-rows: 1fr;
   align-items: center;
-  justify-items: center;
 `;
 
-const ALL_DOMAINS_QUERY = gql`
+const FETCH_ALL_DOMAINS_QUERY = gql`
   query ALL_DOMAINS_QUERY {
     domains {
       id
@@ -56,9 +55,13 @@ class Dashboard extends React.Component {
     this.setState({ dialog: { ...this.state.dialog, open: false } });
   };
 
+  handleSubmit = values => {
+    console.log(values);
+  };
+
   render() {
     return (
-      <Query query={ALL_DOMAINS_QUERY}>
+      <Query query={FETCH_ALL_DOMAINS_QUERY}>
         {({ data, loading, error }) => {
           if (error) {
             return (
@@ -86,8 +89,9 @@ class Dashboard extends React.Component {
                           title: "Create Account",
                           form: (
                             <NewAccountForm
-                              domain={domain.domain}
+                              domain={domain}
                               domains={data.domains}
+                              handleClose={this.handleDialogClose}
                             />
                           )
                         })}
@@ -112,4 +116,4 @@ class Dashboard extends React.Component {
 }
 
 export default Dashboard;
-export { ALL_DOMAINS_QUERY };
+export { FETCH_ALL_DOMAINS_QUERY };
