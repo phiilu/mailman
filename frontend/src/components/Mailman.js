@@ -41,6 +41,7 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     minHeight: "100vh",
+    height: "100%",
     width: drawerWidth,
     [theme.breakpoints.up("md")]: {
       position: "relative"
@@ -121,7 +122,8 @@ const DesktopDrawer = withStyles(styles)(({ classes }) => (
     <Drawer
       variant="permanent"
       classes={{
-        paper: classes.drawerPaper
+        paper: classes.drawerPaper,
+        docked: classes.drawerPaper
       }}
     >
       {drawer}

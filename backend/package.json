@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "backpack",
-    "build": "backpack build && cd client && npm run build && cd -",
+    "build": "backpack build",
     "start": "NODE_ENV=production pm2 start ecosystem.config.js",
     "precommit": "lint-staged"
   },

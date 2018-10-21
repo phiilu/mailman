@@ -1,5 +1,6 @@
 type Query {
   domains: [Domain!]!
+  domain(id: Int!): Domain
   accounts: [Account!]!
   tlspolicies: [TLSPolicy!]!
 }
@@ -18,7 +19,12 @@ type Mutation {
 type Domain {
   id: Int!
   domain: String!
-  accounts: [Account!]!
+  accounts: AccountList!
+}
+
+type AccountList {
+  count: Int
+  nodes: [Account]!
 }
 
 type Account {
@@ -30,6 +36,8 @@ type Account {
   quota: Int!
   enabled: Int!
   sendonly: Int!
+  # Aggregate fields
+  count: Int
 }
 
 type TLSPolicy {

@@ -16,6 +16,7 @@
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "lodash": "^4.17.4",
+    "mui-datatables": "^2.0.0-beta-35",
     "prop-types": "^15.6.0",
     "react": "^16.5.2",
     "react-apollo": "^2.2.4",
