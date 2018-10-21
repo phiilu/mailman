@@ -1,31 +1,35 @@
+/***
+ * This form can only be used inside an Material UI Dialog
+ * @author Florian Kapfenberger <florian@kapfenberger.me>
+ */
 import React, { Component } from "react";
 import { compose } from "redux";
-import { Formik } from "formik";
-import * as yup from "yup";
 import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { Formik } from "formik";
 import styled from "styled-components";
+import gql from "graphql-tag";
+import * as yup from "yup";
 
-import { withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import Select from "@material-ui/core/Select";
-import Switch from "@material-ui/core/Switch";
 import Grid from "@material-ui/core/Grid";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import Slider from "@material-ui/lab/Slider";
+import Switch from "@material-ui/core/Switch";
+import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 
-import { humanReadableDataUnits } from "../lib/humanReadableDataUnits";
 import { FETCH_ALL_DOMAINS_QUERY } from "../pages/Dashboard";
 import { GET_ACCOUNTS_FOR_DOMAIN_QUERY } from "../components/DomainTable";
+import { humanReadableDataUnits } from "../lib/humanReadableDataUnits";
 
 const SliderWrapper = styled.div`
   display: grid;
