@@ -3,7 +3,6 @@
  * @author Florian Kapfenberger <florian@kapfenberger.me>
  */
 import React, { Component } from "react";
-import { compose } from "redux";
 import { Mutation } from "react-apollo";
 import { Formik } from "formik";
 import styled from "styled-components";
@@ -26,6 +25,10 @@ import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
 
 import { FETCH_ALL_DOMAINS_QUERY } from "../pages/Dashboard";
 import { GET_ACCOUNTS_FOR_DOMAIN_QUERY } from "../components/DomainTable";
@@ -45,6 +48,7 @@ const SliderWrapper = styled.div`
 
 const styles = {
   textfield: {
+    minWidth: "312px",
     width: "100%"
   },
   button: {
@@ -72,6 +76,7 @@ const CREATE_ACCOUNT_MUTATION = gql`
     ) {
       id
       email
+      quota
     }
   }
 `;
@@ -83,10 +88,17 @@ class AccountForm extends Component {
     password: "",
     quota: 0,
     enabled: true,
-    sendonly: false
+    sendonly: false,
+    showPassword: false
   };
 
-  async componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    if (this.props.domain.domain !== nextProps.domain.domain) {
+      this.setState({ ...this.state, domain: nextProps.domain.domain });
+    }
+  }
+
+  componentDidMount() {
     const { domain } = this.props;
 
     if (domain) {
@@ -109,34 +121,59 @@ class AccountForm extends Component {
     });
   }
 
+  handleClickShowPassword = () => {
+    this.setState(state => ({ showPassword: !state.showPassword }));
+  };
+
+  updateDomainsCache(cache, account) {
+    // get domains from cache
+    const { domains } = cache.readQuery({
+      query: FETCH_ALL_DOMAINS_QUERY
+    });
+    // get the domain from the accounts email address
+    const [, accountDomain] = account.email.split("@");
+    // increment the count of the accounts in the domain from the user
+    const newDomains = domains.map(domain => {
+      if (domain.domain === accountDomain) {
+        domain.accounts.count++;
+      }
+      return domain;
+    });
+    // write the change back to the cache
+    cache.writeQuery({
+      query: FETCH_ALL_DOMAINS_QUERY,
+      data: { domains: newDomains }
+    });
+  }
+
+  updateAccountsCache(cache, account, domainId) {
+    try {
+      // get domain from cache
+      const { domain } = cache.readQuery({
+        query: GET_ACCOUNTS_FOR_DOMAIN_QUERY,
+        variables: { id: domainId }
+      });
+      // add the account to the existing accounts
+      domain.accounts.nodes = domain.accounts.nodes.concat(account);
+      // write the change back to the cache
+      cache.writeQuery({
+        query: GET_ACCOUNTS_FOR_DOMAIN_QUERY,
+        data: { domain }
+      });
+    } catch (error) {
+      // Probaly the data was not fetched before, so the cache throws an error
+      // nothing to worry about :D
+    }
+  }
+
   render() {
     const { classes, handleClose, domain } = this.props;
     return (
       <Mutation
         mutation={CREATE_ACCOUNT_MUTATION}
-        refetchQueries={[
-          { query: GET_ACCOUNTS_FOR_DOMAIN_QUERY, variables: { id: domain.id } }
-        ]}
         update={(cache, { data: { createAccount: account } }) => {
-          // get domains from cache
-          const { domains } = cache.readQuery({
-            query: FETCH_ALL_DOMAINS_QUERY
-          });
-          console.log(domains, account);
-          // get the domain from the accounts email address
-          const [, accountDomain] = account.email.split("@");
-          // increment the count of the accounts in the domain from the user
-          const newDomains = domains.map(domain => {
-            if (domain.domain === accountDomain) {
-              domain.accounts.count++;
-            }
-            return domain;
-          });
-          // write the change back to the cache
-          cache.writeQuery({
-            query: FETCH_ALL_DOMAINS_QUERY,
-            data: { domains: newDomains }
-          });
+          this.updateDomainsCache(cache, account);
+          this.updateAccountsCache(cache, account, domain.id);
         }}
       >
         {(createAccount, { loading, error }) => {
@@ -152,7 +189,7 @@ class AccountForm extends Component {
               }}
               enableReinitialize={true}
               validationSchema={this.schema}
-              validateOnChange={true}
+              validateOnChange={false}
               onSubmit={async (values, { resetForm }) => {
                 await createAccount({
                   variables: {
@@ -167,11 +204,13 @@ class AccountForm extends Component {
                     createAccount: {
                       __typename: "Account",
                       id: -1,
-                      email: `${values.username}@${values.domain}`
+                      email: `${values.username}@${values.domain}`,
+                      quota: 0
                     }
                   }
                 });
                 resetForm();
+                handleClose();
               }}
             >
               {({
@@ -200,6 +239,7 @@ class AccountForm extends Component {
                           onBlur={handleBlur}
                           className={classes.textfield}
                           margin="dense"
+                          autoFocus
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -235,12 +275,28 @@ class AccountForm extends Component {
                           id="password"
                           label="Password"
                           name="password"
-                          type="password"
+                          type={this.state.showPassword ? "text" : "password"}
                           value={values.password || ""}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           className={classes.textfield}
                           margin="dense"
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="Toggle password visibility"
+                                  onClick={this.handleClickShowPassword}
+                                >
+                                  {this.state.showPassword ? (
+                                    <Visibility />
+                                  ) : (
+                                    <VisibilityOff />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -271,7 +327,7 @@ class AccountForm extends Component {
                             classes={{ container: classes.slider }}
                             value={+values.quota}
                             min={0}
-                            max={10240}
+                            max={51200}
                             step={1024}
                             onChange={(e, value) =>
                               setFieldValue("quota", value)
@@ -311,14 +367,10 @@ class AccountForm extends Component {
                     </Grid>
                   </DialogContent>
                   <DialogActions>
-                    <Button
-                      onClick={handleClose}
-                      color="secondary"
-                      variant="outlined"
-                    >
+                    <Button onClick={handleClose} color="secondary">
                       Close
                     </Button>
-                    <Button color="primary" variant="contained" type="submit">
+                    <Button color="primary" type="submit">
                       Sav
                       {loading ? "ing" : "e"}
                     </Button>
@@ -333,7 +385,5 @@ class AccountForm extends Component {
   }
 }
 
-const enhance = compose(withStyles(styles));
-
-export default enhance(AccountForm);
+export default withStyles(styles)(AccountForm);
 export { CREATE_ACCOUNT_MUTATION };

@@ -40,6 +40,12 @@ const Mutation = {
       error.status = 422;
       throw error;
     }
+  },
+  async deleteDomain(parent, args, ctx, info) {
+    const { id } = args;
+    await Domain.deleteDomain(id);
+
+    return "Domain deleted!";
   }
 };
 

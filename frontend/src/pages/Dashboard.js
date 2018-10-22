@@ -7,9 +7,14 @@ import Typography from "@material-ui/core/Typography";
 import Domain from "../components/Domain";
 import PageTitle from "../components/styles/PageTitle";
 import DomainTable from "../components/DomainTable";
-import FormDialog from "../components/FormDialog";
 import Loading from "../components/Loading";
+import DomainToolbar from "../components/DomainToolbar";
+
+import FormDialog from "../components/FormDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
+
 import NewAccountForm from "../components/NewAccountForm";
+import NewDomainForm from "../components/NewDomainForm";
 
 const DomainCards = styled.div`
   display: grid;
@@ -31,6 +36,12 @@ const FETCH_ALL_DOMAINS_QUERY = gql`
   }
 `;
 
+const DELETE_DOMAIN_MUTATION = gql`
+  mutation DELETE_DOMAIN_MUTATION($domainId: Int!) {
+    deleteDomain(id: $domainId)
+  }
+`;
+
 class Dashboard extends React.Component {
   state = {
     domain: null,
@@ -38,6 +49,14 @@ class Dashboard extends React.Component {
       open: false,
       title: "New Dialog",
       form: null
+    },
+    confirmDialog: {
+      open: false,
+      title: "Confirm Dialog",
+      content: "Are you sure?",
+      info: null,
+      mutation: DELETE_DOMAIN_MUTATION,
+      variables: {}
     }
   };
 
@@ -51,12 +70,50 @@ class Dashboard extends React.Component {
     });
   };
 
+  handleConfirmDialogOpen = ({
+    title,
+    content,
+    info,
+    mutation,
+    variables
+  }) => e => {
+    this.setState({
+      confirmDialog: {
+        ...this.state.confirmDialog,
+        title,
+        content,
+        info,
+        mutation,
+        variables,
+        open: true
+      }
+    });
+  };
+
   handleDialogClose = () => {
     this.setState({ dialog: { ...this.state.dialog, open: false } });
   };
 
-  handleSubmit = values => {
-    console.log(values);
+  handleConfirmDialogClose = () => {
+    // clear out the domain, so the data table is not showing up
+    if (
+      this.state.domain &&
+      this.state.domain.domain === this.state.confirmDialog.info
+    ) {
+      this.setState({
+        domain: null
+      });
+    }
+    this.setState({
+      confirmDialog: {
+        open: false,
+        title: "Confirm Dialog",
+        content: "Are you sure?",
+        info: null,
+        mutation: DELETE_DOMAIN_MUTATION,
+        variables: {}
+      }
+    });
   };
 
   render() {
@@ -75,6 +132,12 @@ class Dashboard extends React.Component {
               <PageTitle variant="h3" noWrap>
                 Dashboard
               </PageTitle>
+              <DomainToolbar
+                openCreateDomainDialog={this.handleDialogOpen({
+                  title: "Create Domain",
+                  form: <NewDomainForm handleClose={this.handleDialogClose} />
+                })}
+              />
               {loading ? (
                 <Loading />
               ) : (
@@ -95,6 +158,13 @@ class Dashboard extends React.Component {
                             />
                           )
                         })}
+                        openDeleteDomainDialog={this.handleConfirmDialogOpen({
+                          title: `Delete Domain: `,
+                          content: `Are you sure you want to delete this domain?`,
+                          info: domain.domain,
+                          mutation: DELETE_DOMAIN_MUTATION,
+                          variables: { domainId: domain.id }
+                        })}
                       />
                     ))}
                   </DomainCards>
@@ -104,7 +174,18 @@ class Dashboard extends React.Component {
                     form={this.state.dialog.form}
                     handleClose={this.handleDialogClose}
                   />
-                  <DomainTable domain={this.state.domain || data.domains[0]} />
+                  <ConfirmDialog
+                    open={this.state.confirmDialog.open}
+                    title={this.state.confirmDialog.title}
+                    content={this.state.confirmDialog.content}
+                    info={this.state.confirmDialog.info}
+                    mutation={this.state.confirmDialog.mutation}
+                    variables={this.state.confirmDialog.variables}
+                    handleClose={this.handleConfirmDialogClose}
+                  />
+                  {this.state.domain && (
+                    <DomainTable domain={this.state.domain} />
+                  )}
                 </>
               )}
             </>

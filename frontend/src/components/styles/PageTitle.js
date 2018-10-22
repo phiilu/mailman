@@ -5,7 +5,6 @@ const PageTitle = styled(Typography)`
   && {
     border-bottom: 3px solid #eee;
     padding: 5px 0;
-    margin-bottom: 1rem;
   }
 `;
 
