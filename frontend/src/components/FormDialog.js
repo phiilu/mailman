@@ -14,11 +14,10 @@ const Transition = props => {
 
 class FormDialog extends Component {
   render() {
-    const { open, handleClose, title, form } = this.props;
+    const { open, title, form } = this.props;
     return (
       <Dialog
         open={open}
-        onClose={handleClose}
         TransitionComponent={Transition}
         disableBackdropClick
         disableEscapeKeyDown

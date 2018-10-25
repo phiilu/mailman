@@ -13,7 +13,7 @@ const LoadingWrapper = styled.div`
 export default function Loading() {
   return (
     <LoadingWrapper>
-      <CircularProgress color="secondary" size={60} />
+      <CircularProgress color="secondary" />
     </LoadingWrapper>
   );
 }

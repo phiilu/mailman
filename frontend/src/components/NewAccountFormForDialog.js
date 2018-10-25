@@ -5,9 +5,7 @@
 import React, { Component } from "react";
 import { Mutation } from "react-apollo";
 import { Formik } from "formik";
-import styled from "styled-components";
 import gql from "graphql-tag";
-import * as yup from "yup";
 
 import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -16,7 +14,9 @@ import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -24,27 +24,17 @@ import Slider from "@material-ui/lab/Slider";
 import Switch from "@material-ui/core/Switch";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
 
-import { FETCH_ALL_DOMAINS_QUERY } from "../pages/Dashboard";
-import { GET_ACCOUNTS_FOR_DOMAIN_QUERY } from "../components/DomainTable";
+import { GET_ACCOUNTS_FOR_DOMAIN_QUERY } from "./AccountList";
 import { humanReadableDataUnits } from "../lib/humanReadableDataUnits";
 
-const SliderWrapper = styled.div`
-  display: grid;
-  grid-gap: 0 25px;
-  grid-template-columns: 1fr 150px;
-  align-content: center;
-  align-items: center;
+import SliderWrapper from "./styles/SliderWrapper";
 
-  #quota {
-    grid-column: span 2;
-  }
-`;
+import { updateDomainsCache } from "../lib/apolloClient";
+import { accountSchema } from "../lib/validations";
 
 const styles = {
   textfield: {
@@ -76,7 +66,14 @@ const CREATE_ACCOUNT_MUTATION = gql`
     ) {
       id
       email
+      username
+      domain {
+        id
+        domain
+      }
       quota
+      enabled
+      sendonly
     }
   }
 `;
@@ -104,47 +101,11 @@ class AccountForm extends Component {
     if (domain) {
       this.setState({ domain: domain.domain });
     }
-
-    this.schema = yup.object().shape({
-      username: yup.string().required("The username is required"),
-      domain: yup.string().required("The domain is required"),
-      password: yup
-        .string()
-        .min(8, "Passwords should be at least 8 characters long.")
-        .required("Password is required"),
-      quota: yup
-        .number()
-        .positive("Quota must be a positive number")
-        .required("Quota is required"),
-      enabled: yup.boolean().required("Enabled is required"),
-      sendonly: yup.boolean().required("Enabled is required")
-    });
   }
 
   handleClickShowPassword = () => {
     this.setState(state => ({ showPassword: !state.showPassword }));
   };
-
-  updateDomainsCache(cache, account) {
-    // get domains from cache
-    const { domains } = cache.readQuery({
-      query: FETCH_ALL_DOMAINS_QUERY
-    });
-    // get the domain from the accounts email address
-    const [, accountDomain] = account.email.split("@");
-    // increment the count of the accounts in the domain from the user
-    const newDomains = domains.map(domain => {
-      if (domain.domain === accountDomain) {
-        domain.accounts.count++;
-      }
-      return domain;
-    });
-    // write the change back to the cache
-    cache.writeQuery({
-      query: FETCH_ALL_DOMAINS_QUERY,
-      data: { domains: newDomains }
-    });
-  }
 
   updateAccountsCache(cache, account, domainId) {
     try {
@@ -161,7 +122,7 @@ class AccountForm extends Component {
         data: { domain }
       });
     } catch (error) {
-      // Probaly the data was not fetched before, so the cache throws an error
+      // Probably the data was not fetched before, so the cache throws an error
       // nothing to worry about :D
     }
   }
@@ -172,7 +133,7 @@ class AccountForm extends Component {
       <Mutation
         mutation={CREATE_ACCOUNT_MUTATION}
         update={(cache, { data: { createAccount: account } }) => {
-          this.updateDomainsCache(cache, account);
+          updateDomainsCache(cache, { account });
           this.updateAccountsCache(cache, account, domain.id);
         }}
       >
@@ -188,7 +149,7 @@ class AccountForm extends Component {
                 sendonly: this.state.sendonly
               }}
               enableReinitialize={true}
-              validationSchema={this.schema}
+              validationSchema={accountSchema()}
               validateOnChange={false}
               onSubmit={async (values, { resetForm }) => {
                 await createAccount({
@@ -205,7 +166,14 @@ class AccountForm extends Component {
                       __typename: "Account",
                       id: -1,
                       email: `${values.username}@${values.domain}`,
-                      quota: 0
+                      quota: 0,
+                      domain: {
+                        __typename: "Domain",
+                        domain: values.domain
+                      },
+                      username: values.username,
+                      enabled: values.enabled,
+                      sendonly: values.sendonly
                     }
                   }
                 });

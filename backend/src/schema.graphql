@@ -13,6 +13,16 @@ type Mutation {
     enabled: Int
     sendonly: Int
   ): Account!
+  updateAccount(
+    id: Int!
+    username: String
+    domain: String
+    password: String
+    quota: Int
+    enabled: Int
+    sendonly: Int
+  ): Account!
+  deleteAccount(id: Int!): String!
   createDomain(domain: String!): Domain!
   deleteDomain(id: Int!): String!
 }

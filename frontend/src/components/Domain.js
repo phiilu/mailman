@@ -6,12 +6,33 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
 
 const CardTitle = styled(CardContent)`
   && {
     background: #eee;
     color: #1e1f2e;
-    padding: 16px 24px 5px 24px;
+    padding: 5px 24px 5px 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .icons {
+      justify-self: end;
+    }
+
+    button.delete {
+      color: #f73378;
+    }
   }
 `;
 
@@ -31,23 +52,45 @@ const DashboardNumbers = styled.div`
   }
 `;
 
+const CardActionsGrid = styled(CardActions)`
+  && {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
 class Domain extends Component {
   render() {
     const {
       domain,
-      handleDomainClick,
       openCreateAccountDialog,
       openDeleteDomainDialog
     } = this.props;
 
     return (
       <Card>
-        <CardActionArea onClick={handleDomainClick(domain)}>
-          <CardTitle>
-            <Typography gutterBottom variant="h5" component="h2">
-              {domain.domain}
-            </Typography>
-          </CardTitle>
+        <CardTitle>
+          <Typography gutterBottom variant="h5" component="h2">
+            {domain.domain}
+          </Typography>
+          <div className="icons">
+            <IconButton
+              aria-label="Edit"
+              className="edit"
+              onClick={openDeleteDomainDialog}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label="Delete"
+              className="delete"
+              onClick={openDeleteDomainDialog}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        </CardTitle>
+        <CardActionArea>
           <CardContent>
             <DashboardNumbers>
               <div className="number-item">
@@ -55,7 +98,8 @@ class Domain extends Component {
                   {domain.accounts.count}
                 </Typography>
                 <Typography variant="h6" className="number-text">
-                  Accounts
+                  Account
+                  {domain.accounts.count === 1 ? "" : "s"}
                 </Typography>
               </div>
               <div className="number-item">
@@ -69,7 +113,7 @@ class Domain extends Component {
             </DashboardNumbers>
           </CardContent>
         </CardActionArea>
-        <CardActions>
+        <CardActionsGrid>
           <Button
             size="small"
             variant="contained"
@@ -81,15 +125,7 @@ class Domain extends Component {
           <Button size="small" variant="contained" color="primary">
             Add Alias
           </Button>
-          <Button
-            size="small"
-            variant="contained"
-            color="secondary"
-            onClick={openDeleteDomainDialog}
-          >
-            Delete Domain
-          </Button>
-        </CardActions>
+        </CardActionsGrid>
       </Card>
     );
   }

@@ -29,6 +29,23 @@ const Mutation = {
       throw error;
     }
   },
+  async updateAccount(parent, args, ctx, info) {
+    const userFields = { ...args };
+    const { id } = args;
+    delete userFields.id;
+
+    await Account.updateAccount(userFields, id);
+    const account = (await Account.getAccount({ id }))[0];
+    console.log(account);
+
+    return account;
+  },
+  async deleteAccount(parent, args, ctx, info) {
+    const { id } = args;
+    await Account.deleteAccount(id);
+
+    return "Account deleted!";
+  },
   async createDomain(parent, args, ctx, info) {
     const { domain } = args;
 

@@ -1,28 +1,21 @@
 import React from "react";
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
-import styled from "styled-components";
 import Typography from "@material-ui/core/Typography";
+import gql from "graphql-tag";
+import { Query, Mutation } from "react-apollo";
+import { adopt } from "react-adopt";
 
-import Domain from "../components/Domain";
-import PageTitle from "../components/styles/PageTitle";
-import DomainTable from "../components/DomainTable";
-import Loading from "../components/Loading";
-import DomainToolbar from "../components/DomainToolbar";
-
-import FormDialog from "../components/FormDialog";
+import AccountList from "../components/AccountList";
+import AddDomainCard from "../components/styles/AddDomainCard";
 import ConfirmDialog from "../components/ConfirmDialog";
-
-import NewAccountForm from "../components/NewAccountForm";
+import Domain from "../components/Domain";
+import DomainCards from "../components/styles/DomainCards";
+import FormDialog from "../components/FormDialog";
+import Loading from "../components/Loading";
+import NewAccountForm from "../components/NewAccountFormForDialog";
 import NewDomainForm from "../components/NewDomainForm";
+import PageTitle from "../components/styles/PageTitle";
 
-const DomainCards = styled.div`
-  display: grid;
-  grid-gap: 25px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-auto-rows: 1fr;
-  align-items: center;
-`;
+import { updateDomainsCache } from "../lib/apolloClient";
 
 const FETCH_ALL_DOMAINS_QUERY = gql`
   query ALL_DOMAINS_QUERY {
@@ -42,9 +35,19 @@ const DELETE_DOMAIN_MUTATION = gql`
   }
 `;
 
+/* eslint-disable */
+const GraphQLComposed = adopt({
+  domainsQuery: ({ render }) => (
+    <Query query={FETCH_ALL_DOMAINS_QUERY}>{render}</Query>
+  ),
+  domainsDeleteMutation: ({ render }) => (
+    <Mutation mutation={DELETE_DOMAIN_MUTATION}>{render}</Mutation>
+  )
+});
+/* eslint-enable */
+
 class Dashboard extends React.Component {
   state = {
-    domain: null,
     dialog: {
       open: false,
       title: "New Dialog",
@@ -55,13 +58,8 @@ class Dashboard extends React.Component {
       title: "Confirm Dialog",
       content: "Are you sure?",
       info: null,
-      mutation: DELETE_DOMAIN_MUTATION,
-      variables: {}
+      action: () => {}
     }
-  };
-
-  handleDomainClick = domain => e => {
-    this.setState({ domain });
   };
 
   handleDialogOpen = ({ title, form }) => e => {
@@ -70,21 +68,14 @@ class Dashboard extends React.Component {
     });
   };
 
-  handleConfirmDialogOpen = ({
-    title,
-    content,
-    info,
-    mutation,
-    variables
-  }) => e => {
+  handleConfirmDialogOpen = ({ title, content, info, action }) => e => {
     this.setState({
       confirmDialog: {
         ...this.state.confirmDialog,
         title,
         content,
         info,
-        mutation,
-        variables,
+        action,
         open: true
       }
     });
@@ -95,103 +86,113 @@ class Dashboard extends React.Component {
   };
 
   handleConfirmDialogClose = () => {
-    // clear out the domain, so the data table is not showing up
-    if (
-      this.state.domain &&
-      this.state.domain.domain === this.state.confirmDialog.info
-    ) {
-      this.setState({
-        domain: null
-      });
-    }
     this.setState({
       confirmDialog: {
-        open: false,
-        title: "Confirm Dialog",
-        content: "Are you sure?",
-        info: null,
-        mutation: DELETE_DOMAIN_MUTATION,
-        variables: {}
+        ...this.state.confirmDialog,
+        open: false
+      }
+    });
+  };
+
+  /**
+   * A function that returns a function so that in can be called with the arguments, but
+   * the actual call to the backend will start when it gets called again.
+   *
+   * For example this function is used to acknowledge the deletion of a domain in the ConfirmDialog
+   */
+  handleDomainDeleteClick = (deleteDomain, variables) => async () => {
+    await deleteDomain({
+      variables,
+      update: (cache, { data }) => {
+        updateDomainsCache(cache, { domainId: variables.domainId });
       }
     });
   };
 
   render() {
     return (
-      <Query query={FETCH_ALL_DOMAINS_QUERY}>
-        {({ data, loading, error }) => {
-          if (error) {
+      <>
+        <PageTitle variant="h3" noWrap>
+          Dashboard
+        </PageTitle>
+        <GraphQLComposed>
+          {({
+            domainsQuery: { data, loading, error },
+            domainsDeleteMutation: deleteDomain
+          }) => {
+            if (error) {
+              return (
+                <Typography variant="h5">
+                  There was an error: <code>${error.message}</code>
+                </Typography>
+              );
+            }
+            if (loading) return <Loading />;
+            if (!data.domains.length) {
+              return (
+                <DomainCards>
+                  <AddDomainCard
+                    openCreateDomainDialog={this.handleDialogOpen({
+                      title: "Create Domain",
+                      form: (
+                        <NewDomainForm handleClose={this.handleDialogClose} />
+                      )
+                    })}
+                  />
+                </DomainCards>
+              );
+            }
             return (
-              <Typography variant="h5">
-                There was an error: <code>${error.message}</code>
-              </Typography>
+              <DomainCards>
+                <AddDomainCard
+                  openCreateDomainDialog={this.handleDialogOpen({
+                    title: "Create Domain",
+                    form: <NewDomainForm handleClose={this.handleDialogClose} />
+                  })}
+                />
+                {data.domains.map((domain, i) => (
+                  <Domain
+                    key={domain.id}
+                    domain={domain}
+                    openCreateAccountDialog={this.handleDialogOpen({
+                      title: "Create Account",
+                      form: (
+                        <NewAccountForm
+                          domain={domain}
+                          domains={data.domains}
+                          handleClose={this.handleDialogClose}
+                        />
+                      )
+                    })}
+                    openDeleteDomainDialog={this.handleConfirmDialogOpen({
+                      title: `Delete Domain: `,
+                      content: `Are you sure you want to delete this domain?`,
+                      info: domain.domain,
+                      action: this.handleDomainDeleteClick(deleteDomain, {
+                        domainId: domain.id
+                      })
+                    })}
+                  />
+                ))}
+              </DomainCards>
             );
-          }
-          return (
-            <>
-              <PageTitle variant="h3" noWrap>
-                Dashboard
-              </PageTitle>
-              <DomainToolbar
-                openCreateDomainDialog={this.handleDialogOpen({
-                  title: "Create Domain",
-                  form: <NewDomainForm handleClose={this.handleDialogClose} />
-                })}
-              />
-              {loading ? (
-                <Loading />
-              ) : (
-                <>
-                  <DomainCards>
-                    {data.domains.map(domain => (
-                      <Domain
-                        key={domain.id}
-                        domain={domain}
-                        handleDomainClick={this.handleDomainClick}
-                        openCreateAccountDialog={this.handleDialogOpen({
-                          title: "Create Account",
-                          form: (
-                            <NewAccountForm
-                              domain={domain}
-                              domains={data.domains}
-                              handleClose={this.handleDialogClose}
-                            />
-                          )
-                        })}
-                        openDeleteDomainDialog={this.handleConfirmDialogOpen({
-                          title: `Delete Domain: `,
-                          content: `Are you sure you want to delete this domain?`,
-                          info: domain.domain,
-                          mutation: DELETE_DOMAIN_MUTATION,
-                          variables: { domainId: domain.id }
-                        })}
-                      />
-                    ))}
-                  </DomainCards>
-                  <FormDialog
-                    title={this.state.dialog.title}
-                    open={this.state.dialog.open}
-                    form={this.state.dialog.form}
-                    handleClose={this.handleDialogClose}
-                  />
-                  <ConfirmDialog
-                    open={this.state.confirmDialog.open}
-                    title={this.state.confirmDialog.title}
-                    content={this.state.confirmDialog.content}
-                    info={this.state.confirmDialog.info}
-                    mutation={this.state.confirmDialog.mutation}
-                    variables={this.state.confirmDialog.variables}
-                    handleClose={this.handleConfirmDialogClose}
-                  />
-                  {this.state.domain && (
-                    <DomainTable domain={this.state.domain} />
-                  )}
-                </>
-              )}
-            </>
-          );
-        }}
-      </Query>
+          }}
+        </GraphQLComposed>
+        <FormDialog
+          title={this.state.dialog.title}
+          open={this.state.dialog.open}
+          form={this.state.dialog.form}
+        />
+        <ConfirmDialog
+          open={this.state.confirmDialog.open}
+          title={this.state.confirmDialog.title}
+          content={this.state.confirmDialog.content}
+          info={this.state.confirmDialog.info}
+          handleAggree={this.state.confirmDialog.action}
+          handleClose={this.handleConfirmDialogClose}
+        />
+        <AccountList openDeleteAccountDialog={this.handleConfirmDialogOpen} />
+      </>
     );
   }
 }
