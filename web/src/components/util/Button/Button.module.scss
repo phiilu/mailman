@@ -1,0 +1,75 @@
+@import "../../../styles/variables.scss";
+
+.button {
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  box-shadow: 0 3px 5px hsla(0, 0, 0, 0.2);
+  background: $grey-lt-2;
+  border-inline-start-color: $grey-dk-3;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: box-shadow 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background: $grey-lt-1;
+    &.disabled {
+      background: $grey-lt-2;
+    }
+  }
+
+  &:active {
+    background: $grey-lt-1;
+    box-shadow: 0 0 1px hsla(0, 0, 0, 0.2);
+  }
+
+  & svg {
+    margin-right: 2px;
+  }
+}
+
+.primary {
+  background: $primary-lt-2;
+  color: $primary-dk-3;
+
+  &:hover {
+    background: $primary-lt-1;
+    &.disabled {
+      background: $primary-lt-2;
+    }
+  }
+
+  &:active {
+    background: $primary-lt-1;
+  }
+}
+
+.secondary {
+  background: $secondary-lt-2;
+  color: $secondary-dk-3;
+
+  &:hover {
+    background: $secondary-lt-1;
+    &.disabled {
+      background: $secondary-lt-2;
+    }
+  }
+
+  &:active {
+    background: $secondary-lt-1;
+  }
+}
+
+.disabled {
+  opacity: 0.7;
+  &:hover {
+    cursor: not-allowed;
+  }
+}

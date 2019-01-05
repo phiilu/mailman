@@ -1,0 +1,70 @@
+@import "../../../styles/variables.scss";
+
+.table {
+  background: $white;
+  border-spacing: 0;
+  border-radius: 7px;
+  box-shadow: 0 7px 15px hsla(0, 0, 0, 0.2);
+
+  thead tr:first-child {
+    background: $grey-lt-4;
+    color: $grey-dk-3;
+
+    th {
+      padding: 20px;
+      text-align: left;
+      letter-spacing: 1px;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+
+      &.numberCell {
+        text-align: right;
+        font-weight: 600;
+      }
+    }
+
+    th:first-child {
+      border-radius: 7px 0 0 0;
+    }
+    th:last-child {
+      border-radius: 0 7px 0 0;
+    }
+  }
+
+  tr:last-child {
+    td:first-child {
+      border-radius: 0 0 0 7px;
+    }
+    td:last-child {
+      border-radius: 0 0 7px 0;
+    }
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background: $grey-lt-4;
+    }
+    td {
+      padding: 20px;
+
+      &.numberCell {
+        text-align: right;
+        font-weight: 600;
+      }
+    }
+
+    .action {
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: $primary-dk-3;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      & > * {
+        margin-right: 10px;
+      }
+    }
+  }
+}

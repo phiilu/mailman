@@ -7,11 +7,11 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import "typeface-roboto";
 
 import registerServiceWorker from "./registerServiceWorker";
-import apolloClient from "./lib/apolloClient";
-import theme from "./lib/theme";
+import apolloClient from "lib/apolloClient";
+import theme from "lib/theme";
 
-import Mailman from "./components/Mailman";
-import Dashboard from "./pages/Dashboard";
+import Mailman from "components/Mailman";
+import Dashboard from "pages/Dashboard";
 
 const app = (
   <ApolloProvider client={apolloClient}>

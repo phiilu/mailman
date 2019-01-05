@@ -1,0 +1,23 @@
+@import "../../../../styles/variables.scss";
+
+.formField {
+  display: grid;
+  margin: 10px 0;
+
+  label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $grey-dk-1;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  input {
+    border: none;
+    padding: 10px 8px;
+    background: $white;
+    border: 2px solid $grey-lt-3;
+    border-radius: 5px;
+    font-size: 1.4rem;
+  }
+}

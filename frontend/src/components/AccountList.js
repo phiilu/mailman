@@ -37,6 +37,10 @@ const ChipStyled = styled(Chip)`
 `;
 
 const ExpansionPanelStyled = styled(ExpansionPanel)`
+  && {
+    background: white;
+  }
+
   && > div {
     padding-left: 0;
   }
@@ -127,7 +131,7 @@ const GraphQLComposed = adopt({
     <Query query={FETCH_ALL_DOMAINS_QUERY}>{render}</Query>
   ),
   accountsQuery: ({ render }) => (
-    <Query query={GET_ACCOUNTS_FOR_DOMAIN_QUERY} variables={{ id: 45 }}>
+    <Query query={GET_ACCOUNTS_FOR_DOMAIN_QUERY} variables={{ id: 1 }}>
       {render}
     </Query>
   ),

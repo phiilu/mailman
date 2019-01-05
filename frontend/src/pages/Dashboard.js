@@ -178,20 +178,24 @@ class Dashboard extends React.Component {
             );
           }}
         </GraphQLComposed>
-        <FormDialog
-          title={this.state.dialog.title}
-          open={this.state.dialog.open}
-          form={this.state.dialog.form}
-        />
-        <ConfirmDialog
-          open={this.state.confirmDialog.open}
-          title={this.state.confirmDialog.title}
-          content={this.state.confirmDialog.content}
-          info={this.state.confirmDialog.info}
-          handleAggree={this.state.confirmDialog.action}
-          handleClose={this.handleConfirmDialogClose}
-        />
         <AccountList openDeleteAccountDialog={this.handleConfirmDialogOpen} />
+        {this.state.dialog.open && (
+          <FormDialog
+            title={this.state.dialog.title}
+            open={this.state.dialog.open}
+            form={this.state.dialog.form}
+          />
+        )}
+        {this.state.confirmDialog.open && (
+          <ConfirmDialog
+            open={this.state.confirmDialog.open}
+            title={this.state.confirmDialog.title}
+            content={this.state.confirmDialog.content}
+            info={this.state.confirmDialog.info}
+            handleAggree={this.state.confirmDialog.action}
+            handleClose={this.handleConfirmDialogClose}
+          />
+        )}
       </>
     );
   }

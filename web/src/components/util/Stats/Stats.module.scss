@@ -1,0 +1,27 @@
+@import "../../../styles/variables.scss";
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr;
+  padding: 30px 0;
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: $white;
+
+    .statName {
+      font-weight: 600;
+      font-size: 1.4rem;
+      color: $primary-lt-3;
+      text-transform: uppercase;
+    }
+
+    .statNumber {
+      padding: 5px 0;
+      font-size: 5rem;
+    }
+  }
+}

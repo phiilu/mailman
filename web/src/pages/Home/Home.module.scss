@@ -1,0 +1,35 @@
+@import "../../styles/variables.scss";
+
+.home {
+  .header {
+    padding-bottom: 10rem;
+    background: $primary-dk-2;
+
+    h1 {
+      padding-top: 5rem;
+      color: $primary-lt-3;
+      font-size: 2rem;
+      text-align: center;
+    }
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
+}
+
+.well {
+  background: $primary-dk-3;
+  margin-bottom: 2rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 25px;
+  justify-content: center;
+
+  &.withForm {
+    grid-template-columns: auto 1fr;
+  }
+}

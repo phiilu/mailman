@@ -1,4 +1,3 @@
 {
-  "presets": ["backpack-core/babel", "react"],
-  "plugins": ["transform-react-jsx"]
+  "presets": ["backpack-core/babel", "@babel/preset-env"]
 }

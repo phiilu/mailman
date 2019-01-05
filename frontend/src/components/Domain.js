@@ -10,6 +10,12 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 
+const StyledCard = styled(Card)`
+  && {
+    background: white;
+  }
+`;
+
 const CardTitle = styled(CardContent)`
   && {
     background: #eee;
@@ -68,7 +74,7 @@ class Domain extends Component {
     } = this.props;
 
     return (
-      <Card>
+      <StyledCard>
         <CardTitle>
           <Typography gutterBottom variant="h5" component="h2">
             {domain.domain}
@@ -126,7 +132,7 @@ class Domain extends Component {
             Add Alias
           </Button>
         </CardActionsGrid>
-      </Card>
+      </StyledCard>
     );
   }
 }

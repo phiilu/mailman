@@ -1,0 +1,29 @@
+@import "../../../styles/variables.scss";
+
+.box {
+  position: relative;
+  background: $grey-lt-4;
+  border-radius: 10px;
+  box-shadow: 0 7px 15px hsla(0, 0, 0, 0.2);
+
+  .boxTitle {
+    padding: 2rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+  }
+
+  .boxContent {
+    padding: 2rem;
+  }
+
+  svg {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

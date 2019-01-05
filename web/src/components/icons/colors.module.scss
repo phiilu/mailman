@@ -1,0 +1,32 @@
+@import "../../styles/variables.scss";
+
+.icon {
+  width: 24px;
+}
+
+.defaultPrimary {
+  fill: $grey-lt-2;
+  &:hover {
+    fill: $grey-lt-1;
+  }
+}
+
+.defaultSecondary {
+  fill: $grey-dk-2;
+}
+
+.primaryPrimary {
+  fill: $primary-lt;
+}
+
+.primarySecondary {
+  fill: $primary-dk;
+}
+
+.secondaryPrimary {
+  fill: $secondary-lt-1;
+}
+
+.secondarySecondary {
+  fill: $secondary-dk-1;
+}
