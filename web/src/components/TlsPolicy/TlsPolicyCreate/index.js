@@ -1,16 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 // import {  } from "./TlsPolicyEdit.module.scss";
-import { formatDataUnit } from "lib/formatDataUnit";
 
 import Box from "components/util/Box";
 import Button from "components/util/Button";
-import Toggle from "components/util/Toggle";
 import { FormField } from "components/util/Form";
-import InputRange from "components/util/InputRange";
 
 export default function TlsPolicyCreate({ setShowCreateTlsPolicy }) {
-  const [range, setRange] = useState(0);
-
   return (
     <Box onClose={() => setShowCreateTlsPolicy(false)}>
       <form action="">
