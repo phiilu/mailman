@@ -7,6 +7,8 @@ import Footer from "components/Footer";
 
 import Home from "pages/Home";
 import Accounts from "pages/Accounts";
+import Aliases from "pages/Aliases";
+import TlsPolicies from "pages/TlsPolicies";
 
 import { app, notFound } from "./App.module.scss";
 
@@ -25,6 +27,8 @@ class App extends Component {
         <Router>
           <Home path="/" />
           <Accounts path="/accounts" />
+          <Aliases path="/aliases" />
+          <TlsPolicies path="/tlspolicies" />
           <NotFound default />
         </Router>
         <Footer />

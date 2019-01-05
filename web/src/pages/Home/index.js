@@ -11,7 +11,7 @@ import { home } from "./Home.module.scss";
 import { row, withForm } from "styles/global.module.scss";
 
 export default function Home() {
-  const [showCreateDomain, setShowCreateDomain] = useState(false);
+  const [showCreateDomain, setShowCreateDomain] = useState(true);
   const [showEditDomain, setShowEditDomain] = useState(false);
 
   return (

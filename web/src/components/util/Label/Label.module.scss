@@ -1,0 +1,28 @@
+@import "../../../styles/variables.scss";
+
+.label {
+  padding: 5px 13px;
+  background: $grey-lt-3;
+  border-radius: 20px;
+  color: $grey-dk-3;
+}
+
+.primaryClass {
+  background: $primary-lt-3;
+  color: $primary-dk-3;
+}
+
+.secondaryClass {
+  background: $secondary-lt-3;
+  color: $secondary-dk-3;
+}
+
+.greenClass {
+  background: $green-lt-3;
+  color: $green-dk-3;
+}
+
+.redClass {
+  background: $red-lt-3;
+  color: $red-dk-3;
+}

@@ -33,35 +33,47 @@ export default function DomanList({
           <td>example.org</td>
           <td className={styles.numberCell}>2</td>
           <td className={styles.action}>
-            <span>View</span>
+            <span>Add Account</span>
+            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
+              Edit
+            </span>
           </td>
         </tr>
         <tr>
           <td>kapfenberger.me</td>
           <td className={styles.numberCell}>4</td>
           <td className={styles.action}>
-            <span>View</span>
+            <span>Add Account</span>
+            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
+              Edit
+            </span>
           </td>
         </tr>
         <tr>
           <td>steinnacher.at</td>
           <td className={styles.numberCell}>4</td>
           <td className={styles.action}>
-            <span>View</span>
+            <span>Add Account</span>
+            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
+              Edit
+            </span>
           </td>
         </tr>
         <tr>
           <td>stadtkino-hainfeld.at</td>
           <td className={styles.numberCell}>1</td>
           <td className={styles.action}>
-            <span>View</span>
+            <span>Add Account</span>
+            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
+              Edit
+            </span>
           </td>
         </tr>
         <tr>
           <td>mpfilms.at</td>
           <td className={styles.numberCell}>0</td>
           <td className={styles.action}>
-            <span>View</span>
+            <span>Add Account</span>
             <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
               Edit
             </span>

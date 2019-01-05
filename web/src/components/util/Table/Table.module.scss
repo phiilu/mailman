@@ -51,12 +51,17 @@
         text-align: right;
         font-weight: 600;
       }
+
+      &.monospace {
+        font-family: monospace;
+      }
     }
 
     .action {
       font-weight: 600;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       color: $primary-dk-3;
+      text-align: right;
 
       &:hover {
         cursor: pointer;
