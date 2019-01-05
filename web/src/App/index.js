@@ -1,16 +1,17 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { Router } from "@reach/router";
 
 import Navigation from "components/Navigation";
 import Header from "components/Header";
 import Footer from "components/Footer";
 
+import Login from "pages/Login";
 import Home from "pages/Home";
 import Accounts from "pages/Accounts";
 import Aliases from "pages/Aliases";
 import TlsPolicies from "pages/TlsPolicies";
 
-import { app, notFound } from "./App.module.scss";
+import { app, appLogin, notFound } from "./App.module.scss";
 
 const NotFound = () => (
   <div className={notFound}>
@@ -18,23 +19,35 @@ const NotFound = () => (
   </div>
 );
 
-class App extends Component {
-  render() {
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  if (!loggedIn)
     return (
-      <div className={app}>
+      <div className={appLogin}>
         <Navigation />
-        <Header />
         <Router>
-          <Home path="/" />
-          <Accounts path="/accounts" />
-          <Aliases path="/aliases" />
-          <TlsPolicies path="/tlspolicies" />
+          <Login path="/login" />
           <NotFound default />
         </Router>
         <Footer />
       </div>
     );
-  }
-}
+
+  return (
+    <div className={app}>
+      <Navigation />
+      <Header />
+      <Router>
+        <Home path="/" />
+        <Accounts path="/accounts" />
+        <Aliases path="/aliases" />
+        <TlsPolicies path="/tlspolicies" />
+        <NotFound default />
+      </Router>
+      <Footer />
+    </div>
+  );
+};
 
 export default App;

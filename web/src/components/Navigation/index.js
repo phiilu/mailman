@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { navigation, innerNav, brand, active } from "./Navigation.module.scss";
+import {
+  navigation,
+  innerNav,
+  brand,
+  active,
+  profile
+} from "./Navigation.module.scss";
 
+import UserCircleIcon from "components/icons/UserCircle";
 import Content from "components/util/Content";
 
 const NavLink = props => (
@@ -53,6 +60,10 @@ export default function Navigation() {
               <NavLink to="/tlspolicies">TLS Policies</NavLink>
             </li>
           </ul>
+          <div className={profile}>
+            <UserCircleIcon />
+            <span>Florian</span>
+          </div>
         </div>
       </Content>
     </nav>
