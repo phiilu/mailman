@@ -15,22 +15,16 @@ import {
 
 import classNames from "classnames";
 
-export default function CloseCircle({
-  primary,
-  secondary,
-  green,
-  red,
-  ...props
-}) {
+export default function Check({ primary, secondary, green, red, ...props }) {
   let primaryClass = classNames({
-    [defaultPrimary]: !primary && !secondary && !green,
+    [defaultPrimary]: !primary && !secondary && !green && !red,
     [primaryPrimary]: primary,
     [secondaryPrimary]: secondary,
     [greenPrimary]: green,
     [redPrimary]: red
   });
   let secondaryClass = classNames({
-    [defaultSecondary]: !primary && !secondary && !green,
+    [defaultSecondary]: !primary && !secondary && !green && !red,
     [primarySecondary]: primary,
     [secondarySecondary]: secondary,
     [greenSecondary]: green,
@@ -47,7 +41,7 @@ export default function CloseCircle({
       <circle cx="12" cy="12" r="10" className={primaryClass} />
       <path
         className={secondaryClass}
-        d="M13.41 12l2.83 2.83a1 1 0 0 1-1.41 1.41L12 13.41l-2.83 2.83a1 1 0 1 1-1.41-1.41L10.59 12 7.76 9.17a1 1 0 0 1 1.41-1.41L12 10.59l2.83-2.83a1 1 0 0 1 1.41 1.41L13.41 12z"
+        d="M10 14.59l6.3-6.3a1 1 0 0 1 1.4 1.42l-7 7a1 1 0 0 1-1.4 0l-3-3a1 1 0 0 1 1.4-1.42l2.3 2.3z"
       />
     </svg>
   );

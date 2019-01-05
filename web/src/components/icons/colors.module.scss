@@ -30,3 +30,23 @@
 .secondarySecondary {
   fill: $secondary-dk-1;
 }
+
+.greenPrimary {
+  fill: $green-lt-2;
+}
+
+.greenSecondary {
+  fill: $green-dk-2;
+}
+
+.redPrimary {
+  fill: $red-lt-2;
+}
+
+.redSecondary {
+  fill: $red-dk-2;
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}

@@ -20,11 +20,17 @@
       display: flex;
 
       li {
-        padding: 20px;
+        padding: 20px 0;
         margin-right: 25px;
 
         a {
           font-weight: 700;
+          padding: 8px 15px;
+          &.active {
+            background: $primary-lt-3;
+            border-radius: 20px;
+            color: $primary-dk-3;
+          }
         }
       }
     }

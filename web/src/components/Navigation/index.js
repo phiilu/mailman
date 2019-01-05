@@ -1,15 +1,27 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { navigation, innerNav, brand } from "./Navigation.module.scss";
+import { navigation, innerNav, brand, active } from "./Navigation.module.scss";
 
 import Content from "components/util/Content";
+
+const NavLink = props => (
+  <Link
+    {...props}
+    getProps={({ isCurrent }) => {
+      // the object returned here is passed to the
+      // anchor element's props
+
+      return isCurrent ? { className: active } : {};
+    }}
+  />
+);
 
 export default function Navigation() {
   return (
     <nav className={navigation}>
       <Content>
         <div className={innerNav}>
-          <Link to="/" className={brand}>
+          <NavLink to="/" className={brand}>
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -26,19 +38,19 @@ export default function Navigation() {
                 <polyline points="22,6 12,13 2,6" />
               </svg>
             </div>
-          </Link>
+          </NavLink>
           <ul>
             <li>
-              <Link to="/domains">Domains</Link>
+              <NavLink to="/">Domains</NavLink>
             </li>
             <li>
-              <Link to="/accounts">Accounts</Link>
+              <NavLink to="/accounts">Accounts</NavLink>
             </li>
             <li>
-              <Link to="/aliases">Aliases</Link>
+              <NavLink to="/aliases">Aliases</NavLink>
             </li>
             <li>
-              <Link to="/tlspolicies">TLS Policies</Link>
+              <NavLink to="/tlspolicies">TLS Policies</NavLink>
             </li>
           </ul>
         </div>

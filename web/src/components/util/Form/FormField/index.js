@@ -1,6 +1,9 @@
 import React from "react";
-import { formField } from "./FormField.module.scss";
+import { formField, inlineField } from "./FormField.module.scss";
 
-export default function FormField({ children }) {
-  return <div className={formField}>{children}</div>;
+import classNames from "classnames";
+
+export default function FormField({ inline, children }) {
+  let classes = classNames({ [formField]: true, [inlineField]: inline });
+  return <div className={classes}>{children}</div>;
 }

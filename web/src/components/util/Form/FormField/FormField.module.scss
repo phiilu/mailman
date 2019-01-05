@@ -4,6 +4,14 @@
   display: grid;
   margin: 10px 0;
 
+  &.inlineField {
+    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+    & div {
+      display: grid;
+      margin: 0 auto;
+    }
+  }
+
   label {
     font-size: 1.2rem;
     font-weight: 700;
@@ -12,7 +20,10 @@
     margin-bottom: 5px;
   }
 
-  input {
+  input,
+  select {
+    width: 100%;
+    height: 40px;
     border: none;
     padding: 10px 8px;
     background: $white;
