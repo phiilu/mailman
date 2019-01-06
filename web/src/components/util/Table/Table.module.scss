@@ -21,6 +21,11 @@
         text-align: right;
         font-weight: 600;
       }
+
+      &:last-child {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
 
     th:first-child {

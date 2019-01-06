@@ -1,14 +1,36 @@
 import React from "react";
+import { Link } from "@reach/router";
+import isEqual from "lodash/isEqual";
+
 import Table, { styles } from "components/util/Table";
 import Button from "components/util/Button";
 import AddIcon from "components/icons/Add";
 
-export default function DomanList({
+function DomanList({
+  domains,
   showCreateDomain,
   setShowCreateDomain,
   showEditDomain,
-  setShowEditDomain
+  setShowEditDomain,
+  deleteDomain,
+  setEditDomainId
 }) {
+  const handleEditClick = id => {
+    if (!showCreateDomain) {
+      setShowEditDomain(true);
+      setEditDomainId(id);
+    }
+  };
+
+  const handleDeleteDomain = async id => {
+    try {
+      await deleteDomain({ variables: { id } });
+    } catch (error) {
+      console.log(error);
+      // Todo
+    }
+  };
+
   return (
     <Table>
       <thead>
@@ -29,57 +51,25 @@ export default function DomanList({
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>example.org</td>
-          <td className={styles.numberCell}>2</td>
-          <td className={styles.action}>
-            <span>Add Account</span>
-            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>kapfenberger.me</td>
-          <td className={styles.numberCell}>4</td>
-          <td className={styles.action}>
-            <span>Add Account</span>
-            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>steinnacher.at</td>
-          <td className={styles.numberCell}>4</td>
-          <td className={styles.action}>
-            <span>Add Account</span>
-            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>stadtkino-hainfeld.at</td>
-          <td className={styles.numberCell}>1</td>
-          <td className={styles.action}>
-            <span>Add Account</span>
-            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>mpfilms.at</td>
-          <td className={styles.numberCell}>0</td>
-          <td className={styles.action}>
-            <span>Add Account</span>
-            <span onClick={() => !showCreateDomain && setShowEditDomain(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
+        {domains.map(domain => (
+          <tr key={domain.id}>
+            <td>{domain.domain}</td>
+            <td className={styles.numberCell}>{domain.accounts.count}</td>
+            <td className={styles.action}>
+              <span>
+                <Link to={`/accounts/${domain.domain}`}>Show Accounts</Link>
+              </span>
+              <span>
+                <Link to={`/accounts/${domain.domain}`}>Add Account</Link>
+              </span>
+              <span onClick={() => handleEditClick(domain.id)}>Edit</span>
+              <span onClick={() => handleDeleteDomain(domain.id)}>Delete</span>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );
 }
+
+export default React.memo(DomanList, isEqual);

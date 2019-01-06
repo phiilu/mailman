@@ -19,6 +19,12 @@ class Alias {
       .orderBy("source_username", "asc");
   }
 
+  async getAliasCount() {
+    const res = await db("aliases").count();
+    const count = res[0]["count(*)"];
+    return count;
+  }
+
   async getAlias(id) {
     return await db
       .select()

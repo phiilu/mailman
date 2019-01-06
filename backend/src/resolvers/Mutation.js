@@ -58,6 +58,18 @@ const Mutation = {
       throw error;
     }
   },
+  async updateDomain(parent, args, ctx, info) {
+    const { id, domain } = args;
+
+    const newId = await Domain.updateDomain(id, domain);
+    if (newId) {
+      return (await Domain.getDomain(newId))[0];
+    } else {
+      const error = new Error("could not update domain");
+      error.status = 422;
+      throw error;
+    }
+  },
   async deleteDomain(parent, args, ctx, info) {
     const { id } = args;
     await Domain.deleteDomain(id);

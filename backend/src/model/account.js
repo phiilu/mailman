@@ -21,6 +21,12 @@ class Account {
       .orderBy("username", "asc");
   }
 
+  async getAccountCount() {
+    const res = await db("accounts").count();
+    const count = res[0]["count(*)"];
+    return count;
+  }
+
   async getAccountsByDomain(domain) {
     return await db
       .select("id", "username", "domain", "quota", "enabled", "sendonly")

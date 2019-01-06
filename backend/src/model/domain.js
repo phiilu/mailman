@@ -8,6 +8,12 @@ class Domain {
       .orderBy("domain", "asc");
   }
 
+  async getDomainCount() {
+    const res = await db("domains").count();
+    const count = res[0]["count(*)"];
+    return count;
+  }
+
   async getDomainForEmail(email) {
     const [, domain] = email.split("@");
     return await db
@@ -29,10 +35,28 @@ class Domain {
     return await db("domains").insert({ domain }, ["id", "domain"]);
   }
 
-  async updateDomain(fields, id) {
-    return await db("domains")
-      .update(fields, ["id", "domain"])
+  async updateDomain(id, domain) {
+    const [oldDomain] = await this.getDomain(id);
+    const [newId] = await this.createDomain(domain);
+
+    // update the references where the domain is set
+    await db("aliases")
+      .update({ source_domain: domain })
+      .where({ source_domain: oldDomain.domain });
+    await db("accounts")
+      .update({ domain })
+      .where({ domain: oldDomain.domain });
+
+    // delete the old domain
+    await db("domains")
+      .delete()
       .where({ id });
+    // set the id back
+    await db("domains")
+      .update({ id })
+      .where({ id: newId });
+
+    return id;
   }
 
   async deleteDomain(id) {

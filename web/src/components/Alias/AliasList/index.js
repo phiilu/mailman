@@ -7,6 +7,7 @@ import CloseCircleIcon from "components/icons/CloseCircle";
 import ArrowThinRightIcon from "components/icons/ArrowThinRight";
 
 export default function AliasList({
+  aliases,
   showCreateAlias,
   setShowCreateAlias,
   showEditAlias,
@@ -34,38 +35,23 @@ export default function AliasList({
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <CheckIcon green />
-            {/* <CloseCircleIcon red /> */}
-          </td>
-          <td>test@example.org</td>
-          <td>
-            <ArrowThinRightIcon primary />
-          </td>
-          <td>florian@example.org</td>
-          <td className={styles.action}>
-            <span onClick={() => !showCreateAlias && setShowEditAlias(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            {/* <CheckIcon green /> */}
-            <CloseCircleIcon red />
-          </td>
-          <td>google@example.org</td>
-          <td>
-            <ArrowThinRightIcon primary />
-          </td>
-          <td>test@gmail.com</td>
-          <td className={styles.action}>
-            <span onClick={() => !showCreateAlias && setShowEditAlias(true)}>
-              Edit
-            </span>
-          </td>
-        </tr>
+        {aliases.map(alias => (
+          <tr key={alias.id}>
+            <td>
+              {!!alias.enabled ? <CheckIcon green /> : <CloseCircleIcon red />}{" "}
+            </td>
+            <td>{alias.sourceEmail}</td>
+            <td>
+              <ArrowThinRightIcon primary />
+            </td>
+            <td>{alias.destinationEmail}</td>
+            <td className={styles.action}>
+              <span onClick={() => !showCreateAlias && setShowEditAlias(true)}>
+                Edit
+              </span>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );

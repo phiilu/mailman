@@ -7,6 +7,7 @@ import Footer from "components/Footer";
 
 import Login from "pages/Login";
 import Home from "pages/Home";
+import Domains from "pages/Domains";
 import Accounts from "pages/Accounts";
 import Aliases from "pages/Aliases";
 import TlsPolicies from "pages/TlsPolicies";
@@ -38,13 +39,18 @@ const App = () => {
     <div className={app}>
       <Navigation />
       <Header />
-      <Router>
-        <Home path="/" />
-        <Accounts path="/accounts" />
-        <Aliases path="/aliases" />
-        <TlsPolicies path="/tlspolicies" />
-        <NotFound default />
-      </Router>
+      <main>
+        <Router>
+          <Home path="/" exact />
+          <Domains path="/domains" />
+          <Accounts path="/accounts/:domain" />
+          <Accounts path="/accounts" />
+          <Aliases path="/aliases/:email" />
+          <Aliases path="/aliases" />
+          <TlsPolicies path="/tlspolicies" />
+          <NotFound default />
+        </Router>
+      </main>
       <Footer />
     </div>
   );

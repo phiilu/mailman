@@ -1,8 +1,13 @@
 type Query {
   domains: [Domain!]!
   domain(id: Int!): Domain
-  accounts: [Account!]!
+  domainCount: Int!
+  accounts(domain: String): [Account!]!
+  accountsCount: Int!
   tlspolicies: [TLSPolicy!]!
+  tlspoliciesCount: Int!
+  aliases(email: String): [Alias!]!
+  aliasesCount: Int!
 }
 
 type Mutation {
@@ -24,6 +29,7 @@ type Mutation {
   ): Account!
   deleteAccount(id: Int!): String!
   createDomain(domain: String!): Domain!
+  updateDomain(id: Int!, domain: String!): Domain!
   deleteDomain(id: Int!): String!
 }
 
@@ -49,6 +55,17 @@ type Account {
   sendonly: Int!
   # Aggregate fields
   count: Int
+}
+
+type Alias {
+  id: Int!
+  sourceEmail: String!
+  sourceUsername: String!
+  sourceDomain: Domain!
+  destinationEmail: String!
+  destinationUsername: String!
+  destinationDomain: String!
+  enabled: Int!
 }
 
 type TLSPolicy {

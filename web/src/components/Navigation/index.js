@@ -14,11 +14,15 @@ import Content from "components/util/Content";
 const NavLink = props => (
   <Link
     {...props}
-    getProps={({ isCurrent }) => {
+    getProps={({ isCurrent, isPartiallyCurrent, href, location }) => {
       // the object returned here is passed to the
       // anchor element's props
 
-      return isCurrent ? { className: active } : {};
+      if (href === "/domains" && location.pathname === "/") {
+        return { className: active };
+      }
+
+      return isCurrent || isPartiallyCurrent ? { className: active } : {};
     }}
   />
 );
@@ -48,7 +52,7 @@ export default function Navigation() {
           </NavLink>
           <ul>
             <li>
-              <NavLink to="/">Domains</NavLink>
+              <NavLink to="/domains">Domains</NavLink>
             </li>
             <li>
               <NavLink to="/accounts">Accounts</NavLink>

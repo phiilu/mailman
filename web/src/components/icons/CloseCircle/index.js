@@ -23,14 +23,14 @@ export default function CloseCircle({
   ...props
 }) {
   let primaryClass = classNames({
-    [defaultPrimary]: !primary && !secondary && !green,
+    [defaultPrimary]: !primary && !secondary && !green && !red,
     [primaryPrimary]: primary,
     [secondaryPrimary]: secondary,
     [greenPrimary]: green,
     [redPrimary]: red
   });
   let secondaryClass = classNames({
-    [defaultSecondary]: !primary && !secondary && !green,
+    [defaultSecondary]: !primary && !secondary && !green && !red,
     [primarySecondary]: primary,
     [secondarySecondary]: secondary,
     [greenSecondary]: green,

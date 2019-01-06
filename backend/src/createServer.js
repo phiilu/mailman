@@ -4,6 +4,7 @@ import Query from "./resolvers/Query";
 import Account from "./resolvers/Account";
 import AccountList from "./resolvers/AccountList";
 import Domain from "./resolvers/Domain";
+import Alias from "./resolvers/Alias";
 
 // Create the GraphQL Yoga Server
 
@@ -15,7 +16,8 @@ function createServer() {
       Query,
       Account,
       AccountList,
-      Domain
+      Domain,
+      Alias
     },
     resolverValidationOptions: {
       requireResolversForResolveType: false

@@ -5,6 +5,7 @@ import AddIcon from "components/icons/Add";
 import Label from "components/util/Label";
 
 export default function TlsPolicyList({
+  tlsPolicies,
   showCreateTlsPolicy,
   setShowCreateTlsPolicy,
   showEditTlsPolicy,
@@ -24,27 +25,31 @@ export default function TlsPolicyList({
                 disabled={showEditTlsPolicy}
                 onClick={() => setShowCreateTlsPolicy(true)}
               >
-                <AddIcon secondary /> TlsPolicy
+                <AddIcon secondary /> TLS Policy
               </Button>
             )}
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>example.org</td>
-          <td className={styles.monospace}>match=.example.org</td>
-          <td>
-            <Label green>dane</Label>
-          </td>
-          <td className={styles.action}>
-            <span
-              onClick={() => !showCreateTlsPolicy && setShowEditTlsPolicy(true)}
-            >
-              Edit
-            </span>
-          </td>
-        </tr>
+        {tlsPolicies.map(tlsPolicy => (
+          <tr key={tlsPolicy.id}>
+            <td>{tlsPolicy.domain}</td>
+            <td className={styles.monospace}>{tlsPolicy.params}</td>
+            <td>
+              <Label green>{tlsPolicy.policy}</Label>
+            </td>
+            <td className={styles.action}>
+              <span
+                onClick={() =>
+                  !showCreateTlsPolicy && setShowEditTlsPolicy(true)
+                }
+              >
+                Edit
+              </span>
+            </td>
+          </tr>
+        ))}
       </tbody>
     </Table>
   );

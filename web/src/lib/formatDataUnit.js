@@ -1,6 +1,6 @@
 import fileSize from "file-size";
 
-const formatDataUnit = unit => {
+export const formatDataUnit = unit => {
   if (unit === 0) {
     return "∞";
   } else {
@@ -11,4 +11,4 @@ const formatDataUnit = unit => {
   }
 };
 
-export { formatDataUnit };
+export default formatDataUnit;

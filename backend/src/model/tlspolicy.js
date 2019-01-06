@@ -16,6 +16,12 @@ class TlsPolicy {
       .limit(1);
   }
 
+  async getTlsPolicyCount() {
+    const res = await db("tlspolicies").count();
+    const count = res[0]["count(*)"];
+    return count;
+  }
+
   async createTlsPolicy(fields) {
     return await db("tlspolicies").insert(fields);
   }
