@@ -11,7 +11,12 @@ const Mutation = {
       sendonly = false
     } = args;
 
-    const [username, domain] = email.split("@");
+    let { username, domain } = args;
+
+    if (email) {
+      username = email.split("@")[0];
+      domain = email.split("@")[1];
+    }
 
     const id = (await Account.createAccount({
       username,

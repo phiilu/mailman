@@ -12,7 +12,9 @@ type Query {
 
 type Mutation {
   createAccount(
-    email: String!
+    email: String
+    username: String
+    domain: String
     password: String!
     quota: Int
     enabled: Int

@@ -6,9 +6,6 @@
 
 .defaultPrimary {
   fill: $grey-lt-2;
-  &:hover {
-    fill: $grey-lt-1;
-  }
 }
 
 .defaultSecondary {
@@ -36,7 +33,7 @@
 }
 
 .greenSecondary {
-  fill: $green-dk-2;
+  fill: $green-dk-1;
 }
 
 .redPrimary {

@@ -34,6 +34,12 @@ h1 {
   justify-content: center;
 
   &.withForm {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  @media screen and (max-width: 1000px) {
+    &.withForm {
+      grid-template-columns: 1fr;
+    }
   }
 }

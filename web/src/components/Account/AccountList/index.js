@@ -11,10 +11,8 @@ import formatDataUnit from "lib/formatDataUnit";
 
 export default function AccountList({
   accounts,
-  showCreateAccount,
-  setShowCreateAccount,
-  showEditAccount,
-  setShowEditAccount
+  showCreateAccountHideEditAccount,
+  showEditAccountHideCeateAccount
 }) {
   return (
     <Table>
@@ -25,15 +23,9 @@ export default function AccountList({
           <th />
           <th className={styles.numberCell}>Quota</th>
           <th>
-            {!showCreateAccount && (
-              <Button
-                secondary
-                disabled={showEditAccount}
-                onClick={() => setShowCreateAccount(true)}
-              >
-                <AddIcon secondary /> Account
-              </Button>
-            )}
+            <Button secondary onClick={showCreateAccountHideEditAccount}>
+              <AddIcon secondary /> Account
+            </Button>
           </th>
         </tr>
       </thead>
@@ -56,11 +48,7 @@ export default function AccountList({
               <span>
                 <Link to={`/aliases/${account.email}`}>Aliases</Link>
               </span>
-              <span
-                onClick={() => !showCreateAccount && setShowEditAccount(true)}
-              >
-                Edit
-              </span>
+              <span onClick={showEditAccountHideCeateAccount}>Edit</span>
             </td>
           </tr>
         ))}

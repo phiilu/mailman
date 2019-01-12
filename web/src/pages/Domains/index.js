@@ -83,6 +83,21 @@ export default function Domains() {
     suspend: false
   });
 
+  const showEditDomainHideCeateDomain = id => {
+    if (showCreateDomain) {
+      setShowCreateDomain(false);
+    }
+    setEditDomainId(id);
+    setShowEditDomain(true);
+  };
+
+  const showCreateDomainHideEditDomain = () => {
+    if (showEditDomain) {
+      setShowEditDomain(false);
+    }
+    setShowCreateDomain(true);
+  };
+
   // handle data fetching states
   if (error) return `Error! ${error.message}`;
   if (loading) return <Loading />;
@@ -108,12 +123,9 @@ export default function Domains() {
             <h1>All Domains</h1>
             <DomainList
               domains={domains}
-              showCreateDomain={showCreateDomain}
-              setShowCreateDomain={setShowCreateDomain}
-              showEditDomain={showEditDomain}
-              setShowEditDomain={setShowEditDomain}
+              showCreateDomainHideEditDomain={showCreateDomainHideEditDomain}
+              showEditDomainHideCeateDomain={showEditDomainHideCeateDomain}
               deleteDomain={deleteDomain}
-              setEditDomainId={setEditDomainId}
             />
           </div>
           <div className="col">

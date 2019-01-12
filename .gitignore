@@ -2,3 +2,4 @@ node_modules
 build
 *.env
 frontend-nextjs
+.DS_Store
