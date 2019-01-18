@@ -2,6 +2,7 @@ import "dotenv/config";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
+import { formatError } from "apollo-errors";
 
 import createServer from "./createServer";
 
@@ -14,12 +15,14 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 app.use(helmet());
 
-server.start({
+server.start(
+  {
     cors: {
       credentials: true,
       origin: process.env.MAILMAN_FRONTEND_URL
     },
-    port: port
+    port: port,
+    formatError
   },
   () => {
     deets => {

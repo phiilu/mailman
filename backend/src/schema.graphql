@@ -2,36 +2,36 @@ type Query {
   domains: [Domain!]!
   domain(id: Int!): Domain
   domainCount: Int!
+
   accounts(domain: String): [Account!]!
   accountsCount: Int!
-  tlspolicies: [TLSPolicy!]!
-  tlspoliciesCount: Int!
+
+  tlsPolicies: [TlsPolicy!]!
+  tlsPoliciesCount: Int!
+
   aliases(email: String): [Alias!]!
   aliasesCount: Int!
 }
 
 type Mutation {
-  createAccount(
-    email: String!
-    password: String!
-    quota: Int
-    enabled: Int
-    sendonly: Int
-  ): Account!
-  updateAccount(
-    id: Int!
-    username: String
-    domain: String
-    password: String
-    quota: Int
-    enabled: Int
-    sendonly: Int
-  ): Account!
+  createAccount(data: AccountCreateInput!): Account!
+  updateAccount(id: Int!, data: AccountUpdateInput!): Account!
   deleteAccount(id: Int!): String!
-  createDomain(domain: String!): Domain!
-  updateDomain(id: Int!, domain: String!): Domain!
+
+  createDomain(data: DomainInput!): Domain!
+  updateDomain(id: Int!, data: DomainInput!): Domain!
   deleteDomain(id: Int!): String!
+
+  createAlias(data: AliasInput!): Alias!
+  updateAlias(id: Int!, data: AliasInput!): Alias!
+  deleteAlias(id: Int!): String!
+
+  createTlsPolicy(data: TlsPolicyInput!): TlsPolicy!
+  updateTlsPolicy(id: Int!, data: TlsPolicyInput!): TlsPolicy!
+  deleteTlsPolicy(id: Int!): String!
 }
+
+## Domains
 
 type Domain {
   id: Int!
@@ -39,10 +39,11 @@ type Domain {
   accounts: AccountList!
 }
 
-type AccountList {
-  count: Int
-  nodes: [Account]!
+input DomainInput {
+  domain: String!
 }
+
+## Accounts
 
 type Account {
   id: Int!
@@ -57,19 +58,60 @@ type Account {
   count: Int
 }
 
+type AccountList {
+  count: Int
+  nodes: [Account]!
+}
+
+input AccountCreateInput {
+  username: String!
+  domain: String!
+  password: String!
+  quota: Int
+  enabled: Int
+  sendonly: Int
+}
+
+input AccountUpdateInput {
+  username: String
+  domain: String
+  password: String
+  quota: Int
+  enabled: Int
+  sendonly: Int
+}
+
+## Aliases
+
 type Alias {
   id: Int!
   sourceEmail: String!
   sourceUsername: String!
-  sourceDomain: Domain!
+  sourceDomain: String!
   destinationEmail: String!
   destinationUsername: String!
   destinationDomain: String!
   enabled: Int!
 }
 
-type TLSPolicy {
+input AliasInput {
+  sourceUsername: String!
+  sourceDomain: String!
+  destinationUsername: String!
+  destinationDomain: String!
+  enabled: Int
+}
+
+## TLS Policies
+
+type TlsPolicy {
   id: Int!
+  domain: String!
+  policy: String!
+  params: String
+}
+
+input TlsPolicyInput {
   domain: String!
   policy: String!
   params: String

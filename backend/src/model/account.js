@@ -51,7 +51,7 @@ class Account {
     return await db("accounts").insert(fields);
   }
 
-  async updateAccount(fields, id) {
+  async updateAccount(id, fields) {
     if (fields.password) {
       fields.password = this.hashPassword(fields.password);
     }

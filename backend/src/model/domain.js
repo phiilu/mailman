@@ -23,11 +23,11 @@ class Domain {
       .orderBy("domain", "asc");
   }
 
-  async getDomain(id) {
+  async getDomain(fields) {
     return await db
       .select()
       .from("domains")
-      .where({ id })
+      .where(fields)
       .limit(1);
   }
 
@@ -36,7 +36,7 @@ class Domain {
   }
 
   async updateDomain(id, domain) {
-    const [oldDomain] = await this.getDomain(id);
+    const [oldDomain] = await this.getDomain({ id });
     const [newId] = await this.createDomain(domain);
 
     // update the references where the domain is set
@@ -56,11 +56,11 @@ class Domain {
       .update({ id })
       .where({ id: newId });
 
-    return id;
+    return [id];
   }
 
   async deleteDomain(id) {
-    const domain = await this.getDomain(id);
+    const domain = await this.getDomain({ id });
 
     await db("aliases")
       .delete()

@@ -3,14 +3,16 @@ import Account from "../model/account";
 import Alias from "../model/alias";
 import TLSPolicy from "../model/tlspolicy";
 
+import DomainErrors from "./errors/DomainErrors";
+
 const Query = {
   async domain(parent, args, ctx, info) {
-    const domain = await Domain.getDomain(args.id);
-    if (!domain[0]) {
-      throw new Error(`Domain not found for id ${args.id}`);
+    const [domain] = await Domain.getDomain({ id: args.id });
+    if (!domain) {
+      throw new DomainErrors.DomainNotFoundError({ data: { id: args.id } });
     }
 
-    return domain[0];
+    return domain;
   },
   async domains() {
     const domains = await Domain.getDomains();
@@ -52,12 +54,11 @@ const Query = {
     const count = await Alias.getAliasCount();
     return count;
   },
-  async tlspolicies() {
+  async tlsPolicies() {
     const tlspolicies = await TLSPolicy.getTlsPolicies();
-    console.log(tlspolicies);
     return tlspolicies;
   },
-  async tlspoliciesCount() {
+  async tlsPoliciesCount() {
     const count = await TLSPolicy.getTlsPolicyCount();
     return count;
   }
