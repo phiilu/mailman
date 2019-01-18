@@ -5,21 +5,20 @@ import isEqual from "lodash/isEqual";
 import Table, { styles } from "components/util/Table";
 import Button from "components/util/Button";
 import AddIcon from "components/icons/Add";
+import UserGroupIcon from "components/icons/UserGroup";
+import UserAddIcon from "components/icons/UserAdd";
+import EditIcon from "components/icons/Edit";
+import DeleteIcon from "components/icons/Delete";
 
 function DomanList({
   domains,
   showCreateDomain,
-  setShowCreateDomain,
-  showEditDomain,
-  setShowEditDomain,
   deleteDomain,
-  setEditDomainId
+  showEditDomainHideCeateDomain,
+  showCreateDomainHideEditDomain
 }) {
   const handleEditClick = id => {
-    if (!showCreateDomain) {
-      setShowEditDomain(true);
-      setEditDomainId(id);
-    }
+    showEditDomainHideCeateDomain(id);
   };
 
   const handleDeleteDomain = async id => {
@@ -38,15 +37,9 @@ function DomanList({
           <th>URL</th>
           <th className={styles.numberCell}>Accounts</th>
           <th>
-            {!showCreateDomain && (
-              <Button
-                secondary
-                disabled={showEditDomain}
-                onClick={() => setShowCreateDomain(true)}
-              >
-                <AddIcon secondary /> Domain
-              </Button>
-            )}
+            <Button secondary onClick={showCreateDomainHideEditDomain}>
+              <AddIcon secondary /> Domain
+            </Button>
           </th>
         </tr>
       </thead>
@@ -57,13 +50,21 @@ function DomanList({
             <td className={styles.numberCell}>{domain.accounts.count}</td>
             <td className={styles.action}>
               <span>
-                <Link to={`/accounts/${domain.domain}`}>Show Accounts</Link>
+                <Link to={`/accounts/${domain.domain}`}>
+                  <UserGroupIcon green />
+                </Link>
               </span>
               <span>
-                <Link to={`/accounts/${domain.domain}`}>Add Account</Link>
+                <Link to={`/accounts/${domain.domain}`}>
+                  <UserAddIcon green />
+                </Link>
               </span>
-              <span onClick={() => handleEditClick(domain.id)}>Edit</span>
-              <span onClick={() => handleDeleteDomain(domain.id)}>Delete</span>
+              <span onClick={() => handleEditClick(domain.id)}>
+                <EditIcon primary />
+              </span>
+              <span onClick={() => handleDeleteDomain(domain.id)}>
+                <DeleteIcon red />{" "}
+              </span>
             </td>
           </tr>
         ))}

@@ -8,35 +8,82 @@ import Toggle from "components/util/Toggle";
 import { FormField } from "components/util/Form";
 import InputRange from "components/util/InputRange";
 
-export default function AccountCreate({ setShowCreateAccount }) {
-  const [range, setRange] = useState(0);
+const defaultState = {
+  username: "",
+  domain: "",
+  password: "",
+  quota: 0,
+  enabled: true,
+  sendonly: false
+};
+
+export default function AccountCreate({
+  setShowCreateAccount,
+  domains,
+  createAccount
+}) {
+  const [account, setAccount] = useState(defaultState);
+
+  const handleChange = e => {
+    setAccount({ ...account, [e.target.name]: e.target.value });
+  };
+  const handleRangeChange = quota => setAccount({ ...account, quota });
+  const handleToggleChange = field => on =>
+    setAccount({ ...account, [field]: on });
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+
+    try {
+      await createAccount({
+        variables: {
+          ...account,
+          enabled: account.enabled ? 1 : 0,
+          sendonly: account.sendonly ? 1 : 0
+        }
+      });
+      setAccount(defaultState);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box onClose={() => setShowCreateAccount(false)}>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         <FormField>
-          <label htmlFor="">Username</label>
-          <input type="text" />
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            name="username"
+            value={account.username}
+            onChange={handleChange}
+          />
         </FormField>
         <FormField>
-          <label htmlFor="">Domain</label>
-          <select>
-            <option value="example.org">example.org</option>
-            <option value="kapfenberger.me">kapfenberger.me</option>
-            <option value="steinnacher.at">steinnacher.at</option>
-            <option value="stadtkino-hainfeld.at">stadtkino-hainfeld.at</option>
-            <option value="mpfilms.at">mpfilms.at</option>
+          <label htmlFor="domain">Domain</label>
+          <select name="domain" value={account.domain} onChange={handleChange}>
+            {domains.map(domain => (
+              <option key={domain.id} value={domain.domain}>
+                {domain.domain}
+              </option>
+            ))}
           </select>
         </FormField>
         <FormField>
-          <label htmlFor="">Password</label>
-          <input type="text" />
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={account.password}
+            onChange={handleChange}
+          />
         </FormField>
         <FormField>
-          <label htmlFor="">Quota</label>
+          <label htmlFor="quota">Quota</label>
           <InputRange
-            value={range}
-            onChange={setRange}
+            value={account.quota}
+            onChange={handleRangeChange}
             minValue={0}
             maxValue={1024 * 100}
             step={1024}
@@ -44,12 +91,18 @@ export default function AccountCreate({ setShowCreateAccount }) {
           />
         </FormField>
         <FormField>
-          <label htmlFor="">Enabled</label>
-          <Toggle />
+          <label htmlFor="enabled">Enabled</label>
+          <Toggle
+            on={account.enabled}
+            onToggle={handleToggleChange("enabled")}
+          />
         </FormField>
         <FormField>
-          <label htmlFor="">Sendonly</label>
-          <Toggle />
+          <label htmlFor="sendonly">Sendonly</label>
+          <Toggle
+            on={account.sendonly}
+            onToggle={handleToggleChange("sendonly")}
+          />
         </FormField>
 
         <Button secondary>Create</Button>

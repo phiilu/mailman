@@ -39,7 +39,7 @@ export default function AccountEdit({ setShowEditAccount }) {
             value={range}
             onChange={setRange}
             minValue={0}
-            maxValue={1024 * 10}
+            maxValue={1024 * 100}
             formatLabel={formatDataUnit}
           />
         </FormField>

@@ -5,6 +5,7 @@
   border-spacing: 0;
   border-radius: 7px;
   box-shadow: 0 7px 15px hsla(0, 0, 0, 0.2);
+  width: 100%;
 
   thead tr:first-child {
     background: $grey-lt-4;
@@ -67,6 +68,7 @@
       font-size: 1.4rem;
       color: $primary-dk-3;
       text-align: right;
+      display: flex;
 
       &:hover {
         cursor: pointer;

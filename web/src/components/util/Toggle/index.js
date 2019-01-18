@@ -5,14 +5,13 @@ import { tgl, tglIos, tglBtn } from "./Toggle.module.scss";
 
 import classNames from "classnames";
 
-export default function Toggler() {
+export default function Toggler({ on, onToggle }) {
   return (
-    <Toggle>
+    <Toggle on={on} onToggle={onToggle}>
       {({ on, toggle, getTogglerProps }) => {
         return (
           <>
             <input
-              id="toggle"
               type="checkbox"
               checked={on}
               onChange={toggle}
