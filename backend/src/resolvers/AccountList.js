@@ -1,5 +1,3 @@
-import Account from "../model/account";
-
 const AccountListResolver = {
   count(parent, args, ctx, info) {
     return parent.length;

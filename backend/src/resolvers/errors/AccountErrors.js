@@ -10,12 +10,16 @@ const AccountAlreadyExistsError = createError("AccountAlreadyExistsError", {
   message: "The Account could not be created, because it already exists!"
 });
 const AccountNotUpdatedError = createError("AccountNotUpdatedError", {
-  message: "The Account could be updated!"
+  message: "The Account could not be updated!"
+});
+const AccountValidationError = createError("AccountValidationError", {
+  message: "The provided data was not valid!"
 });
 
 export default {
   AccountNotFoundError,
   AccountNotCreatedError,
   AccountAlreadyExistsError,
-  AccountNotUpdatedError
+  AccountNotUpdatedError,
+  AccountValidationError
 };

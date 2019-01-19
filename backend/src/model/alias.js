@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "db";
 
 class Alias {
   async getAliases() {
@@ -25,11 +25,11 @@ class Alias {
     return count;
   }
 
-  async getAlias(id) {
+  async getAlias(fields) {
     return await db
       .select()
       .from("aliases")
-      .where({ id })
+      .where(fields)
       .limit(1);
   }
 
@@ -37,7 +37,7 @@ class Alias {
     return await db("aliases").insert(fields);
   }
 
-  async updateAlias(fields, id) {
+  async updateAlias(id, fields) {
     return await db("aliases")
       .update(fields)
       .where({ id });

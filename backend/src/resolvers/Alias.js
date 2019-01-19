@@ -1,4 +1,4 @@
-import Domain from "../model/domain";
+import Domain from "model/domain";
 
 const AliasResolver = {
   sourceEmail(parent, args, ctx, info) {

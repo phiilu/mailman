@@ -22,12 +22,12 @@ type Mutation {
   updateDomain(id: Int!, data: DomainInput!): Domain!
   deleteDomain(id: Int!): String!
 
-  createAlias(data: AliasInput!): Alias!
-  updateAlias(id: Int!, data: AliasInput!): Alias!
+  createAlias(data: AliasCreateInput!): Alias!
+  updateAlias(id: Int!, data: AliasUpdateInput!): Alias!
   deleteAlias(id: Int!): String!
 
-  createTlsPolicy(data: TlsPolicyInput!): TlsPolicy!
-  updateTlsPolicy(id: Int!, data: TlsPolicyInput!): TlsPolicy!
+  createTlsPolicy(data: TlsPolicyCreateInput!): TlsPolicy!
+  updateTlsPolicy(id: Int!, data: TlsPolicyUpdateInput!): TlsPolicy!
   deleteTlsPolicy(id: Int!): String!
 }
 
@@ -85,20 +85,28 @@ input AccountUpdateInput {
 
 type Alias {
   id: Int!
-  sourceEmail: String!
+  sourceEmail: String
   sourceUsername: String!
   sourceDomain: String!
   destinationEmail: String!
   destinationUsername: String!
-  destinationDomain: String!
-  enabled: Int!
+  destinationDomain: String
+  enabled: Int
 }
 
-input AliasInput {
+input AliasCreateInput {
   sourceUsername: String!
   sourceDomain: String!
   destinationUsername: String!
   destinationDomain: String!
+  enabled: Int
+}
+
+input AliasUpdateInput {
+  sourceUsername: String
+  sourceDomain: String
+  destinationUsername: String
+  destinationDomain: String
   enabled: Int
 }
 
@@ -111,8 +119,14 @@ type TlsPolicy {
   params: String
 }
 
-input TlsPolicyInput {
+input TlsPolicyCreateInput {
   domain: String!
   policy: String!
+  params: String
+}
+
+input TlsPolicyUpdateInput {
+  domain: String
+  policy: String
   params: String
 }

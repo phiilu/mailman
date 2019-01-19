@@ -1,0 +1,40 @@
+import TlsPolicy from "model/tlspolicy";
+import TlsPolicyErrors from "resolvers/errors/TlsPolicyErrors";
+
+const tlsPoliciesMutations = {
+  async createTlsPolicy(parent, args, ctx, info) {
+    const [existsDomain] = await TlsPolicy.getTlsPolicy({
+      domain: args.data.domain
+    });
+    if (existsDomain) {
+      throw new TlsPolicyErrors.TlsPolicyAlreadyExistsError();
+    }
+
+    try {
+      const [id] = await TlsPolicy.createTlsPolicy(args.data);
+      const [tlsPolicy] = await TlsPolicy.getTlsPolicy({ id });
+      return tlsPolicy;
+    } catch (error) {
+      throw new TlsPolicyErrors.TlsPolicyNotCreatedError();
+    }
+  },
+
+  async updateTlsPolicy(parent, args, ctx, info) {
+    try {
+      await TlsPolicy.updateTlsPolicy(args.id, args.data);
+      const [tlsPolicy] = await TlsPolicy.getTlsPolicy({ id: args.id });
+      return tlsPolicy;
+    } catch (error) {
+      throw new TlsPolicyErrors.TlsPolicyNotUpdatedError();
+    }
+  },
+
+  async deleteTlsPolicy(parent, args, ctx, info) {
+    const { id } = args;
+    await TlsPolicy.deleteTlsPolicy(id);
+
+    return "TlsPolicy deleted!";
+  }
+};
+
+export default tlsPoliciesMutations;

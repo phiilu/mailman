@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "db";
 
 class TlsPolicy {
   async getTlsPolicies() {
@@ -8,11 +8,11 @@ class TlsPolicy {
       .orderBy("domain", "asc");
   }
 
-  async getTlsPolicy(id) {
+  async getTlsPolicy(fields) {
     return await db
       .select()
       .from("tlspolicies")
-      .where({ id })
+      .where(fields)
       .limit(1);
   }
 
@@ -26,7 +26,7 @@ class TlsPolicy {
     return await db("tlspolicies").insert(fields);
   }
 
-  async updateTlsPolicy(fields, id) {
+  async updateTlsPolicy(id, fields) {
     return await db("tlspolicies")
       .update(fields)
       .where({ id });

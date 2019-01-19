@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "db";
 import crypto from "crypto";
 import { sha512crypt } from "sha512crypt-node";
 

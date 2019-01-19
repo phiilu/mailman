@@ -1,4 +1,4 @@
-import Domain from "../model/domain";
+import Domain from "model/domain";
 
 const AccountResolver = {
   email(parent, args, ctx, info) {

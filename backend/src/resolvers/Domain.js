@@ -1,4 +1,4 @@
-import Account from "../model/account";
+import Account from "model/account";
 
 const DomainResolver = {
   async accounts(parent, args, ctx, info) {
