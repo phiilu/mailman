@@ -17,8 +17,8 @@ import { GET_STATS_QUERY } from "components/Header";
 
 // GraphQL Queries
 export const ALL_DOMAINS_QUERY = gql`
-  query ALL_DOMAINS_QUERY {
-    domains {
+  query ALL_DOMAINS_QUERY($perPage: Int, $currentPage: Int) {
+    domains(pagination: { perPage: $perPage, currentPage: $currentPage }) {
       nodes {
         id
         domain
@@ -37,6 +37,11 @@ export const ALL_DOMAINS_QUERY = gql`
             sendonly
           }
         }
+      }
+      pagination {
+        currentPage
+        lastPage
+        total
       }
     }
   }
@@ -70,6 +75,7 @@ export default function Domains() {
   const [showCreateDomain, setShowCreateDomain] = useState(true);
   const [showEditDomain, setShowEditDomain] = useState(false);
   const [editDomainId, setEditDomainId] = useState(0);
+  const [page, setPage] = useState(0);
 
   // querys and mutations
   const createDomain = useMutation(CREATE_DOMAIN_MUTATION, {
@@ -82,7 +88,11 @@ export default function Domains() {
     refetchQueries: [{ query: ALL_DOMAINS_QUERY }, { query: GET_STATS_QUERY }]
   });
   const { data, loading, error } = useQuery(ALL_DOMAINS_QUERY, {
-    suspend: false
+    suspend: false,
+    variables: {
+      perPage: 5,
+      currentPage: page
+    }
   });
 
   const showEditDomainHideCeateDomain = id => {
@@ -106,11 +116,12 @@ export default function Domains() {
 
   // get data
   const domains = data.domains.nodes;
+  const pagination = data.domains.pagination;
+  const editDomain = domains.find(domain => domain.id === editDomainId);
+
   if (!domains) {
     return "Todo: show add domain view!";
   }
-
-  const editDomain = domains.find(domain => domain.id === editDomainId);
 
   return (
     <div className={home}>
@@ -128,6 +139,8 @@ export default function Domains() {
               showCreateDomainHideEditDomain={showCreateDomainHideEditDomain}
               showEditDomainHideCeateDomain={showEditDomainHideCeateDomain}
               deleteDomain={deleteDomain}
+              pagination={pagination}
+              setPage={setPage}
             />
           </div>
           <div className="col">
