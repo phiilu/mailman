@@ -1,7 +1,15 @@
 import db from "db";
 
 class Domain {
-  async getDomains() {
+  async getDomains(pagination) {
+    if (pagination) {
+      return await db
+        .select()
+        .from("domains")
+        .orderBy("domain", "asc")
+        .paginate(pagination.perPage, pagination.currentPage);
+    }
+
     return await db
       .select()
       .from("domains")

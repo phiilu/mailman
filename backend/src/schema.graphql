@@ -1,15 +1,16 @@
 type Query {
-  domains: [Domain!]!
+  domains(pagination: PaginationInput): DomainList!
   domain(id: Int!): Domain
   domainCount: Int!
 
-  accounts(domain: String): [Account!]!
+  accounts(domain: String, pagination: PaginationInput): AccountList!
+  account(id: Int!): Account
   accountsCount: Int!
 
-  tlsPolicies: [TlsPolicy!]!
+  tlsPolicies(pagination: PaginationInput): TlsPolicyList!
   tlsPoliciesCount: Int!
 
-  aliases(email: String): [Alias!]!
+  aliases(email: String, pagination: PaginationInput): AliasList!
   aliasesCount: Int!
 }
 
@@ -31,12 +32,30 @@ type Mutation {
   deleteTlsPolicy(id: Int!): String!
 }
 
+type Pagination {
+  total: Int
+  perPage: Int
+  currentPage: Int
+  lastPage: Int
+}
+
+input PaginationInput {
+  perPage: Int
+  currentPage: Int
+}
+
 ## Domains
 
 type Domain {
   id: Int!
   domain: String!
   accounts: AccountList!
+}
+
+type DomainList {
+  count: Int
+  nodes: [Domain]!
+  pagination: Pagination
 }
 
 input DomainInput {
@@ -61,6 +80,7 @@ type Account {
 type AccountList {
   count: Int
   nodes: [Account]!
+  pagination: Pagination
 }
 
 input AccountCreateInput {
@@ -94,6 +114,12 @@ type Alias {
   enabled: Int
 }
 
+type AliasList {
+  count: Int
+  nodes: [Alias]!
+  pagination: Pagination
+}
+
 input AliasCreateInput {
   sourceUsername: String!
   sourceDomain: String!
@@ -117,6 +143,12 @@ type TlsPolicy {
   domain: String!
   policy: String!
   params: String
+}
+
+type TlsPolicyList {
+  count: Int
+  nodes: [TlsPolicy]!
+  pagination: Pagination
 }
 
 input TlsPolicyCreateInput {

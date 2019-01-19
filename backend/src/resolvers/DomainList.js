@@ -1,8 +1,8 @@
 import isArray from "lodash/isArray";
 
-const AccountListResolver = {
+const DomainListResolver = {
   count(parent, args, ctx, info) {
-    return AccountListResolver.nodes(parent).length;
+    return DomainListResolver.nodes(parent).length;
   },
   nodes(parent, args, ctx, info) {
     if (isArray(parent)) {
@@ -15,9 +15,9 @@ const AccountListResolver = {
       perPage: parent.per_page || -1,
       currentPage: parent.current_page || -1,
       lastPage: parent.last_page || -1,
-      total: parent.total || AccountListResolver.count(parent)
+      total: parent.total || DomainListResolver.count(parent)
     };
   }
 };
 
-export default AccountListResolver;
+export default DomainListResolver;

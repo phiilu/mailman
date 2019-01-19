@@ -1,11 +1,14 @@
 import { GraphQLServer } from "graphql-yoga";
 
-import Mutation from "./resolvers/Mutation";
-import Query from "./resolvers/Query";
-import Account from "./resolvers/Account";
-import AccountList from "./resolvers/AccountList";
-import Domain from "./resolvers/Domain";
-import Alias from "./resolvers/Alias";
+import Mutation from "resolvers/Mutation";
+import Query from "resolvers/Query";
+import Account from "resolvers/Account";
+import AccountList from "resolvers/AccountList";
+import Domain from "resolvers/Domain";
+import DomainList from "resolvers/DomainList";
+import Alias from "resolvers/Alias";
+import AliasList from "resolvers/AliasList";
+import TlsPolicyList from "resolvers/TlsPolicyList";
 
 // Create the GraphQL Yoga Server
 
@@ -18,7 +21,10 @@ function createServer() {
       Account,
       AccountList,
       Domain,
-      Alias
+      DomainList,
+      Alias,
+      AliasList,
+      TlsPolicyList
     },
     resolverValidationOptions: {
       requireResolversForResolveType: false

@@ -1,7 +1,14 @@
 import db from "db";
 
 class TlsPolicy {
-  async getTlsPolicies() {
+  async getTlsPolicies(pagination) {
+    if (pagination) {
+      return await db
+        .select()
+        .from("tlspolicies")
+        .orderBy("domain", "asc")
+        .paginate(pagination.perPage, pagination.currentPage);
+    }
     return await db
       .select()
       .from("tlspolicies")

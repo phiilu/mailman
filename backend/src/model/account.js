@@ -3,7 +3,16 @@ import crypto from "crypto";
 import { sha512crypt } from "sha512crypt-node";
 
 class Account {
-  async getAccounts() {
+  async getAccounts(pagination) {
+    if (pagination) {
+      return await db
+        .select("id", "username", "domain", "quota", "enabled", "sendonly")
+        .from("accounts")
+        .orderBy("domain", "asc")
+        .orderBy("username", "asc")
+        .paginate(pagination.perPage, pagination.currentPage);
+    }
+
     return await db
       .select("id", "username", "domain", "quota", "enabled", "sendonly")
       .from("accounts")
@@ -27,7 +36,17 @@ class Account {
     return count;
   }
 
-  async getAccountsByDomain(domain) {
+  async getAccountsByDomain(domain, pagination) {
+    if (pagination) {
+      return await db
+        .select("id", "username", "domain", "quota", "enabled", "sendonly")
+        .from("accounts")
+        .where({ domain })
+        .orderBy("domain", "asc")
+        .orderBy("username", "asc")
+        .paginate(pagination.perPage, pagination.currentPage);
+    }
+
     return await db
       .select("id", "username", "domain", "quota", "enabled", "sendonly")
       .from("accounts")

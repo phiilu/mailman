@@ -1,7 +1,16 @@
 import db from "db";
 
 class Alias {
-  async getAliases() {
+  async getAliases(pagination) {
+    if (pagination) {
+      return await db
+        .select()
+        .from("aliases")
+        .orderBy("source_domain", "asc")
+        .orderBy("source_username", "asc")
+        .paginate(pagination.perPage, pagination.currentPage);
+    }
+
     return await db
       .select()
       .from("aliases")

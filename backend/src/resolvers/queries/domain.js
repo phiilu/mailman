@@ -10,8 +10,8 @@ const domainQueries = {
 
     return domain;
   },
-  async domains() {
-    const domains = await Domain.getDomains();
+  async domains(parent, args, ctx, info) {
+    const domains = await Domain.getDomains(args.pagination);
     return domains;
   },
   async domainCount() {

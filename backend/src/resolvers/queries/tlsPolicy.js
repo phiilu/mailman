@@ -1,8 +1,8 @@
 import TLSPolicy from "model/tlspolicy";
 
 const tlsPoliciesQueries = {
-  async tlsPolicies() {
-    const tlspolicies = await TLSPolicy.getTlsPolicies();
+  async tlsPolicies(parent, args, ctx, info) {
+    const tlspolicies = await TLSPolicy.getTlsPolicies(args.pagination);
     return tlspolicies;
   },
   async tlsPoliciesCount() {

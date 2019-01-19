@@ -2,13 +2,13 @@ import Alias from "model/alias";
 
 const aliasQueries = {
   async aliases(parent, args, ctx, info) {
-    const { email } = args;
+    const { email, pagination } = args;
     let aliases;
 
     if (email) {
-      aliases = await Alias.getAliasesForEmail(email);
+      aliases = await Alias.getAliasesForEmail(email, pagination);
     } else {
-      aliases = await Alias.getAliases();
+      aliases = await Alias.getAliases(pagination);
     }
 
     return aliases;
