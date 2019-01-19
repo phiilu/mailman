@@ -10,6 +10,8 @@ import Alias from "resolvers/Alias";
 import AliasList from "resolvers/AliasList";
 import TlsPolicyList from "resolvers/TlsPolicyList";
 
+import db from "db";
+
 // Create the GraphQL Yoga Server
 
 function createServer() {
@@ -28,7 +30,8 @@ function createServer() {
     },
     resolverValidationOptions: {
       requireResolversForResolveType: false
-    }
+    },
+    context: req => ({ ...req, db })
   });
 }
 

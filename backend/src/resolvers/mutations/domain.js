@@ -1,9 +1,19 @@
 import Domain from "model/domain";
 
 import DomainErrors from "resolvers/errors/DomainErrors";
+import PermissionErrors from "resolvers/errors/PermissionErrors";
 
 const domainMutations = {
   async createDomain(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const { domain } = args.data;
 
     const [domainExists] = await Domain.getDomain({ domain });
@@ -21,6 +31,15 @@ const domainMutations = {
     }
   },
   async updateDomain(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const {
       id,
       data: { domain }
@@ -37,6 +56,15 @@ const domainMutations = {
     }
   },
   async deleteDomain(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const { id } = args;
     await Domain.deleteDomain(id);
 

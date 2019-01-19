@@ -15,11 +15,15 @@ const AccountNotUpdatedError = createError("AccountNotUpdatedError", {
 const AccountValidationError = createError("AccountValidationError", {
   message: "The provided data was not valid!"
 });
+const AccountInvalidPasswordError = createError("AccountInvalidPasswordError", {
+  message: "The provided password was invalid!"
+});
 
 export default {
   AccountNotFoundError,
   AccountNotCreatedError,
   AccountAlreadyExistsError,
   AccountNotUpdatedError,
-  AccountValidationError
+  AccountValidationError,
+  AccountInvalidPasswordError
 };

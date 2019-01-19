@@ -15,6 +15,9 @@ type Query {
 }
 
 type Mutation {
+  login(email: String!, password: String!): Account!
+  logout: String!
+
   createAccount(data: AccountCreateInput!): Account!
   updateAccount(id: Int!, data: AccountUpdateInput!): Account!
   deleteAccount(id: Int!): String!

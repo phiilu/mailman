@@ -1,8 +1,18 @@
 import Alias from "model/alias";
 import AliasErrors from "resolvers/errors/AliasErrors";
+import PermissionErrors from "resolvers/errors/PermissionErrors";
 
 const aliasMutations = {
   async createAlias(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const fields = {
       source_username: args.data.sourceUsername,
       source_domain: args.data.sourceDomain,
@@ -34,6 +44,15 @@ const aliasMutations = {
   },
 
   async updateAlias(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const fields = {
       source_username: args.data.sourceUsername,
       source_domain: args.data.sourceDomain,
@@ -53,6 +72,15 @@ const aliasMutations = {
   },
 
   async deleteAlias(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const { id } = args;
     await Alias.deleteAlias(id);
 

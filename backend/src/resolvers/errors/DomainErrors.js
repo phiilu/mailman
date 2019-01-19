@@ -10,7 +10,7 @@ const DomainAlreadyExistsError = createError("DomainAlreadyExistsError", {
   message: "The Domain could not be created, because it already exists!"
 });
 const DomainNotUpdatedError = createError("DomainNotUpdatedError", {
-  message: "The Domain could be updated!"
+  message: "The Domain could not be updated!"
 });
 
 export default {

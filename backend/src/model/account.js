@@ -63,6 +63,15 @@ class Account {
       .limit(1);
   }
 
+  async getAccountByEmail(email) {
+    const [username, domain] = email.split("@");
+    return await db
+      .select()
+      .from("accounts")
+      .where({ username, domain })
+      .limit(1);
+  }
+
   async createAccount(fields) {
     if (fields.password) {
       fields.password = this.hashPassword(fields.password);
