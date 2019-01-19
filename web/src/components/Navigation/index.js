@@ -1,15 +1,19 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "@reach/router";
 import {
   navigation,
   innerNav,
   brand,
   active,
-  profile
+  profile,
+  login
 } from "./Navigation.module.scss";
 
 import UserCircleIcon from "components/icons/UserCircle";
+import DoorExitIcon from "components/icons/DoorExit";
 import Content from "components/util/Content";
+
+import { useUser } from "lib/hooks";
 
 const NavLink = props => (
   <Link
@@ -28,6 +32,8 @@ const NavLink = props => (
 );
 
 export default function Navigation() {
+  const { user, logout } = useUser();
+
   return (
     <nav className={navigation}>
       <Content>
@@ -50,24 +56,31 @@ export default function Navigation() {
               </svg>
             </div>
           </NavLink>
-          <ul>
-            <li>
-              <NavLink to="/domains">Domains</NavLink>
-            </li>
-            <li>
-              <NavLink to="/accounts">Accounts</NavLink>
-            </li>
-            <li>
-              <NavLink to="/aliases">Aliases</NavLink>
-            </li>
-            <li>
-              <NavLink to="/tlspolicies">TLS Policies</NavLink>
-            </li>
-          </ul>
-          <div className={profile}>
-            <UserCircleIcon />
-            <span>Florian</span>
-          </div>
+          {user && (
+            <Fragment>
+              <ul>
+                <li>
+                  <NavLink to="/domains">Domains</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/accounts">Accounts</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/aliases">Aliases</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/tlspolicies">TLS Policies</NavLink>
+                </li>
+              </ul>
+              <div className={profile}>
+                <div>
+                  <UserCircleIcon />
+                  <span>{user.username}</span>
+                </div>
+                <DoorExitIcon primary onClick={() => logout()} />
+              </div>
+            </Fragment>
+          )}
         </div>
       </Content>
     </nav>

@@ -10,7 +10,7 @@ export const GET_STATS_QUERY = gql`
   query GET_STATS_QUERY {
     domainCount
     accountsCount
-    tlspoliciesCount
+    tlsPoliciesCount
     aliasesCount
   }
 `;
@@ -21,7 +21,7 @@ export default function Header() {
   });
   if (error) return `Error! ${error.message}`;
 
-  const { domainCount, accountsCount, tlspoliciesCount, aliasesCount } = data;
+  const { domainCount, accountsCount, tlsPoliciesCount, aliasesCount } = data;
 
   return (
     <header className={well}>
@@ -30,7 +30,7 @@ export default function Header() {
           <Stat title={"Domains"}>{loading ? 0 : domainCount}</Stat>
           <Stat title={"Users"}>{loading ? 0 : accountsCount}</Stat>
           <Stat title={"Aliases"}>{loading ? 0 : aliasesCount}</Stat>
-          <Stat title={"TLS Policies"}>{loading ? 0 : tlspoliciesCount}</Stat>
+          <Stat title={"TLS Policies"}>{loading ? 0 : tlsPoliciesCount}</Stat>
         </Stats>
       </Content>
     </header>

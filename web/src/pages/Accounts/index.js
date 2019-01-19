@@ -18,16 +18,18 @@ import { GET_STATS_QUERY } from "components/Header";
 const ALL_ACCOUNTS_QUERY = gql`
   query ALL_ACCOUNTS_QUERY($domain: String) {
     accounts(domain: $domain) {
-      id
-      username
-      domain {
+      nodes {
         id
-        domain
+        username
+        domain {
+          id
+          domain
+        }
+        email
+        quota
+        enabled
+        sendonly
       }
-      email
-      quota
-      enabled
-      sendonly
     }
   }
 `;
@@ -88,11 +90,14 @@ export default function Accounts({ domain }) {
     refetchQueries: [{ query: ALL_ACCOUNTS_QUERY }, { query: GET_STATS_QUERY }]
   });
 
-  if (error || domainsError) return `Error! ${error.message}`;
+  if (error || domainsError) {
+    console.log(error.response);
+    return `Error!`;
+  }
   if (loading || domainsLoading) return <Loading />;
 
-  const { accounts } = data;
-  const { domains } = domainsData;
+  const accounts = data.accounts.nodes;
+  const domains = domainsData.domains.nodes;
 
   const showEditAccountHideCeateAccount = id => {
     if (showCreateAccount) {

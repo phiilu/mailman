@@ -3,6 +3,7 @@ type Query {
   domain(id: Int!): Domain
   domainCount: Int!
 
+  me: Account
   accounts(domain: String, pagination: PaginationInput): AccountList!
   account(id: Int!): Account
   accountsCount: Int!

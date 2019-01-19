@@ -2,6 +2,15 @@ import Alias from "model/alias";
 
 const aliasQueries = {
   async aliases(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const { email, pagination } = args;
     let aliases;
 
@@ -13,7 +22,16 @@ const aliasQueries = {
 
     return aliases;
   },
-  async aliasesCount() {
+  async aliasesCount(parent, args, ctx, info) {
+    if (!ctx.request.isAdmin) {
+      throw new PermissionErrors.PermissionInsufficient({
+        internalData: {
+          args,
+          info
+        }
+      });
+    }
+
     const count = await Alias.getAliasCount();
     return count;
   }

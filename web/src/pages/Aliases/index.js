@@ -16,17 +16,16 @@ import { row, withForm } from "styles/global.module.scss";
 const ALL_ALIASES_QUERY = gql`
   query ALL_ALIASES_QUERY($email: String) {
     aliases(email: $email) {
-      id
-      sourceEmail
-      sourceUsername
-      sourceDomain {
+      nodes {
         id
-        domain
+        sourceEmail
+        sourceUsername
+        sourceDomain
+        destinationEmail
+        destinationUsername
+        destinationDomain
+        enabled
       }
-      destinationEmail
-      destinationUsername
-      destinationDomain
-      enabled
     }
   }
 `;
@@ -41,7 +40,7 @@ export default function Aliases({ email }) {
   if (error) return `Error! ${error.message}`;
   if (loading) return <Loading />;
 
-  const { aliases } = data;
+  const aliases = data.aliases.nodes;
 
   if (!aliases.length) {
     return "Todo: show add alias view!";

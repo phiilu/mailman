@@ -2,6 +2,7 @@
 
 .navigation {
   background: $white;
+
   .innerNav {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -9,6 +10,7 @@
     justify-content: center;
     align-items: center;
     align-content: center;
+    height: 50px;
 
     .brand {
       font-size: 2rem;
@@ -20,7 +22,6 @@
       display: flex;
 
       li {
-        padding: 20px 0;
         margin-right: 25px;
 
         a {
@@ -41,12 +42,33 @@
       grid-template-columns: auto auto;
       justify-content: center;
       align-items: center;
+      grid-gap: 10px;
 
-      span {
-        margin-left: 10px;
-        font-weight: 600;
-        color: $primary-dk-3;
+      div {
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        align-items: center;
+        grid-gap: 3px;
+        background: $grey-lt-3;
+        border-radius: 50px;
+        padding: 2px;
+
+        span {
+          font-weight: 600;
+          color: $grey-dk-2;
+          padding-right: 10px;
+          text-transform: capitalize;
+        }
       }
+
+      svg:hover {
+        cursor: pointer;
+      }
+    }
+
+    &.login {
+      grid-template-columns: 1fr auto;
     }
   }
 }

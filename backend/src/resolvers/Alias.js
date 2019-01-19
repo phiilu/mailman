@@ -8,10 +8,7 @@ const AliasResolver = {
     return parent.source_username;
   },
   async sourceDomain(parent, args, ctx, info) {
-    const domain = (await Domain.getDomainForEmail(
-      `${parent.source_username}@${parent.source_domain}`
-    ))[0];
-    return domain;
+    return parent.source_domain;
   },
   destinationEmail(parent, args, ctx, info) {
     return `${parent.destination_username}@${parent.destination_domain}`;

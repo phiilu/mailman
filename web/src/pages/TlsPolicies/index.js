@@ -15,11 +15,13 @@ import { row, withForm } from "styles/global.module.scss";
 // GraphQL Queries
 const ALL_TLS_POLICIES_QUERY = gql`
   query ALL_TLS_POLICIES_QUERY {
-    tlspolicies {
-      id
-      domain
-      policy
-      params
+    tlsPolicies {
+      nodes {
+        id
+        domain
+        policy
+        params
+      }
     }
   }
 `;
@@ -33,7 +35,7 @@ export default function TlsPolicys() {
   if (error) return `Error! ${error.message}`;
   if (loading) return <Loading />;
 
-  const { tlspolicies: tlsPolicies } = data;
+  const tlsPolicies = data.tlsPolicies.nodes;
 
   if (!tlsPolicies) {
     return "Todo: show add tlspolicy view!";

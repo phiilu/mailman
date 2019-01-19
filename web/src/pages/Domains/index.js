@@ -19,21 +19,23 @@ import { GET_STATS_QUERY } from "components/Header";
 export const ALL_DOMAINS_QUERY = gql`
   query ALL_DOMAINS_QUERY {
     domains {
-      id
-      domain
-      accounts {
-        count
-        nodes {
-          id
-          username
-          domain {
+      nodes {
+        id
+        domain
+        accounts {
+          count
+          nodes {
             id
-            domain
+            username
+            domain {
+              id
+              domain
+            }
+            email
+            quota
+            enabled
+            sendonly
           }
-          email
-          quota
-          enabled
-          sendonly
         }
       }
     }
@@ -103,7 +105,7 @@ export default function Domains() {
   if (loading) return <Loading />;
 
   // get data
-  const { domains } = data;
+  const domains = data.domains.nodes;
   if (!domains) {
     return "Todo: show add domain view!";
   }
