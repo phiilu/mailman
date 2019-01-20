@@ -14,7 +14,26 @@ import { row, withForm } from "styles/global.module.scss";
 
 // GraphQL Queries
 export const ALL_ACCOUNTS_QUERY = gql`
-  query ALL_ACCOUNTS_QUERY($domain: String) {
+  query ALL_ACCOUNTS_QUERY {
+    accounts {
+      nodes {
+        id
+        username
+        domain {
+          id
+          domain
+        }
+        email
+        quota
+        enabled
+        sendonly
+      }
+    }
+  }
+`;
+
+export const ALL_ACCOUNTS_BY_DOMAIN_QUERY = gql`
+  query ALL_ACCOUNTS_BY_DOMAIN_QUERY($domain: String) {
     accounts(domain: $domain) {
       nodes {
         id
@@ -37,12 +56,19 @@ export default function Accounts({ domain }) {
   const [showEditAccount, setShowEditAccount] = useState(false);
   const [editAccountId, setEditAccountId] = useState(0);
 
+  let query;
   // queries
-  const { data, loading, error } = useQuery(ALL_ACCOUNTS_QUERY, {
-    suspend: false,
-    variables: { domain },
-    fetchPolicy: "network-only"
-  });
+  if (domain) {
+    query = useQuery(ALL_ACCOUNTS_BY_DOMAIN_QUERY, {
+      suspend: false,
+      variables: { domain }
+    });
+  } else {
+    query = useQuery(ALL_ACCOUNTS_QUERY, {
+      suspend: false
+    });
+  }
+  const { data, loading, error } = query;
 
   if (loading) return <Loading />;
 

@@ -10,7 +10,10 @@ import { FormField } from "components/util/Form";
 import InputRange from "components/util/InputRange";
 
 import { ALL_DOMAINS_QUERY } from "pages/Domains";
-import { ALL_ACCOUNTS_QUERY } from "pages/Accounts";
+import {
+  ALL_ACCOUNTS_QUERY,
+  ALL_ACCOUNTS_BY_DOMAIN_QUERY
+} from "pages/Accounts";
 import { COUNT_QUERY } from "components/Pagination";
 
 const CREATE_ACCOUNT_MUTATION = gql`
@@ -43,22 +46,13 @@ export default function AccountCreate({ setShowCreateAccount, domain }) {
   // state
   const [account, setAccount] = useState(defaultState);
   const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState(null);
-
-  console.log(domain, account.domain, domain === account.domain, {
-    variables:
-      domain === account.domain
-        ? {
-            domain
-          }
-        : {}
-  });
 
   // GraphQL
   const createAccount = useMutation(CREATE_ACCOUNT_MUTATION, {
     refetchQueries: [
+      { query: ALL_ACCOUNTS_QUERY },
       {
-        query: ALL_ACCOUNTS_QUERY,
+        query: ALL_ACCOUNTS_BY_DOMAIN_QUERY,
         variables: { domain }
       },
       { query: COUNT_QUERY },
@@ -116,7 +110,6 @@ export default function AccountCreate({ setShowCreateAccount, domain }) {
 
   return (
     <Box onClose={() => setShowCreateAccount(false)}>
-      {errors && errors[0].message}
       <form onSubmit={handleSubmit}>
         <FormField>
           <label htmlFor="username">Username</label>
