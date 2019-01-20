@@ -1,5 +1,4 @@
 import React from "react";
-import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
 import Content from "components/util/Content";

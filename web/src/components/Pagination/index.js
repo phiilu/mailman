@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { Link } from "@reach/router";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
@@ -21,7 +21,7 @@ export const COUNT_QUERY = gql`
 `;
 
 export default function Pagination({ type = "domains", page }) {
-  const { data, loading, error } = useQuery(COUNT_QUERY, {
+  const { data, loading } = useQuery(COUNT_QUERY, {
     refetchQueris: [{ query: ALL_DOMAINS_QUERY }]
   });
 

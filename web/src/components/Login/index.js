@@ -7,7 +7,7 @@ import { FormField } from "components/util/Form";
 import { useUser } from "lib/hooks";
 
 export default function Login() {
-  const { user, login, loginError } = useUser();
+  const { login, loginError } = useUser();
   const [form, setForm] = useState({ email: "", password: "" });
 
   const handleChange = e => {

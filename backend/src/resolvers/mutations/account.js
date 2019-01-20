@@ -72,6 +72,8 @@ const accountMutations = {
       sendonly = false
     } = args.data;
 
+    console.log(args.data);
+
     // Validation
     const notValid = validate(
       { username, email: `${username}@${domain}`, password },

@@ -5,8 +5,7 @@ import {
   innerNav,
   brand,
   active,
-  profile,
-  login
+  profile
 } from "./Navigation.module.scss";
 
 import UserCircleIcon from "components/icons/UserCircle";

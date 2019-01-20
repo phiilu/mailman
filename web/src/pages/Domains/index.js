@@ -15,12 +15,12 @@ import { home } from "./Domains.module.scss";
 import { row, withForm } from "styles/global.module.scss";
 
 import { COUNT_QUERY } from "components/Pagination";
-import { PER_PAGE } from "config";
 
 // GraphQL Queries
+// $skip: Int = 0, $perPage: Int = ${PER_PAGE}
 export const ALL_DOMAINS_QUERY = gql`
-  query ALL_DOMAINS_QUERY($skip: Int = 0, $perPage: Int = ${PER_PAGE}) {
-    domains(pagination: { perPage: $perPage, skip: $skip }) {
+  query ALL_DOMAINS_QUERY {
+    domains {
       nodes {
         id
         domain
@@ -69,7 +69,10 @@ const UPDATE_DOMAIN_MUTATION = gql`
 `;
 
 export default function Domains(props) {
-  const { page = 1 } = queryString.parse(props.location.search);
+  let page = 1;
+  if (props.location) {
+    page = queryString.parse(props.location.search).page;
+  }
 
   const [showCreateDomain, setShowCreateDomain] = useState(true);
   const [showEditDomain, setShowEditDomain] = useState(false);
@@ -79,8 +82,7 @@ export default function Domains(props) {
   const createDomain = useMutation(CREATE_DOMAIN_MUTATION, {
     refetchQueries: [
       {
-        query: ALL_DOMAINS_QUERY,
-        variables: { skip: page * PER_PAGE - PER_PAGE }
+        query: ALL_DOMAINS_QUERY
       },
       { query: COUNT_QUERY }
     ]
@@ -91,17 +93,13 @@ export default function Domains(props) {
   const deleteDomain = useMutation(DELETE_DOMAIN_MUTATION, {
     refetchQueries: [
       {
-        query: ALL_DOMAINS_QUERY,
-        variables: { skip: page * PER_PAGE - PER_PAGE }
+        query: ALL_DOMAINS_QUERY
       },
       { query: COUNT_QUERY }
     ]
   });
   const { data, loading, error } = useQuery(ALL_DOMAINS_QUERY, {
-    suspend: false,
-    variables: {
-      skip: page * PER_PAGE - PER_PAGE
-    }
+    suspend: false
   });
 
   const showEditDomainHideCeateDomain = id => {

@@ -9,15 +9,12 @@ import UserGroupIcon from "components/icons/UserGroup";
 import UserAddIcon from "components/icons/UserAdd";
 import EditIcon from "components/icons/Edit";
 import DeleteIcon from "components/icons/Delete";
-import Pagination from "components/Pagination";
 
 function DomanList({
   domains,
-  showCreateDomain,
   deleteDomain,
   showEditDomainHideCeateDomain,
-  showCreateDomainHideEditDomain,
-  page
+  showCreateDomainHideEditDomain
 }) {
   const handleEditClick = id => {
     showEditDomainHideCeateDomain(id);
@@ -74,7 +71,7 @@ function DomanList({
           ))}
         </tbody>
       </Table>
-      <Pagination page={page} />
+      {/* <Pagination page={page} /> */}
     </div>
   );
 }
