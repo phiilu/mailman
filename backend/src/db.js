@@ -11,24 +11,22 @@ const db = knex({
   }
 });
 
-KnexQueryBuilder.prototype.paginate = function(per_page, current_page) {
-  const page = Math.max(current_page || 1, 1);
-  const offset = (page - 1) * per_page;
+KnexQueryBuilder.prototype.paginate = function(per_page, skip) {
   const clone = this.clone();
 
   return Promise.all([
-    this.offset(offset).limit(per_page),
+    this.offset(skip).limit(per_page),
     db.count("*").from(clone.as("t1"))
   ]).then(([rows, total]) => {
     const count = parseInt(total.length > 0 ? total[0]["count(*)"] : 0);
     return {
       total: count,
       per_page: per_page,
-      offset: offset,
-      to: offset + rows.length,
+      offset: skip,
+      to: skip + rows.length,
       last_page: Math.ceil(count / per_page),
-      current_page: page,
-      from: offset,
+      // current_page: page,
+      from: skip,
       data: rows
     };
   });

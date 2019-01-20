@@ -6,8 +6,7 @@ class Domain {
       return await db
         .select()
         .from("domains")
-        .orderBy("domain", "asc")
-        .paginate(pagination.perPage, pagination.currentPage);
+        .paginate(pagination.perPage, pagination.skip);
     }
 
     return await db

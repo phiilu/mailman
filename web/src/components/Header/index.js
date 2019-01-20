@@ -6,17 +6,10 @@ import Content from "components/util/Content";
 import Stats, { Stat } from "components/util/Stats";
 import { well } from "./Header.module.scss";
 
-export const GET_STATS_QUERY = gql`
-  query GET_STATS_QUERY {
-    domainCount
-    accountsCount
-    tlsPoliciesCount
-    aliasesCount
-  }
-`;
+import { COUNT_QUERY } from "components/Pagination";
 
 export default function Header() {
-  const { data, loading, error } = useQuery(GET_STATS_QUERY, {
+  const { data, loading, error } = useQuery(COUNT_QUERY, {
     suspend: false
   });
   if (error) return `Error! ${error.message}`;

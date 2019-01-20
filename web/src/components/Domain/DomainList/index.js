@@ -17,8 +17,7 @@ function DomanList({
   deleteDomain,
   showEditDomainHideCeateDomain,
   showCreateDomainHideEditDomain,
-  pagination,
-  setPage
+  page
 }) {
   const handleEditClick = id => {
     showEditDomainHideCeateDomain(id);
@@ -26,7 +25,8 @@ function DomanList({
 
   const handleDeleteDomain = async id => {
     try {
-      await deleteDomain({ variables: { id } });
+      const shouldDelete = window.confirm("Are you sure?");
+      if (shouldDelete) await deleteDomain({ variables: { id } });
     } catch (error) {
       console.log(error);
       // Todo
@@ -74,11 +74,7 @@ function DomanList({
           ))}
         </tbody>
       </Table>
-      <Pagination
-        lastPage={pagination.lastPage}
-        currentPage={pagination.currentPage}
-        setPage={setPage}
-      />
+      <Pagination page={page} />
     </div>
   );
 }

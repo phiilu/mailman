@@ -39,13 +39,12 @@ type Mutation {
 type Pagination {
   total: Int
   perPage: Int
-  currentPage: Int
   lastPage: Int
 }
 
 input PaginationInput {
+  skip: Int
   perPage: Int
-  currentPage: Int
 }
 
 ## Domains

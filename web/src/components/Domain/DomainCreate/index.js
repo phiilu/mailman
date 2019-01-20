@@ -14,7 +14,7 @@ export default function DomainCreate({ setShowCreateDomain, createDomain }) {
     if (!domain) return;
 
     try {
-      await createDomain({ variables: { domain } });
+      await createDomain({ variables: { data: { domain } } });
       setDomain("");
     } catch (error) {
       console.log(error);

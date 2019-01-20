@@ -12,7 +12,7 @@ import Loading from "components/util/Loading";
 
 import { row, withForm } from "styles/global.module.scss";
 import { ALL_DOMAINS_QUERY } from "pages/Domains";
-import { GET_STATS_QUERY } from "components/Header";
+import { COUNT_QUERY } from "components/Pagination";
 
 // GraphQL Queries
 const ALL_ACCOUNTS_QUERY = gql`
@@ -87,7 +87,7 @@ export default function Accounts({ domain }) {
 
   // mutations
   const createAccount = useMutation(CREATE_ACCOUNT_MUTATION, {
-    refetchQueries: [{ query: ALL_ACCOUNTS_QUERY }, { query: GET_STATS_QUERY }]
+    refetchQueries: [{ query: ALL_ACCOUNTS_QUERY }, { query: COUNT_QUERY }]
   });
 
   if (error || domainsError) {

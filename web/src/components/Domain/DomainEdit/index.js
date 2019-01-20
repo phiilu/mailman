@@ -27,7 +27,7 @@ export default function DomainEdit({
 
     try {
       const { data } = await updateDomain({
-        variables: { id: domain.id, domain: domain.domain }
+        variables: { id: domain.id, data: { domain: domain.domain } }
       });
       setEditDomainId(data.updateDomain.id);
     } catch (error) {

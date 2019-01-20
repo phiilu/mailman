@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useQuery, useMutation } from "react-apollo-hooks";
+import queryString from "query-string";
 
 import DomainList from "components/Domain/DomainList";
 import DomainEdit from "components/Domain/DomainEdit";
@@ -13,12 +14,13 @@ import Loading from "components/util/Loading";
 import { home } from "./Domains.module.scss";
 import { row, withForm } from "styles/global.module.scss";
 
-import { GET_STATS_QUERY } from "components/Header";
+import { COUNT_QUERY } from "components/Pagination";
+import { PER_PAGE } from "config";
 
 // GraphQL Queries
 export const ALL_DOMAINS_QUERY = gql`
-  query ALL_DOMAINS_QUERY($perPage: Int, $currentPage: Int) {
-    domains(pagination: { perPage: $perPage, currentPage: $currentPage }) {
+  query ALL_DOMAINS_QUERY($skip: Int = 0, $perPage: Int = ${PER_PAGE}) {
+    domains(pagination: { perPage: $perPage, skip: $skip }) {
       nodes {
         id
         domain
@@ -38,18 +40,13 @@ export const ALL_DOMAINS_QUERY = gql`
           }
         }
       }
-      pagination {
-        currentPage
-        lastPage
-        total
-      }
     }
   }
 `;
 
 const CREATE_DOMAIN_MUTATION = gql`
-  mutation CREATE_DOMAIN_MUTATION($domain: String!) {
-    createDomain(domain: $domain) {
+  mutation CREATE_DOMAIN_MUTATION($data: DomainInput!) {
+    createDomain(data: $data) {
       id
       domain
     }
@@ -63,35 +60,47 @@ const DELETE_DOMAIN_MUTATION = gql`
 `;
 
 const UPDATE_DOMAIN_MUTATION = gql`
-  mutation UPDATE_DOMAIN_MUTATION($id: Int!, $domain: String!) {
-    updateDomain(id: $id, domain: $domain) {
+  mutation UPDATE_DOMAIN_MUTATION($id: Int!, $data: DomainInput!) {
+    updateDomain(id: $id, data: $data) {
       id
       domain
     }
   }
 `;
 
-export default function Domains() {
+export default function Domains(props) {
+  const { page = 1 } = queryString.parse(props.location.search);
+
   const [showCreateDomain, setShowCreateDomain] = useState(true);
   const [showEditDomain, setShowEditDomain] = useState(false);
   const [editDomainId, setEditDomainId] = useState(0);
-  const [page, setPage] = useState(0);
 
   // querys and mutations
   const createDomain = useMutation(CREATE_DOMAIN_MUTATION, {
-    refetchQueries: [{ query: ALL_DOMAINS_QUERY }, { query: GET_STATS_QUERY }]
+    refetchQueries: [
+      {
+        query: ALL_DOMAINS_QUERY,
+        variables: { skip: page * PER_PAGE - PER_PAGE }
+      },
+      { query: COUNT_QUERY }
+    ]
   });
   const updateDomain = useMutation(UPDATE_DOMAIN_MUTATION, {
     refetchQueries: [{ query: ALL_DOMAINS_QUERY }]
   });
   const deleteDomain = useMutation(DELETE_DOMAIN_MUTATION, {
-    refetchQueries: [{ query: ALL_DOMAINS_QUERY }, { query: GET_STATS_QUERY }]
+    refetchQueries: [
+      {
+        query: ALL_DOMAINS_QUERY,
+        variables: { skip: page * PER_PAGE - PER_PAGE }
+      },
+      { query: COUNT_QUERY }
+    ]
   });
   const { data, loading, error } = useQuery(ALL_DOMAINS_QUERY, {
     suspend: false,
     variables: {
-      perPage: 5,
-      currentPage: page
+      skip: page * PER_PAGE - PER_PAGE
     }
   });
 
@@ -116,7 +125,6 @@ export default function Domains() {
 
   // get data
   const domains = data.domains.nodes;
-  const pagination = data.domains.pagination;
   const editDomain = domains.find(domain => domain.id === editDomainId);
 
   if (!domains) {
@@ -139,8 +147,7 @@ export default function Domains() {
               showCreateDomainHideEditDomain={showCreateDomainHideEditDomain}
               showEditDomainHideCeateDomain={showEditDomainHideCeateDomain}
               deleteDomain={deleteDomain}
-              pagination={pagination}
-              setPage={setPage}
+              page={parseFloat(page)}
             />
           </div>
           <div className="col">

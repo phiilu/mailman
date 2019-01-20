@@ -69,6 +69,7 @@
       color: $primary-dk-3;
       text-align: right;
       display: flex;
+      justify-content: flex-end;
 
       &:hover {
         cursor: pointer;
