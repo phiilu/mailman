@@ -149,6 +149,7 @@ Open .env with a text editor and adapt the environment variables with your
 configuration:
 
 * `MAILMAN_SECRET` a long unique random string to sign the JWT token
+* `MAILMAN_DB_ENGINE` the engine used by mailman. defaults to maria if no value given.
 * `MAILMAN_DB_USER` the `vmail` database user
 * `MAILMAN_DB_PASSWORD` the password for the `vmail` database user
 * `MAILMAN_DB_DATABASE` the `vmail` database
