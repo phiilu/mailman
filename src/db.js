@@ -1,7 +1,7 @@
 import knex from "knex";
 
 const db = knex({
-  client: "maria",
+  client: process.env.MAILMAN_DB_ENGINE || "maria",
   connection: {
     host: process.env.MAILMAN_DB_HOST || "127.0.0.1",
     user: process.env.MAILMAN_DB_USER,
