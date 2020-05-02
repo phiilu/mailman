@@ -149,15 +149,17 @@ Open .env with a text editor and adapt the environment variables with your
 configuration:
 
 * `MAILMAN_SECRET` a long unique random string to sign the JWT token
-* `MAILMAN_DB_ENGINE` the engine used by mailman. defaults to maria if no value given.
+* `MAILMAN_DB_ENGINE` the engine used by mailman. defaults to mysql (mariadb) if no value given.
+* `MAILMAN_DB_SOCKET` the unix socket of the database
+* `MAILMAN_DB_HOST` IP address or hostname of the database server; defaults to mariadb
+* `MAILMAN_DB_PORT` the port the database listens on
 * `MAILMAN_DB_USER` the `vmail` database user
 * `MAILMAN_DB_PASSWORD` the password for the `vmail` database user
 * `MAILMAN_DB_DATABASE` the `vmail` database
 * `MAILMAN_HOST` the IP address which mailman binds to. Default is `0.0.0.0`
 * `MAILMAN_PORT` the TCP port mailman binds to. Default is `4000`
 * `MAILMAN_BASENAME` the HTTP base. Default is `/`
-* `MAILMAN_ADMIN` the email address of the user, which is allowed to
-  administrate the `vmail` database
+* `MAILMAN_ADMIN` the email address of the user, which is allowed to administrate the `vmail` database
 
 ---
 
