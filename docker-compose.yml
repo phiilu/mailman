@@ -1,9 +1,23 @@
 version: '3'
 services:
+
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: "vmail"
+      MYSQL_DATABASE: "vmail"
+      MYSQL_USER: "vmail"
+      MYSQL_PASSWORD: "vmail"
+    volumes:
+      - database:/var/lib/mysql
+
   web:
-    image: phiilu/mailman
+    build: .
     ports:
      - "4000:4000"
     env_file:
      - .env
     network_mode: "host"
+
+volumes:
+  database:
