@@ -32,7 +32,10 @@ class AuthenticationController {
     }
 
     // check passwords
-    const authenticated = Account.comparePasswords(password, account.password);
+    const authenticated = await Account.comparePasswords(
+      password,
+      account.password
+    );
 
     if (!authenticated) {
       return res.status(401).json({ message: `credentials mismatch` });

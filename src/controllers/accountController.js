@@ -55,14 +55,16 @@ class AccountController {
     if (!username || !domain || !password)
       return res.status(400).json({ message: "parameters are missing" });
 
-    const id = (await Account.createAccount({
-      username,
-      domain,
-      password,
-      quota,
-      enabled,
-      sendonly
-    }))[0];
+    const id = (
+      await Account.createAccount({
+        username,
+        domain,
+        password,
+        quota,
+        enabled,
+        sendonly
+      })
+    )[0];
     if (id) {
       res.json({ account: (await Account.getAccount({ id }))[0] });
     } else {
@@ -141,7 +143,7 @@ class AccountController {
     }
 
     // check passwords
-    const authenticated = Account.comparePasswords(
+    const authenticated = await Account.comparePasswords(
       currentPassword,
       account.password
     );
