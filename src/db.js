@@ -13,8 +13,14 @@ if (process.env.MAILMAN_DB_SOCKET) {
   connection.port = parseInt(process.env.MAILMAN_DB_PORT, 10) || 3306;
 }
 
+let engine = process.env.MAILMAN_DB_ENGINE;
+// workaround to support old settings:
+if (engine === "maria") {
+  engine = "mysql";
+}
+
 const db = knex({
-  client: process.env.MAILMAN_DB_ENGINE || "mysql",
+  client: engine || "mysql",
   connection
 });
 
