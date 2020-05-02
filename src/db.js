@@ -3,7 +3,7 @@ import knex from "knex";
 const connection = {
   user: process.env.MAILMAN_DB_USER,
   password: process.env.MAILMAN_DB_PASSWORD,
-  db: process.env.MAILMAN_DB_DATABASE
+  database: process.env.MAILMAN_DB_DATABASE
 };
 
 if (process.env.MAILMAN_DB_SOCKET) {
