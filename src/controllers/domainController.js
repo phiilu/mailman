@@ -1,6 +1,4 @@
-import { isEmpty } from "lodash";
 import Domain from "../model/domain";
-
 import { isAdmin } from "../helpers/authorizationHelper";
 
 class DomainController {

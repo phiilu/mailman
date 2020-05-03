@@ -1,6 +1,5 @@
 import { isEmpty } from "lodash";
 import TlsPolicy from "../model/tlspolicy";
-
 import { isAdmin } from "../helpers/authorizationHelper";
 
 class TlsPolicyController {

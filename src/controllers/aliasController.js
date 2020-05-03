@@ -1,6 +1,5 @@
 import { isEmpty } from "lodash";
 import Alias from "../model/alias";
-
 import { isAdmin } from "../helpers/authorizationHelper";
 
 class AliasController {
