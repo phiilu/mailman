@@ -1,6 +1,4 @@
-import { isEmpty } from "lodash";
 import Account from "../model/account";
-
 import { isAdmin } from "../helpers/authorizationHelper";
 
 class AccountController {

@@ -1,12 +1,11 @@
-import Joi from "joi";
-import { promisify } from "util";
-
+import Joi from "@hapi/joi";
 import Account from "../model/account";
 import { generateToken } from "../helpers/tokenHelper";
 import { isAdmin } from "../helpers/authorizationHelper";
 
-const validate = promisify(Joi.validate);
-const emailValidator = Joi.string().email();
+const emailValidator = Joi.object({
+  email: Joi.string().email()
+});
 
 class AuthenticationController {
   async authenticate(req, res) {
@@ -18,7 +17,7 @@ class AuthenticationController {
 
     // validate email
     try {
-      await validate(email, emailValidator);
+      await emailValidator.validateAsync({ email });
     } catch (validationError) {
       return res.status(422).json({ message: "invalid email" });
     }
