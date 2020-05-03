@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "backpack-core": "^0.7.0",
+    "backpack-core": "^0.8.4",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -29,11 +29,10 @@
     "sha512crypt-node": "^0.1.0"
   },
   "devDependencies": {
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.0",
-    "prettier": "^1.9.2"
+    "@babel/preset-react": "^7.9.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
+    "prettier": "^2.0.5"
   },
   "lint-staged": {
     "*.{js,jsx}": [
