@@ -23,7 +23,7 @@
     "joi": "^13.0.2",
     "jsonwebtoken": "^8.1.0",
     "knex": "^0.14.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "mariasql": "^0.2.6",
     "morgan": "^1.9.0",
     "sha512crypt-node": "^0.1.0"
