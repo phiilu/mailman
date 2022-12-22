@@ -21,7 +21,7 @@
     "express-rate-limit": "^2.11.0",
     "helmet": "^3.9.0",
     "joi": "^13.0.2",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "knex": "^0.14.2",
     "lodash": "^4.17.4",
     "mariasql": "^0.2.6",
